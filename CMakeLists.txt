@@ -16,8 +16,13 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-add_executable(server "src/server.cpp")
-add_executable(client "src/client.cpp")
+add_executable(broadcaster "src/server.cpp")
+add_executable(listener "src/client.cpp")
+
+install(TARGETS
+  broadcaster
+  listener
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
