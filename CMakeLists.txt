@@ -16,6 +16,9 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
+add_executable(server "src/server.cpp")
+add_executable(client "src/client.cpp")
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
