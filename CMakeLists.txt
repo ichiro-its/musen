@@ -16,8 +16,8 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-add_executable(broadcaster "src/server.cpp")
-add_executable(listener "src/client.cpp")
+add_executable(broadcaster "src/broadcaster.cpp")
+add_executable(listener "src/listener.cpp")
 
 install(TARGETS
   broadcaster
