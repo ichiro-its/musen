@@ -16,6 +16,14 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
+add_executable(broadcaster "src/broadcaster.cpp")
+add_executable(listener "src/listener.cpp")
+
+install(TARGETS
+  broadcaster
+  listener
+  DESTINATION lib/${PROJECT_NAME})
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
