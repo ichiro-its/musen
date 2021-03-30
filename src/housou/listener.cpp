@@ -25,57 +25,63 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <housou/listener.hpp>
 #include <iostream>
 #include <string>
 
-#define PORT 8080
 
-int main()
+namespace housou
 {
-  std::string a;
-  char buffer[1024];
-  char * hello = const_cast<char *>("Hello from server\0");
-  struct sockaddr_in sa, ca;
+Listener::Listener()
+{
+  socket_ = -1;
+}
+
+bool Listener::connect(int port)
+{
+  port_ = port;
 
   // Creating socket
-  int socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (socket_ < 0) {
     fprintf(stderr, "Failure creating socket\n");
     return false;
   }
 
   // Filling server information
-  sa.sin_family = AF_INET;
-  sa.sin_addr.s_addr = htonl(INADDR_ANY);
-  sa.sin_port = htons(PORT);
+  recipient.sin_family = AF_INET;
+  recipient.sin_addr.s_addr = htonl(INADDR_ANY);
+  recipient.sin_port = htons(port_);
 
-  // Bind the socket with the server address
-  if (bind(socket_, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    perror("bind failed");
-    return false;
-  }
-
-  int count = 0;
-  socklen_t address_len = sizeof(ca);
-  // Start communication
-  while (true) {
-    recvfrom(
-      socket_, const_cast<char *>(buffer), 1024, MSG_WAITALL,
-      (struct sockaddr *) &ca, &address_len);
-
-    std::string s(buffer);
-    s = s + " " + std::to_string(count);
-    std::cout << "Client : " << s << std::endl;
-
-    sendto(
-      socket_, const_cast<char *>(hello), strlen(hello),
-      MSG_CONFIRM, (const struct sockaddr *) &ca,
-      address_len);
-
-    std::cout << "Hello message sent from server" << std::endl;
-    count++;
-    sleep(1);
-  }
-
-  return 0;
+  return true;
 }
+
+void Listener::request(std::string data)
+{
+  message = const_cast<char *>(data.c_str());
+
+  sendto(
+    socket_, const_cast<char *>(message), strlen(message),
+    MSG_CONFIRM, (const struct sockaddr *) &recipient,
+    sizeof(recipient));
+}
+
+std::string Listener::recover()
+{
+  addr_len = sizeof(recipient);
+
+  recvfrom(
+    socket_, const_cast<char *>(buffer), 1024,
+    MSG_WAITALL, (struct sockaddr *) &recipient,
+    &addr_len);
+
+  std::string s(buffer);
+  return s;
+}
+
+void Listener::close_socket()
+{
+  close(socket_);
+}
+
+}  // namespace housou

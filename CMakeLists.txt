@@ -14,10 +14,27 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+add_library(${PROJECT_NAME}
+  "src/${PROJECT_NAME}/broadcaster.cpp"
+  "src/${PROJECT_NAME}/listener.cpp")
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
 find_package(ament_cmake REQUIRED)
 
-add_executable(broadcaster "src/broadcaster.cpp")
-add_executable(listener "src/listener.cpp")
+add_executable(broadcaster "src/broadcaster_main.cpp")
+target_include_directories(broadcaster PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(broadcaster ${PROJECT_NAME})
+
+add_executable(listener "src/listener_main.cpp")
+target_include_directories(listener PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(listener ${PROJECT_NAME})
 
 install(TARGETS
   broadcaster
