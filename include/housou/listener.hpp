@@ -29,9 +29,8 @@ namespace housou
 class Listener
 {
 private:
-  int socket_;
-  int port_;
-  char buffer[1024];
+  int sockfd;
+  int socket_port;
   char * message;
   struct sockaddr_in recipient;
   socklen_t addr_len;
@@ -40,7 +39,7 @@ public:
   Listener();
   bool connect(int port);
   void request(std::string data);
-  std::string recover();
+  std::string recover(int length);
   void close_socket();
 };
 }  // namespace housou

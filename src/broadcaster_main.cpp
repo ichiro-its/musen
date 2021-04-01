@@ -38,12 +38,12 @@ int main()
   int count = 0;
   // Start communication
   while (true) {
-    std::string s = broadcaster.wait();
-    s = s + " " + std::to_string(count);
+    std::string s = "";
+    s = broadcaster.wait();
     std::cout << "Client : " << s << std::endl;
 
-    broadcaster.send("Hello From Server");
-    std::cout << "Hello message sent from server" << std::endl;
+    broadcaster.send("Hello From Server " + std::to_string(count));
+    std::cout << "Hello message " << std::to_string(count) << " sent from server" << std::endl;
     count++;
     sleep(1);
   }

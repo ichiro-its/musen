@@ -34,16 +34,16 @@ namespace housou
 {
 Listener::Listener()
 {
-  socket_ = -1;
+  sockfd = -1;
 }
 
 bool Listener::connect(int port)
 {
-  port_ = port;
+  socket_port = port;
 
   // Creating socket
-  socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (socket_ < 0) {
+  sockfd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
     fprintf(stderr, "Failure creating socket\n");
     return false;
   }
@@ -51,7 +51,7 @@ bool Listener::connect(int port)
   // Filling server information
   recipient.sin_family = AF_INET;
   recipient.sin_addr.s_addr = htonl(INADDR_ANY);
-  recipient.sin_port = htons(port_);
+  recipient.sin_port = htons(socket_port);
 
   return true;
 }
@@ -61,18 +61,19 @@ void Listener::request(std::string data)
   message = const_cast<char *>(data.c_str());
 
   sendto(
-    socket_, const_cast<char *>(message), strlen(message),
-    MSG_CONFIRM, (const struct sockaddr *) &recipient,
+    sockfd, const_cast<char *>(message), strlen(message),
+    0, (const struct sockaddr *) &recipient,
     sizeof(recipient));
 }
 
-std::string Listener::recover()
+std::string Listener::recover(int length)
 {
+  char * buffer = new char[length];
   addr_len = sizeof(recipient);
 
   recvfrom(
-    socket_, const_cast<char *>(buffer), 1024,
-    MSG_WAITALL, (struct sockaddr *) &recipient,
+    sockfd, const_cast<char *>(buffer), length,
+    0, (struct sockaddr *) &recipient,
     &addr_len);
 
   std::string s(buffer);
@@ -81,7 +82,7 @@ std::string Listener::recover()
 
 void Listener::close_socket()
 {
-  close(socket_);
+  close(sockfd);
 }
 
 }  // namespace housou

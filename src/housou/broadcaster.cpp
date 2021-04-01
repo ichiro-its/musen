@@ -33,27 +33,35 @@ namespace housou
 {
 Broadcaster::Broadcaster()
 {
-  socket_ = -1;
+  sockfd = -1;
 }
 
 bool Broadcaster::connect(int port)
 {
-  port_ = port;
+  socket_port = port;
 
   // Creating socket
-  socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (socket_ < 0) {
+  sockfd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
     fprintf(stderr, "Failure creating socket\n");
     return false;
   }
 
+  int broadcast = 1;
+  setsockopt(
+    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&broadcast),
+    sizeof(broadcast));
+
+  int fcntl_flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, fcntl_flags | O_NONBLOCK);
+
   // Filling server information
   server_addr.sin_family = AF_INET;
   server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_addr.sin_port = htons(port_);
+  server_addr.sin_port = htons(socket_port);
 
   // Bind the socket with the server address
-  if (bind(socket_, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+  if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
     perror("bind failed");
     return false;
   }
@@ -63,10 +71,11 @@ bool Broadcaster::connect(int port)
 
 std::string Broadcaster::wait()
 {
+  char buffer[1024];
   addr_len = sizeof(client_addr);
 
   recvfrom(
-    socket_, const_cast<char *>(buffer), 1024, MSG_WAITALL,
+    sockfd, const_cast<char *>(buffer), 1024, 0,
     (struct sockaddr *) &client_addr, &addr_len);
 
   std::string s(buffer);
@@ -77,9 +86,24 @@ void Broadcaster::send(std::string data)
 {
   message = const_cast<char *>(data.c_str());
 
+  // struct ifaddrs *ifap;
+  // getifaddrs(&ifap);
+  // uint32_t interface_addr = ntohl(((struct sockaddr_in *)(ifap->ifa_addr))->sin_addr.s_addr);
+  // uint32_t broadcast_addr = ((struct sockaddr_in *)(ifap->ifa_broadaddr))->sin_addr.s_addr;
+
+  // if (interface_addr > 0 && interface_addr != 0x7F000001)
+  // {
+  //   client_addr.sin_family      = AF_INET;
+  //   client_addr.sin_port        = htons(socket_port);
+  //   client_addr.sin_addr.s_addr = broadcast_addr;
+
+  //   sendto(sockfd, message, strlen(message), 0, (const struct sockaddr*)&client_addr,
+  //    sizeof client_addr);
+  // }
+
   sendto(
-    socket_, message, strlen(message),
-    MSG_CONFIRM, (const struct sockaddr *) &client_addr,
+    sockfd, message, strlen(message),
+    0, (const struct sockaddr *) &client_addr,
     addr_len);
 }
 }  // namespace housou

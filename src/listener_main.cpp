@@ -36,11 +36,10 @@ int main()
   int count = 0;
   // Start communication
   while (true) {
-    listener.request("Hello from client\0");
-    std::cout << "Hello message sent from client" << std::endl;
+    listener.request("Hello from client " + std::to_string(count));
+    std::cout << "Hello message " << std::to_string(count) << " sent from client" << std::endl;
 
-    std::string s = listener.recover();
-    s = s + " " + std::to_string(count);
+    std::string s = listener.recover(1024);
     std::cout << "Server : " << s << std::endl;
 
     count++;

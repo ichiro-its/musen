@@ -29,9 +29,9 @@ namespace housou
 class Broadcaster
 {
 private:
-  int socket_;
-  int port_;
-  char buffer[1024];
+  int sockfd;
+  int socket_port;
+  // char buffer[1024];
   char * message;
   struct sockaddr_in server_addr, client_addr;
   socklen_t addr_len;
