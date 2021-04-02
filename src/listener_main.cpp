@@ -18,59 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <ifaddrs.h>
-#include <string.h>
-#include <sys/socket.h>
+#include <housou/listener.hpp>
+
 #include <unistd.h>
 
 #include <iostream>
 #include <string>
 
-#define PORT 8080
-
 int main()
 {
-  char buffer[1024];
-  char * hello = const_cast<char *>("Hello from client\0");
-  struct sockaddr_in recipient;
+  housou::Listener listener(8080);
 
-  // Creating socket
-  int socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (socket_ < 0) {
-    fprintf(stderr, "Failure creating socket\n");
-    return false;
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.port << "!" << std::endl;
+
+    return 1;
   }
 
-  // Filling server information
-  recipient.sin_family = AF_INET;
-  recipient.sin_port = htons(PORT);
-  recipient.sin_addr.s_addr = INADDR_ANY;
-
-  int count = 0;
-  socklen_t len;
-  // Start communication
   while (true) {
-    sendto(
-      socket_, const_cast<char *>(hello), strlen(hello),
-      MSG_CONFIRM, (const struct sockaddr *) &recipient,
-      sizeof(recipient));
-    std::cout << "Hello message sent from client" << std::endl;
+    auto message = listener.receive(64);
 
-    recvfrom(
-      socket_, const_cast<char *>(buffer), 1024,
-      MSG_WAITALL, (struct sockaddr *) &recipient,
-      &len);
+    if (message.size() > 0) {
+      std::cout << "Received: " << message << std::endl;
+    }
 
-    std::string s(buffer);
-    s = s + " " + std::to_string(count);
-    std::cout << "Server : " << s << std::endl;
-
-    count++;
-    sleep(1);
+    usleep(100 * 1000);
   }
 
-  close(socket_);
+  listener.disconnect();
+
   return 0;
 }

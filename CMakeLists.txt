@@ -16,17 +16,33 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-add_executable(broadcaster "src/broadcaster.cpp")
-add_executable(listener "src/listener.cpp")
+add_library(${PROJECT_NAME}
+  "src/${PROJECT_NAME}/broadcaster.cpp"
+  "src/${PROJECT_NAME}/listener.cpp")
 
-install(TARGETS
-  broadcaster
-  listener
-  DESTINATION lib/${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+add_executable(broadcaster "src/broadcaster_main.cpp")
+target_include_directories(broadcaster PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(broadcaster ${PROJECT_NAME})
+
+add_executable(listener "src/listener_main.cpp")
+target_include_directories(listener PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(listener ${PROJECT_NAME})
+
+install(TARGETS broadcaster listener DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_include_directories("include")
+ament_export_libraries(${PROJECT_NAME})
 ament_package()
