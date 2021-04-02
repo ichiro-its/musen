@@ -39,7 +39,9 @@ int main()
   while (true) {
     auto message = listener.receive(64);
 
-    std::cout << "Received: " << message << std::endl;
+    if (message.size() > 0) {
+      std::cout << "Received: " << message << std::endl;
+    }
 
     usleep(100 * 1000);
   }

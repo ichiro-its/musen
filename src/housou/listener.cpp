@@ -66,6 +66,21 @@ bool Listener::connect()
   int flags = fcntl(sockfd, F_GETFL, 0);
   fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
+  // Configure the recipent address
+  struct sockaddr_in sa;
+  {
+    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
+
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
+    sa.sin_port = htons(port);
+  }
+
+  // Bind the socket with the recipent address
+  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+    return false;
+  }
+
   return true;
 }
 

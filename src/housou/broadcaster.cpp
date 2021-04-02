@@ -66,21 +66,6 @@ bool Broadcaster::connect()
   int flags = fcntl(sockfd, F_GETFL, 0);
   fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
-  // Configure the sender address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(port);
-  }
-
-  // Bind the socket with the sender address
-  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
-
   return true;
 }
 
@@ -128,7 +113,7 @@ int Broadcaster::send(std::string data)
       memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
       sa.sin_family = AF_INET;
-      sa.sin_addr.s_addr = ntohl(broadaddr->sin_addr.s_addr);
+      sa.sin_addr.s_addr = broadaddr->sin_addr.s_addr;
       sa.sin_port = htons(port);
     }
 
@@ -141,6 +126,8 @@ int Broadcaster::send(std::string data)
       lowest_sent = sent;
     }
   }
+
+  freeifaddrs(ifas);
 
   return lowest_sent;
 }
