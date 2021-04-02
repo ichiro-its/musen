@@ -20,9 +20,10 @@
 
 #include <housou/broadcaster.hpp>
 
+#include <unistd.h>
+
 #include <iostream>
 #include <string>
-#include <unistd.h>
 
 int main()
 {

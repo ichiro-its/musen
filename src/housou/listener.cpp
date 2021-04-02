@@ -23,10 +23,11 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
-#include <string>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include <string>
 
 namespace housou
 {
@@ -93,7 +94,7 @@ std::string Listener::receive(int length)
   recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
   std::string message(buffer);
-  delete buffer;
+  delete[] buffer;
 
   return message;
 }

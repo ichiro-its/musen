@@ -27,6 +27,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <string>
+
 namespace housou
 {
 
@@ -113,7 +115,6 @@ int Broadcaster::send(std::string data)
 
   // Repeat for all available interfaces
   for (auto & ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
-
     // Skip if null or if the address family is different
     if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
       continue;

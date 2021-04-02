@@ -29,7 +29,7 @@ namespace housou
 class Broadcaster
 {
 public:
-  Broadcaster(int port);
+  explicit Broadcaster(int port);
   ~Broadcaster();
 
   bool connect();

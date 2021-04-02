@@ -30,7 +30,7 @@ namespace housou
 class Listener
 {
 public:
-  Listener(int port);
+  explicit Listener(int port);
   ~Listener();
 
   bool connect();
