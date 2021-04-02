@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <housou/broadcaster.hpp>
+
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
@@ -25,85 +27,121 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <housou/broadcaster.hpp>
-#include <iostream>
-#include <string>
-
 namespace housou
 {
-Broadcaster::Broadcaster()
+
+Broadcaster::Broadcaster(int port)
+: port(port),
+  sockfd(-1)
 {
-  sockfd = -1;
 }
 
-bool Broadcaster::connect(int port)
+Broadcaster::~Broadcaster()
 {
-  socket_port = port;
+  disconnect();
+}
 
-  // Creating socket
-  sockfd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
-    fprintf(stderr, "Failure creating socket\n");
+bool Broadcaster::connect()
+{
+  // Failed if already connected
+  if (sockfd >= 0) {
     return false;
   }
 
-  int broadcast = 1;
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
+    return false;
+  }
+
+  // Enable broadcast
+  int opt = 1;
   setsockopt(
-    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&broadcast),
-    sizeof(broadcast));
+    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
 
-  int fcntl_flags = fcntl(sockfd, F_GETFL, 0);
-  fcntl(sockfd, F_SETFL, fcntl_flags | O_NONBLOCK);
+  // Enable non-blocking
+  int flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
-  // Filling server information
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_addr.sin_port = htons(socket_port);
+  // Configure the sender address
+  struct sockaddr_in sa;
+  {
+    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
-  // Bind the socket with the server address
-  if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-    perror("bind failed");
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
+    sa.sin_port = htons(port);
+  }
+
+  // Bind the socket with the sender address
+  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 
   return true;
 }
 
-std::string Broadcaster::wait()
+bool Broadcaster::disconnect()
 {
-  char buffer[1024];
-  addr_len = sizeof(client_addr);
+  // Failed if not connected
+  if (sockfd < 0) {
+    return false;
+  }
 
-  recvfrom(
-    sockfd, const_cast<char *>(buffer), 1024, 0,
-    (struct sockaddr *) &client_addr, &addr_len);
+  // Close the socket
+  close(sockfd);
+  sockfd = -1;
 
-  std::string s(buffer);
-  return s;
+  return true;
 }
 
-void Broadcaster::send(std::string data)
+int Broadcaster::send(std::string data)
 {
-  message = const_cast<char *>(data.c_str());
+  // Skip if not connected
+  if (sockfd < 0) {
+    return 0;
+  }
 
-  // struct ifaddrs *ifap;
-  // getifaddrs(&ifap);
-  // uint32_t interface_addr = ntohl(((struct sockaddr_in *)(ifap->ifa_addr))->sin_addr.s_addr);
-  // uint32_t broadcast_addr = ((struct sockaddr_in *)(ifap->ifa_broadaddr))->sin_addr.s_addr;
+  // Obtain all interfaces
+  struct ifaddrs * ifas;
+  if (getifaddrs(&ifas) != 0) {
+    return 0;
+  }
 
-  // if (interface_addr > 0 && interface_addr != 0x7F000001)
-  // {
-  //   client_addr.sin_family      = AF_INET;
-  //   client_addr.sin_port        = htons(socket_port);
-  //   client_addr.sin_addr.s_addr = broadcast_addr;
+  int lowest_sent = 0;
 
-  //   sendto(sockfd, message, strlen(message), 0, (const struct sockaddr*)&client_addr,
-  //    sizeof client_addr);
-  // }
+  // Repeat for all available interfaces
+  for (auto & ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
 
-  sendto(
-    sockfd, message, strlen(message),
-    0, (const struct sockaddr *) &client_addr,
-    addr_len);
+    // Skip if null or if the address family is different
+    if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
+      continue;
+    }
+
+    auto broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
+
+    // Configure the recipent address
+    struct sockaddr_in sa;
+    {
+      memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
+
+      sa.sin_family = AF_INET;
+      sa.sin_addr.s_addr = ntohl(broadaddr->sin_addr.s_addr);
+      sa.sin_port = htons(port);
+    }
+
+    // Send data to the recipent address
+    int sent = sendto(
+      sockfd, const_cast<char *>(data.c_str()), data.size(), 0,
+      (struct sockaddr *)&sa, sizeof(sa));
+
+    if (sent < lowest_sent) {
+      lowest_sent = sent;
+    }
+  }
+
+  return lowest_sent;
 }
+
 }  // namespace housou

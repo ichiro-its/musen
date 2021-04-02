@@ -18,35 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <unistd.h>
-
 #include <housou/broadcaster.hpp>
+
 #include <iostream>
 #include <string>
-
-#define PORT 8080
-
-using Broadcaster = housou::Broadcaster;
+#include <unistd.h>
 
 int main()
 {
-  Broadcaster broadcaster;
+  housou::Broadcaster broadcaster(8080);
 
-  // Creating socket
-  broadcaster.connect(8080);
+  if (!broadcaster.connect()) {
+    std::cerr << "Failed to connect broadcaster on port " <<
+      broadcaster.port << "!" << std::endl;
 
-  int count = 0;
-  // Start communication
+    return 1;
+  }
+
+  int counter = 0;
   while (true) {
-    std::string s = "";
-    s = broadcaster.wait();
-    std::cout << "Client : " << s << std::endl;
+    std::string message = "Hello world! " + std::to_string(counter++);
 
-    broadcaster.send("Hello From Server " + std::to_string(count));
-    std::cout << "Hello message " << std::to_string(count) << " sent from server" << std::endl;
-    count++;
+    broadcaster.send(message);
+
+    std::cout << "Sent: " << message << std::endl;
+
     sleep(1);
   }
+
+  broadcaster.disconnect();
 
   return 0;
 }

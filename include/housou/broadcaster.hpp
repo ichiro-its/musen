@@ -21,27 +21,28 @@
 #ifndef HOUSOU__BROADCASTER_HPP_
 #define HOUSOU__BROADCASTER_HPP_
 
-#include <arpa/inet.h>
 #include <string>
 
 namespace housou
 {
+
 class Broadcaster
 {
+public:
+  Broadcaster(int port);
+  ~Broadcaster();
+
+  bool connect();
+  bool disconnect();
+
+  int send(std::string data);
+
+  int port;
+
 private:
   int sockfd;
-  int socket_port;
-  // char buffer[1024];
-  char * message;
-  struct sockaddr_in server_addr, client_addr;
-  socklen_t addr_len;
-
-public:
-  Broadcaster();
-  bool connect(int port);
-  void send(std::string data);
-  std::string wait();
 };
+
 }  // namespace housou
 
 #endif  // HOUSOU__BROADCASTER_HPP_
