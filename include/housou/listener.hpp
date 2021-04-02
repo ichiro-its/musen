@@ -26,22 +26,24 @@
 
 namespace housou
 {
+
 class Listener
 {
+public:
+  Listener(int port);
+  ~Listener();
+
+  bool connect();
+  bool disconnect();
+
+  std::string receive(int length);
+
+  int port;
+
 private:
   int sockfd;
-  int socket_port;
-  char * message;
-  struct sockaddr_in recipient;
-  socklen_t addr_len;
-
-public:
-  Listener();
-  bool connect(int port);
-  void request(std::string data);
-  std::string recover(int length);
-  void close_socket();
 };
+
 }  // namespace housou
 
 #endif  // HOUSOU__LISTENER_HPP_

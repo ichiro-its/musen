@@ -18,71 +18,84 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <housou/listener.hpp>
+
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
+#include <string>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <housou/listener.hpp>
-#include <iostream>
-#include <string>
-
-
 namespace housou
 {
-Listener::Listener()
+
+Listener::Listener(int port)
+: port(port),
+  sockfd(-1)
 {
-  sockfd = -1;
 }
 
-bool Listener::connect(int port)
+Listener::~Listener()
 {
-  socket_port = port;
+  disconnect();
+}
 
-  // Creating socket
-  sockfd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
-    fprintf(stderr, "Failure creating socket\n");
+bool Listener::connect()
+{
+  // Failed if already connected
+  if (sockfd >= 0) {
     return false;
   }
 
-  // Filling server information
-  recipient.sin_family = AF_INET;
-  recipient.sin_addr.s_addr = htonl(INADDR_ANY);
-  recipient.sin_port = htons(socket_port);
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
+    return false;
+  }
+
+  // Enable broadcast
+  int opt = 1;
+  setsockopt(
+    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
+
+  // Enable non-blocking
+  int flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
   return true;
 }
 
-void Listener::request(std::string data)
+bool Listener::disconnect()
 {
-  message = const_cast<char *>(data.c_str());
+  // Failed if not connected
+  if (sockfd < 0) {
+    return false;
+  }
 
-  sendto(
-    sockfd, const_cast<char *>(message), strlen(message),
-    0, (const struct sockaddr *) &recipient,
-    sizeof(recipient));
+  // Close the socket
+  close(sockfd);
+  sockfd = -1;
+
+  return true;
 }
 
-std::string Listener::recover(int length)
+std::string Listener::receive(int length)
 {
   char * buffer = new char[length];
-  addr_len = sizeof(recipient);
 
-  recvfrom(
-    sockfd, const_cast<char *>(buffer), length,
-    0, (struct sockaddr *) &recipient,
-    &addr_len);
+  struct sockaddr sa;
+  socklen_t sa_len = sizeof(sa);
 
-  std::string s(buffer);
-  return s;
-}
+  // Receive data
+  recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
-void Listener::close_socket()
-{
-  close(sockfd);
+  std::string message(buffer);
+  delete buffer;
+
+  return message;
 }
 
 }  // namespace housou

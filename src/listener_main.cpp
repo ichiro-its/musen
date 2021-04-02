@@ -18,34 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <unistd.h>
-
 #include <housou/listener.hpp>
+
 #include <iostream>
 #include <string>
-
-using Listener = housou::Listener;
+#include <unistd.h>
 
 int main()
 {
-  Listener listener;
+  housou::Listener listener(8080);
 
-  // Creating socket
-  listener.connect(8080);
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.port << "!" << std::endl;
 
-  int count = 0;
-  // Start communication
-  while (true) {
-    listener.request("Hello from client " + std::to_string(count));
-    std::cout << "Hello message " << std::to_string(count) << " sent from client" << std::endl;
-
-    std::string s = listener.recover(1024);
-    std::cout << "Server : " << s << std::endl;
-
-    count++;
-    sleep(1);
+    return 1;
   }
 
-  listener.close_socket();
+  while (true) {
+    auto message = listener.receive(64);
+
+    std::cout << "Received: " << message << std::endl;
+
+    usleep(100 * 1000);
+  }
+
+  listener.disconnect();
+
   return 0;
 }
