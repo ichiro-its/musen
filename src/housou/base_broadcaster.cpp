@@ -18,26 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster.hpp>
+#include <housou/base_broadcaster.hpp>
 
 #include <arpa/inet.h>
 #include <ifaddrs.h>
 #include <string.h>
 
-#include <string>
-
 namespace housou
 {
 
-Broadcaster::Broadcaster(int port)
+BaseBroadcaster::BaseBroadcaster(int port)
 : UdpSocket(),
   port(port)
 {
 }
 
-int Broadcaster::send(std::string data)
+int BaseBroadcaster::send(const void * data, int length)
 {
-  if (!is_connected()) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -69,9 +67,7 @@ int Broadcaster::send(std::string data)
     }
 
     // Send data to the recipent address
-    int sent = sendto(
-      sockfd, const_cast<char *>(data.c_str()), data.size(), 0,
-      (struct sockaddr *)&sa, sizeof(sa));
+    int sent = sendto(sockfd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
     if (sent < lowest_sent) {
       lowest_sent = sent;
