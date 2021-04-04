@@ -18,64 +18,67 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener.hpp>
+#include <housou/udp_socket.hpp>
 
 #include <arpa/inet.h>
-#include <string.h>
-
-#include <string>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 namespace housou
 {
 
-Listener::Listener(int port)
-: UdpSocket(),
-  port(port)
+UdpSocket::UdpSocket()
+: sockfd(-1)
 {
 }
 
-bool Listener::connect()
+UdpSocket::~UdpSocket()
 {
-  if (!UdpSocket::connect()) {
+  disconnect();
+}
+
+bool UdpSocket::connect()
+{
+  if (is_connected()) {
     return false;
   }
 
-  // Configure the recipent address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(port);
-  }
-
-  // Bind the socket with the recipent address
-  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
     return false;
   }
+
+  // Enable broadcast
+  int opt = 1;
+  setsockopt(
+    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
+
+  // Enable non-blocking
+  int flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
   return true;
 }
 
-std::string Listener::receive(int length)
+bool UdpSocket::disconnect()
 {
   if (!is_connected()) {
-    return "";
+    return false;
   }
 
-  char * buffer = new char[length];
+  // Close the socket
+  close(sockfd);
+  sockfd = -1;
 
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
+  return true;
+}
 
-  // Receive data
-  recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
-
-  std::string message(buffer);
-  delete[] buffer;
-
-  return message;
+bool UdpSocket::is_connected()
+{
+  return sockfd >= 0;
 }
 
 }  // namespace housou

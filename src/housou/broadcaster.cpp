@@ -21,11 +21,8 @@
 #include <housou/broadcaster.hpp>
 
 #include <arpa/inet.h>
-#include <fcntl.h>
 #include <ifaddrs.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 #include <string>
 
@@ -33,60 +30,14 @@ namespace housou
 {
 
 Broadcaster::Broadcaster(int port)
-: port(port),
-  sockfd(-1)
+: UdpSocket(),
+  port(port)
 {
-}
-
-Broadcaster::~Broadcaster()
-{
-  disconnect();
-}
-
-bool Broadcaster::connect()
-{
-  // Failed if already connected
-  if (sockfd >= 0) {
-    return false;
-  }
-
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
-    return false;
-  }
-
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
-
-  // Enable non-blocking
-  int flags = fcntl(sockfd, F_GETFL, 0);
-  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
-
-  return true;
-}
-
-bool Broadcaster::disconnect()
-{
-  // Failed if not connected
-  if (sockfd < 0) {
-    return false;
-  }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
 }
 
 int Broadcaster::send(std::string data)
 {
-  // Skip if not connected
-  if (sockfd < 0) {
+  if (!is_connected()) {
     return 0;
   }
 

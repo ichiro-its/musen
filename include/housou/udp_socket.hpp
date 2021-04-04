@@ -18,64 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener.hpp>
-
-#include <arpa/inet.h>
-#include <string.h>
-
-#include <string>
+#ifndef HOUSOU__UDP_SOCKET_HPP_
+#define HOUSOU__UDP_SOCKET_HPP_
 
 namespace housou
 {
 
-Listener::Listener(int port)
-: UdpSocket(),
-  port(port)
+class UdpSocket
 {
-}
+public:
+  UdpSocket();
+  ~UdpSocket();
 
-bool Listener::connect()
-{
-  if (!UdpSocket::connect()) {
-    return false;
-  }
+  virtual bool connect();
+  virtual bool disconnect();
 
-  // Configure the recipent address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
+  bool is_connected();
 
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(port);
-  }
-
-  // Bind the socket with the recipent address
-  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
-
-  return true;
-}
-
-std::string Listener::receive(int length)
-{
-  if (!is_connected()) {
-    return "";
-  }
-
-  char * buffer = new char[length];
-
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
-
-  // Receive data
-  recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
-
-  std::string message(buffer);
-  delete[] buffer;
-
-  return message;
-}
+protected:
+  int sockfd;
+};
 
 }  // namespace housou
+
+#endif  // HOUSOU__UDP_SOCKET_HPP_

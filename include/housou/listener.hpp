@@ -21,27 +21,23 @@
 #ifndef HOUSOU__LISTENER_HPP_
 #define HOUSOU__LISTENER_HPP_
 
-#include <arpa/inet.h>
+#include <housou/udp_socket.hpp>
+
 #include <string>
 
 namespace housou
 {
 
-class Listener
+class Listener : public UdpSocket
 {
 public:
   explicit Listener(int port);
-  ~Listener();
 
-  bool connect();
-  bool disconnect();
+  bool connect() override;
 
   std::string receive(int length);
 
   int port;
-
-private:
-  int sockfd;
 };
 
 }  // namespace housou

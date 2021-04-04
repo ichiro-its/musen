@@ -21,26 +21,21 @@
 #ifndef HOUSOU__BROADCASTER_HPP_
 #define HOUSOU__BROADCASTER_HPP_
 
+#include <housou/udp_socket.hpp>
+
 #include <string>
 
 namespace housou
 {
 
-class Broadcaster
+class Broadcaster : public UdpSocket
 {
 public:
   explicit Broadcaster(int port);
-  ~Broadcaster();
-
-  bool connect();
-  bool disconnect();
 
   int send(std::string data);
 
   int port;
-
-private:
-  int sockfd;
 };
 
 }  // namespace housou
