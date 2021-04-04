@@ -37,8 +37,24 @@ target_include_directories(hello_world_listener PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_link_libraries(hello_world_listener ${PROJECT_NAME})
 
+add_executable(position_broadcaster "examples/position_broadcaster.cpp")
+target_include_directories(position_broadcaster PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(position_broadcaster ${PROJECT_NAME})
+
+add_executable(position_listener "examples/position_listener.cpp")
+target_include_directories(position_listener PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(position_listener ${PROJECT_NAME})
+
 install(
-  TARGETS hello_world_broadcaster hello_world_listener
+  TARGETS
+    hello_world_broadcaster
+    hello_world_listener
+    position_broadcaster
+    position_listener
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
