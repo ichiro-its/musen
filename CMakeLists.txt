@@ -18,7 +18,7 @@ find_package(ament_cmake REQUIRED)
 
 add_library(${PROJECT_NAME}
   "src/${PROJECT_NAME}/base_broadcaster.cpp"
-  "src/${PROJECT_NAME}/listener.cpp"
+  "src/${PROJECT_NAME}/base_listener.cpp"
   "src/${PROJECT_NAME}/udp_socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC

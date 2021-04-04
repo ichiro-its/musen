@@ -18,23 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener.hpp>
+#include <housou/base_listener.hpp>
 
 #include <arpa/inet.h>
 #include <string.h>
 
-#include <string>
-
 namespace housou
 {
 
-Listener::Listener(int port)
+BaseListener::BaseListener(int port)
 : UdpSocket(),
   port(port)
 {
 }
 
-bool Listener::connect()
+bool BaseListener::connect()
 {
   if (!UdpSocket::connect()) {
     return false;
@@ -58,24 +56,19 @@ bool Listener::connect()
   return true;
 }
 
-std::string Listener::receive(int length)
+int BaseListener::receive(void * buffer, int length)
 {
   if (!is_connected()) {
-    return "";
+    return 0;
   }
-
-  char * buffer = new char[length];
 
   struct sockaddr sa;
   socklen_t sa_len = sizeof(sa);
 
   // Receive data
-  recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
+  int received = recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
-  std::string message(buffer);
-  delete[] buffer;
-
-  return message;
+  return received;
 }
 
 }  // namespace housou
