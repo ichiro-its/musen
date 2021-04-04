@@ -18,36 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster.hpp>
+#ifndef HOUSOU__UDP_SOCKET_HPP_
+#define HOUSOU__UDP_SOCKET_HPP_
 
-#include <unistd.h>
-
-#include <iostream>
-#include <string>
-
-int main()
+namespace housou
 {
-  housou::Broadcaster broadcaster(8080);
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.port << "!" << std::endl;
+class UdpSocket
+{
+public:
+  UdpSocket();
+  ~UdpSocket();
 
-    return 1;
-  }
+  virtual bool connect();
+  virtual bool disconnect();
 
-  int counter = 0;
-  while (true) {
-    std::string message = "Hello world! " + std::to_string(counter++);
+  bool is_connected();
 
-    broadcaster.send(message);
+protected:
+  int sockfd;
+};
 
-    std::cout << "Sent: " << message << std::endl;
+}  // namespace housou
 
-    sleep(1);
-  }
-
-  broadcaster.disconnect();
-
-  return 0;
-}
+#endif  // HOUSOU__UDP_SOCKET_HPP_

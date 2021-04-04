@@ -18,39 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER_HPP_
-#define HOUSOU__LISTENER_HPP_
+#ifndef HOUSOU__STRING_LISTENER_HPP_
+#define HOUSOU__STRING_LISTENER_HPP_
 
 #include <housou/base_listener.hpp>
 
-#include <memory>
+#include <string>
 
 namespace housou
 {
 
-template<typename T>
-class Listener : public BaseListener
+class StringListener : public BaseListener
 {
 public:
-  explicit Listener(int port)
+  explicit StringListener(int port)
   : BaseListener(port)
   {
   }
 
-  std::shared_ptr<T> receive()
+  std::string receive(int length)
   {
-    auto data = std::make_shared<T>();
+    char * buffer = new char[length];
 
-    int received = BaseListener::receive(data.get(), sizeof(T));
+    BaseListener::receive(buffer, length);
 
-    if (received < (signed)sizeof(T)) {
-      return nullptr;
-    }
+    std::string message(buffer);
+    delete[] buffer;
 
-    return data;
+    return message;
   }
 };
 
 }  // namespace housou
 
-#endif  // HOUSOU__LISTENER_HPP_
+#endif  // HOUSOU__STRING_LISTENER_HPP_

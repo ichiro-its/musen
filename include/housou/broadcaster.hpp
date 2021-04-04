@@ -21,26 +21,24 @@
 #ifndef HOUSOU__BROADCASTER_HPP_
 #define HOUSOU__BROADCASTER_HPP_
 
-#include <string>
+#include <housou/base_broadcaster.hpp>
 
 namespace housou
 {
 
-class Broadcaster
+template<typename T>
+class Broadcaster : public BaseBroadcaster
 {
 public:
-  explicit Broadcaster(int port);
-  ~Broadcaster();
+  explicit Broadcaster(int port)
+  : BaseBroadcaster(port)
+  {
+  }
 
-  bool connect();
-  bool disconnect();
-
-  int send(std::string data);
-
-  int port;
-
-private:
-  int sockfd;
+  int send(const T data)
+  {
+    return BaseBroadcaster::send(&data, sizeof(data));
+  }
 };
 
 }  // namespace housou

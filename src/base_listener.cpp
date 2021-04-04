@@ -18,53 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener.hpp>
+#include <housou/base_listener.hpp>
 
 #include <arpa/inet.h>
-#include <fcntl.h>
-#include <ifaddrs.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
-#include <string>
 
 namespace housou
 {
 
-Listener::Listener(int port)
-: port(port),
-  sockfd(-1)
+BaseListener::BaseListener(int port)
+: UdpSocket(),
+  port(port)
 {
 }
 
-Listener::~Listener()
+bool BaseListener::connect()
 {
-  disconnect();
-}
-
-bool Listener::connect()
-{
-  // Failed if already connected
-  if (sockfd >= 0) {
+  if (!UdpSocket::connect()) {
     return false;
   }
-
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
-    return false;
-  }
-
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
-
-  // Enable non-blocking
-  int flags = fcntl(sockfd, F_GETFL, 0);
-  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
   // Configure the recipent address
   struct sockaddr_in sa;
@@ -84,34 +56,19 @@ bool Listener::connect()
   return true;
 }
 
-bool Listener::disconnect()
+int BaseListener::receive(void * buffer, int length)
 {
-  // Failed if not connected
-  if (sockfd < 0) {
-    return false;
+  if (!is_connected()) {
+    return 0;
   }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
-}
-
-std::string Listener::receive(int length)
-{
-  char * buffer = new char[length];
 
   struct sockaddr sa;
   socklen_t sa_len = sizeof(sa);
 
   // Receive data
-  recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
+  int received = recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
-  std::string message(buffer);
-  delete[] buffer;
-
-  return message;
+  return received;
 }
 
 }  // namespace housou

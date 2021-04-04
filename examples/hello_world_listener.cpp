@@ -18,39 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER_HPP_
-#define HOUSOU__LISTENER_HPP_
+#include <housou/string_listener.hpp>
 
-#include <housou/base_listener.hpp>
+#include <unistd.h>
 
-#include <memory>
+#include <iostream>
+#include <string>
 
-namespace housou
+int main()
 {
+  housou::StringListener listener(8080);
 
-template<typename T>
-class Listener : public BaseListener
-{
-public:
-  explicit Listener(int port)
-  : BaseListener(port)
-  {
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.port << "!" << std::endl;
+
+    return 1;
   }
 
-  std::shared_ptr<T> receive()
-  {
-    auto data = std::make_shared<T>();
+  while (true) {
+    auto message = listener.receive(64);
 
-    int received = BaseListener::receive(data.get(), sizeof(T));
-
-    if (received < (signed)sizeof(T)) {
-      return nullptr;
+    if (message.size() > 0) {
+      std::cout << "Received: " << message << std::endl;
     }
 
-    return data;
+    usleep(100 * 1000);
   }
-};
 
-}  // namespace housou
+  listener.disconnect();
 
-#endif  // HOUSOU__LISTENER_HPP_
+  return 0;
+}

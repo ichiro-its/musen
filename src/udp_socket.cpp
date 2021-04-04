@@ -18,39 +18,67 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER_HPP_
-#define HOUSOU__LISTENER_HPP_
+#include <housou/udp_socket.hpp>
 
-#include <housou/base_listener.hpp>
-
-#include <memory>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 namespace housou
 {
 
-template<typename T>
-class Listener : public BaseListener
+UdpSocket::UdpSocket()
+: sockfd(-1)
 {
-public:
-  explicit Listener(int port)
-  : BaseListener(port)
-  {
+}
+
+UdpSocket::~UdpSocket()
+{
+  disconnect();
+}
+
+bool UdpSocket::connect()
+{
+  if (is_connected()) {
+    return false;
   }
 
-  std::shared_ptr<T> receive()
-  {
-    auto data = std::make_shared<T>();
-
-    int received = BaseListener::receive(data.get(), sizeof(T));
-
-    if (received < (signed)sizeof(T)) {
-      return nullptr;
-    }
-
-    return data;
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sockfd < 0) {
+    return false;
   }
-};
+
+  // Enable broadcast
+  int opt = 1;
+  setsockopt(
+    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
+
+  // Enable non-blocking
+  int flags = fcntl(sockfd, F_GETFL, 0);
+  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+
+  return true;
+}
+
+bool UdpSocket::disconnect()
+{
+  if (!is_connected()) {
+    return false;
+  }
+
+  // Close the socket
+  close(sockfd);
+  sockfd = -1;
+
+  return true;
+}
+
+bool UdpSocket::is_connected()
+{
+  return sockfd >= 0;
+}
 
 }  // namespace housou
-
-#endif  // HOUSOU__LISTENER_HPP_

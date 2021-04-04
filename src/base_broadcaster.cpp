@@ -18,75 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster.hpp>
+#include <housou/base_broadcaster.hpp>
 
 #include <arpa/inet.h>
-#include <fcntl.h>
 #include <ifaddrs.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
-#include <string>
 
 namespace housou
 {
 
-Broadcaster::Broadcaster(int port)
-: port(port),
-  sockfd(-1)
+BaseBroadcaster::BaseBroadcaster(int port)
+: UdpSocket(),
+  port(port)
 {
 }
 
-Broadcaster::~Broadcaster()
+int BaseBroadcaster::send(const void * data, int length)
 {
-  disconnect();
-}
-
-bool Broadcaster::connect()
-{
-  // Failed if already connected
-  if (sockfd >= 0) {
-    return false;
-  }
-
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
-    return false;
-  }
-
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
-
-  // Enable non-blocking
-  int flags = fcntl(sockfd, F_GETFL, 0);
-  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
-
-  return true;
-}
-
-bool Broadcaster::disconnect()
-{
-  // Failed if not connected
-  if (sockfd < 0) {
-    return false;
-  }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
-}
-
-int Broadcaster::send(std::string data)
-{
-  // Skip if not connected
-  if (sockfd < 0) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -118,9 +67,7 @@ int Broadcaster::send(std::string data)
     }
 
     // Send data to the recipent address
-    int sent = sendto(
-      sockfd, const_cast<char *>(data.c_str()), data.size(), 0,
-      (struct sockaddr *)&sa, sizeof(sa));
+    int sent = sendto(sockfd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
     if (sent < lowest_sent) {
       lowest_sent = sent;

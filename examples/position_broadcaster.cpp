@@ -18,39 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER_HPP_
-#define HOUSOU__LISTENER_HPP_
+#include <housou/broadcaster.hpp>
 
-#include <housou/base_listener.hpp>
+#include <stdlib.h>
+#include <unistd.h>
 
-#include <memory>
+#include <iostream>
 
-namespace housou
+struct Position
 {
-
-template<typename T>
-class Listener : public BaseListener
-{
-public:
-  explicit Listener(int port)
-  : BaseListener(port)
-  {
-  }
-
-  std::shared_ptr<T> receive()
-  {
-    auto data = std::make_shared<T>();
-
-    int received = BaseListener::receive(data.get(), sizeof(T));
-
-    if (received < (signed)sizeof(T)) {
-      return nullptr;
-    }
-
-    return data;
-  }
+  int x;
+  int y;
+  int z;
 };
 
-}  // namespace housou
+int main()
+{
+  housou::Broadcaster<Position> broadcaster(8080);
 
-#endif  // HOUSOU__LISTENER_HPP_
+  if (!broadcaster.connect()) {
+    std::cerr << "Failed to connect broadcaster on port " <<
+      broadcaster.port << "!" << std::endl;
+
+    return 1;
+  }
+
+  while (true) {
+    Position position;
+
+    unsigned int seed;
+
+    position.x = rand_r(&seed) % 100;
+    position.y = rand_r(&seed) % 100;
+    position.z = rand_r(&seed) % 100;
+
+    broadcaster.send(position);
+
+    std::cout << "Sent: " <<
+      position.x << ", " <<
+      position.y << ", " <<
+      position.z << std::endl;
+
+    sleep(1);
+  }
+
+  broadcaster.disconnect();
+
+  return 0;
+}

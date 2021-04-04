@@ -17,26 +17,45 @@ endif()
 find_package(ament_cmake REQUIRED)
 
 add_library(${PROJECT_NAME}
-  "src/${PROJECT_NAME}/broadcaster.cpp"
-  "src/${PROJECT_NAME}/listener.cpp")
+  "src/base_broadcaster.cpp"
+  "src/base_listener.cpp"
+  "src/udp_socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-add_executable(broadcaster "src/broadcaster_main.cpp")
-target_include_directories(broadcaster PUBLIC
+add_executable(hello_world_broadcaster "examples/hello_world_broadcaster.cpp")
+target_include_directories(hello_world_broadcaster PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(broadcaster ${PROJECT_NAME})
+target_link_libraries(hello_world_broadcaster ${PROJECT_NAME})
 
-add_executable(listener "src/listener_main.cpp")
-target_include_directories(listener PUBLIC
+add_executable(hello_world_listener "examples/hello_world_listener.cpp")
+target_include_directories(hello_world_listener PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(listener ${PROJECT_NAME})
+target_link_libraries(hello_world_listener ${PROJECT_NAME})
 
-install(TARGETS broadcaster listener DESTINATION lib/${PROJECT_NAME})
+add_executable(position_broadcaster "examples/position_broadcaster.cpp")
+target_include_directories(position_broadcaster PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(position_broadcaster ${PROJECT_NAME})
+
+add_executable(position_listener "examples/position_listener.cpp")
+target_include_directories(position_listener PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(position_listener ${PROJECT_NAME})
+
+install(
+  TARGETS
+    hello_world_broadcaster
+    hello_world_listener
+    position_broadcaster
+    position_listener
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
