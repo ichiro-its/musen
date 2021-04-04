@@ -18,36 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster.hpp>
+#ifndef HOUSOU__STRING_LISTENER_HPP_
+#define HOUSOU__STRING_LISTENER_HPP_
 
-#include <unistd.h>
+#include <housou/base_listener.hpp>
 
-#include <iostream>
 #include <string>
 
-int main()
+namespace housou
 {
-  housou::Broadcaster broadcaster(8080);
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.port << "!" << std::endl;
-
-    return 1;
+class StringListener : public BaseListener
+{
+public:
+  explicit StringListener(int port)
+  : BaseListener(port)
+  {
   }
 
-  int counter = 0;
-  while (true) {
-    std::string message = "Hello world! " + std::to_string(counter++);
+  std::string receive(int length)
+  {
+    char * buffer = new char[length];
 
-    broadcaster.send(message);
+    BaseListener::receive(buffer, length);
 
-    std::cout << "Sent: " << message << std::endl;
+    std::string message(buffer);
+    delete[] buffer;
 
-    sleep(1);
+    return message;
   }
+};
 
-  broadcaster.disconnect();
+}  // namespace housou
 
-  return 0;
-}
+#endif  // HOUSOU__STRING_LISTENER_HPP_
