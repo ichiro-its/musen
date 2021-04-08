@@ -18,37 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__STRING_LISTENER_HPP_
-#define HOUSOU__STRING_LISTENER_HPP_
+#ifndef HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
+#define HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
 
-#include <housou/base_listener.hpp>
-
-#include <string>
+#include "../udp_socket.hpp"
 
 namespace housou
 {
 
-class StringListener : public BaseListener
+class BaseBroadcaster : public UdpSocket
 {
 public:
-  explicit StringListener(int port)
-  : BaseListener(port)
-  {
-  }
+  explicit BaseBroadcaster(int port);
 
-  std::string receive(int length)
-  {
-    char * buffer = new char[length];
+  int send(const void * data, int length);
 
-    BaseListener::receive(buffer, length);
-
-    std::string message(buffer);
-    delete[] buffer;
-
-    return message;
-  }
+  int port;
 };
 
 }  // namespace housou
 
-#endif  // HOUSOU__STRING_LISTENER_HPP_
+#endif  // HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_

@@ -18,30 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__STRING_BROADCASTER_HPP_
-#define HOUSOU__STRING_BROADCASTER_HPP_
+#ifndef HOUSOU__BROADCASTER__BROADCASTER_HPP_
+#define HOUSOU__BROADCASTER__BROADCASTER_HPP_
 
-#include <housou/base_broadcaster.hpp>
-
-#include <string>
+#include "./base_broadcaster.hpp"
 
 namespace housou
 {
 
-class StringBroadcaster : public BaseBroadcaster
+template<typename T>
+class Broadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringBroadcaster(int port)
+  explicit Broadcaster(int port)
   : BaseBroadcaster(port)
   {
   }
 
-  int send(std::string data)
+  int send(const T data)
   {
-    return BaseBroadcaster::send(data.c_str(), data.size());
+    return BaseBroadcaster::send(&data, sizeof(data));
   }
 };
 
 }  // namespace housou
 
-#endif  // HOUSOU__STRING_BROADCASTER_HPP_
+#endif  // HOUSOU__BROADCASTER__BROADCASTER_HPP_
