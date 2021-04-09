@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER_HPP_
-#define HOUSOU__LISTENER_HPP_
-
-#include <housou/base_listener.hpp>
+#ifndef HOUSOU__LISTENER__LISTENER_HPP_
+#define HOUSOU__LISTENER__LISTENER_HPP_
 
 #include <memory>
+
+#include "./base_listener.hpp"
 
 namespace housou
 {
@@ -53,4 +53,4 @@ public:
 
 }  // namespace housou
 
-#endif  // HOUSOU__LISTENER_HPP_
+#endif  // HOUSOU__LISTENER__LISTENER_HPP_

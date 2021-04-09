@@ -18,51 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#ifndef HOUSOU__BROADCASTER__STRING_BROADCASTER_HPP_
+#define HOUSOU__BROADCASTER__STRING_BROADCASTER_HPP_
 
-#include <stdlib.h>
-#include <unistd.h>
+#include <string>
 
-#include <iostream>
+#include "./base_broadcaster.hpp"
 
-struct Position
+namespace housou
 {
-  int x;
-  int y;
-  int z;
+
+class StringBroadcaster : public BaseBroadcaster
+{
+public:
+  explicit StringBroadcaster(int port)
+  : BaseBroadcaster(port)
+  {
+  }
+
+  int send(std::string data)
+  {
+    return BaseBroadcaster::send(data.c_str(), data.size());
+  }
 };
 
-int main()
-{
-  housou::Broadcaster<Position> broadcaster(8080);
+}  // namespace housou
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.port << "!" << std::endl;
-
-    return 1;
-  }
-
-  while (true) {
-    Position position;
-
-    unsigned int seed;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    broadcaster.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
-  }
-
-  broadcaster.disconnect();
-
-  return 0;
-}
+#endif  // HOUSOU__BROADCASTER__STRING_BROADCASTER_HPP_

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/string_broadcaster.hpp>
+#include <housou/housou.hpp>
 
 #include <unistd.h>
 
