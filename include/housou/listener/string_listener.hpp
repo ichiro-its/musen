@@ -50,7 +50,7 @@ public:
     return message;
   }
 
-  std::vector<std::string> receive(int length, char symbol)
+  std::vector<std::string> receive(int length, std::string delimiter)
   {
     std::vector<std::string> message;
     std::string received_message = StringListener::receive(length);
@@ -58,7 +58,7 @@ public:
     std::stringstream check(received_message);
     std::string temp;
 
-    while (std::getline(check, temp, symbol)) {
+    while (std::getline(check, temp, delimiter[0])) {
       message.push_back(temp);
     }
 

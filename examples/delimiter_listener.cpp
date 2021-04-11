@@ -37,12 +37,12 @@ int main()
   }
 
   while (true) {
-    auto message = listener.receive(64, ',');
+    auto message = listener.receive(64, ",");
 
     if (message.size() > 0) {
       std::cout << "Received: ";
-      for (auto i = message.begin(); i != message.end(); ++i) {
-        std::cout << *i << " ";
+      for (auto & value : message) {
+        std::cout << value << " ";
       }
       std::cout << std::endl;
     }
