@@ -31,7 +31,7 @@ int main()
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<
-      listener.port << "!" << std::endl;
+      listener.get_port() << "!" << std::endl;
 
     return 1;
   }

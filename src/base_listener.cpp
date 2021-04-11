@@ -71,4 +71,9 @@ int BaseListener::receive(void * buffer, int length)
   return received;
 }
 
+int BaseListener::get_port()
+{
+  return port;
+}
+
 }  // namespace housou
