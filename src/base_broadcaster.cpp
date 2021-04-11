@@ -79,4 +79,9 @@ int BaseBroadcaster::send(const void * data, int length)
   return lowest_sent;
 }
 
+int BaseBroadcaster::get_port()
+{
+  return port;
+}
+
 }  // namespace housou

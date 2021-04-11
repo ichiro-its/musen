@@ -35,6 +35,9 @@ public:
 
   int receive(void * buffer, int length);
 
+  int get_port();
+
+protected:
   int port;
 };
 

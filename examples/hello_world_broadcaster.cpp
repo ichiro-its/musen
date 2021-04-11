@@ -31,7 +31,7 @@ int main()
 
   if (!broadcaster.connect()) {
     std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.port << "!" << std::endl;
+      broadcaster.get_port() << "!" << std::endl;
 
     return 1;
   }

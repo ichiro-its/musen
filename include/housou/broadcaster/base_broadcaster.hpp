@@ -33,6 +33,9 @@ public:
 
   int send(const void * data, int length);
 
+  int get_port();
+
+protected:
   int port;
 };
 
