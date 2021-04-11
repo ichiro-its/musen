@@ -21,7 +21,7 @@
 #ifndef HOUSOU__LISTENER__STRING_LISTENER_HPP_
 #define HOUSOU__LISTENER__STRING_LISTENER_HPP_
 
-#include <bits/stdc++.h>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -53,13 +53,14 @@ public:
   std::vector<std::string> receive(int length, std::string delimiter)
   {
     std::vector<std::string> message;
+
     std::string received_message = StringListener::receive(length);
 
-    std::stringstream check(received_message);
-    std::string temp;
+    size_t pos = 0;
 
-    while (std::getline(check, temp, delimiter[0])) {
-      message.push_back(temp);
+    while ((pos = received_message.find(delimiter)) != std::string::npos) {
+      message.push_back(received_message.substr(0, pos));
+      received_message.erase(0, pos + delimiter.length());
     }
 
     return message;

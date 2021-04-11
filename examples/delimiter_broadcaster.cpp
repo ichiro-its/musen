@@ -37,7 +37,7 @@ int main()
   }
 
   while (true) {
-    std::string message = "abc,123,56789,lalala";
+    std::string message = "abc>=123>=56789>=lalala";
 
     broadcaster.send(message);
 
