@@ -29,6 +29,9 @@ int main()
 {
   housou::StringBroadcaster broadcaster(8080);
 
+  broadcaster.enable_broadcast(false);
+  broadcaster.add_target_host("localhost");
+
   if (!broadcaster.connect()) {
     std::cerr << "Failed to connect broadcaster on port " <<
       broadcaster.get_port() << "!" << std::endl;

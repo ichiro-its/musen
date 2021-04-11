@@ -24,6 +24,9 @@
 #include <ifaddrs.h>
 #include <string.h>
 
+#include <string>
+#include <vector>
+
 namespace housou
 {
 
@@ -39,33 +42,58 @@ int BaseBroadcaster::send(const void * data, int length)
     return 0;
   }
 
-  // Obtain all interfaces
-  struct ifaddrs * ifas;
-  if (getifaddrs(&ifas) != 0) {
-    return 0;
-  }
+  std::vector<struct sockaddr_in> sas;
 
-  int lowest_sent = 0;
-
-  // Repeat for all available interfaces
-  for (auto & ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
-    // Skip if null or if the address family is different
-    if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
-      continue;
+  if (broadcast) {
+    // Obtain all interfaces
+    struct ifaddrs * ifas;
+    if (getifaddrs(&ifas) != 0) {
+      return 0;
     }
 
-    auto broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
+    // Repeat for all available interfaces
+    for (auto & ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
+      // Skip if null or if the address family is different
+      if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
+        continue;
+      }
 
+      auto broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
+
+      // Configure the recipent address
+      struct sockaddr_in sa;
+      {
+        memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
+
+        sa.sin_family = AF_INET;
+        sa.sin_addr = broadaddr->sin_addr;
+        sa.sin_port = htons(port);
+      }
+
+      sas.push_back(sa);
+    }
+
+    freeifaddrs(ifas);
+  }
+
+  for (auto & target_host : target_hosts) {
     // Configure the recipent address
     struct sockaddr_in sa;
     {
       memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
       sa.sin_family = AF_INET;
-      sa.sin_addr.s_addr = broadaddr->sin_addr.s_addr;
       sa.sin_port = htons(port);
+
+      inet_aton(target_host.c_str(), &sa.sin_addr);
     }
 
+    sas.push_back(sa);
+  }
+
+  int lowest_sent = 0;
+
+  for (auto & sa : sas) {
     // Send data to the recipent address
     int sent = sendto(sockfd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
@@ -74,9 +102,17 @@ int BaseBroadcaster::send(const void * data, int length)
     }
   }
 
-  freeifaddrs(ifas);
-
   return lowest_sent;
+}
+
+void BaseBroadcaster::enable_broadcast(bool enable)
+{
+  broadcast = enable;
+}
+
+void BaseBroadcaster::add_target_host(std::string target_host)
+{
+  target_hosts.push_back(target_host);
 }
 
 int BaseBroadcaster::get_port()

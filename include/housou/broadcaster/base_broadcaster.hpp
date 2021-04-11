@@ -21,6 +21,9 @@
 #ifndef HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
 #define HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
 
+#include <string>
+#include <vector>
+
 #include "../udp_socket.hpp"
 
 namespace housou
@@ -33,9 +36,15 @@ public:
 
   int send(const void * data, int length);
 
+  void enable_broadcast(bool enable);
+  void add_target_host(std::string host);
+
   int get_port();
 
 protected:
+  bool broadcast;
+  std::vector<std::string> target_hosts;
+
   int port;
 };
 
