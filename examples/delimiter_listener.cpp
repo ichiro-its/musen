@@ -18,53 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__STRING_LISTENER_HPP_
-#define HOUSOU__LISTENER__STRING_LISTENER_HPP_
+#include <housou/housou.hpp>
 
-#include <bits/stdc++.h>
+#include <unistd.h>
+
+#include <iostream>
 #include <string>
 
-#include "./base_listener.hpp"
-
-namespace housou
+int main()
 {
+  housou::StringListener listener(8080);
 
-class StringListener : public BaseListener
-{
-public:
-  explicit StringListener(int port)
-  : BaseListener(port)
-  {
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.get_port() << "!" << std::endl;
+
+    return 1;
   }
 
-  std::string receive(int length)
-  {
-    char * buffer = new char[length];
+  while (true) {
+    auto message = listener.receive(64, ',');
 
-    BaseListener::receive(buffer, length);
-
-    std::string message(buffer);
-    delete[] buffer;
-
-    return message;
-  }
-
-  std::vector<std::string> receive(int length, char symbol)
-  {
-    std::vector<std::string> message;
-    std::string received_message = StringListener::receive(length);
-
-    std::stringstream check(received_message);
-    std::string temp;
-
-    while (std::getline(check, temp, symbol)) {
-      message.push_back(temp);
+    if (message.size() > 0) {
+      std::cout << "Received: ";
+      for (auto i = message.begin(); i != message.end(); ++i) {
+        std::cout << *i << " ";
+      }
+      std::cout << std::endl;
     }
 
-    return message;
+    usleep(100 * 1000);
   }
-};
 
-}  // namespace housou
+  listener.disconnect();
 
-#endif  // HOUSOU__LISTENER__STRING_LISTENER_HPP_
+  return 0;
+}

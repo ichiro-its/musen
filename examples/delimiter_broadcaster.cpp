@@ -18,53 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__STRING_LISTENER_HPP_
-#define HOUSOU__LISTENER__STRING_LISTENER_HPP_
+#include <housou/housou.hpp>
 
-#include <bits/stdc++.h>
+#include <unistd.h>
+
+#include <iostream>
 #include <string>
 
-#include "./base_listener.hpp"
-
-namespace housou
+int main()
 {
+  housou::StringBroadcaster broadcaster(8080);
 
-class StringListener : public BaseListener
-{
-public:
-  explicit StringListener(int port)
-  : BaseListener(port)
-  {
+  if (!broadcaster.connect()) {
+    std::cerr << "Failed to connect broadcaster on port " <<
+      broadcaster.get_port() << "!" << std::endl;
+
+    return 1;
   }
 
-  std::string receive(int length)
-  {
-    char * buffer = new char[length];
+  while (true) {
+    std::string message = "abc,123,56789,lalala";
 
-    BaseListener::receive(buffer, length);
+    broadcaster.send(message);
 
-    std::string message(buffer);
-    delete[] buffer;
+    std::cout << "Sent: " << message << std::endl;
 
-    return message;
+    sleep(1);
   }
 
-  std::vector<std::string> receive(int length, char symbol)
-  {
-    std::vector<std::string> message;
-    std::string received_message = StringListener::receive(length);
+  broadcaster.disconnect();
 
-    std::stringstream check(received_message);
-    std::string temp;
-
-    while (std::getline(check, temp, symbol)) {
-      message.push_back(temp);
-    }
-
-    return message;
-  }
-};
-
-}  // namespace housou
-
-#endif  // HOUSOU__LISTENER__STRING_LISTENER_HPP_
+  return 0;
+}
