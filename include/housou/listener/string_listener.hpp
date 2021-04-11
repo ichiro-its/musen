@@ -63,6 +63,11 @@ public:
       received_message.erase(0, pos + delimiter.length());
     }
 
+    // enter remaining token into vector
+    if (received_message.length() > 0) {
+      message.push_back(received_message);
+    }
+
     return message;
   }
 };
