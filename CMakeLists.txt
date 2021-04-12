@@ -57,12 +57,26 @@ target_include_directories(position_listener PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_link_libraries(position_listener ${PROJECT_NAME})
 
+add_executable(delimiter_broadcaster "examples/delimiter_broadcaster.cpp")
+target_include_directories(delimiter_broadcaster PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(delimiter_broadcaster ${PROJECT_NAME})
+
+add_executable(delimiter_listener "examples/delimiter_listener.cpp")
+target_include_directories(delimiter_listener PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(delimiter_listener ${PROJECT_NAME})
+
 install(
   TARGETS
     hello_world_broadcaster
     hello_world_listener
     position_broadcaster
     position_listener
+    delimiter_broadcaster
+    delimiter_listener
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
