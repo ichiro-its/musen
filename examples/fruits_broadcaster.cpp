@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 int main()
 {
@@ -37,11 +38,18 @@ int main()
   }
 
   while (true) {
-    std::string message = "abc>=123>=56789>=lalala";
+    std::string delimiter = "-";
+    std::vector<std::string> message{"apple", "banana", "orange", "pear"};
+    broadcaster.send(message, delimiter);
 
-    broadcaster.send(message);
-
-    std::cout << "Sent: " << message << std::endl;
+    std::cout << "Sent: ";
+    for (int i = 0; i < message.size(); i++) {
+      std::cout << message[i];
+      if (i != message.size() - 1) {
+        std::cout << delimiter;
+      }
+    }
+    std::cout << std::endl;
 
     sleep(1);
   }

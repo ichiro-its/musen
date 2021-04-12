@@ -22,6 +22,7 @@
 #define HOUSOU__BROADCASTER__STRING_BROADCASTER_HPP_
 
 #include <string>
+#include <vector>
 
 #include "./base_broadcaster.hpp"
 
@@ -39,6 +40,20 @@ public:
   int send(std::string data)
   {
     return BaseBroadcaster::send(data.c_str(), data.size());
+  }
+
+  int send(std::vector<std::string> data, std::string delimiter)
+  {
+    std::string message = "";
+    for (int i = 0; i < data.size(); i++) {
+      message.append(data[i]);
+      if (i != data.size() - 1) {
+        message.append(delimiter);
+      }
+    }
+    message = message + '\0';
+
+    return BaseBroadcaster::send(message.c_str(), message.size());
   }
 };
 
