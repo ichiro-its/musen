@@ -22,12 +22,14 @@
 
 #include <unistd.h>
 
+#include <ctime>
 #include <iostream>
 #include <string>
 #include <vector>
 
 int main()
 {
+  srand(time(NULL));
   housou::StringBroadcaster broadcaster(8080);
 
   if (!broadcaster.connect()) {
@@ -38,15 +40,24 @@ int main()
   }
 
   while (true) {
-    std::string delimiter = "-";
-    std::vector<std::string> message{"apple", "banana", "orange", "pear"};
-    broadcaster.send(message, delimiter);
+    std::string fruits[] = {"apple", "banana", "orange", "pear"};
+    std::vector<std::string> message;
+
+    unsigned int seed;
+    int size = sizeof(fruits) / sizeof(fruits[0]);
+    int length = size - (rand_r(&seed) % 2);
+
+    for (int i = 0; i < length; ++i) {
+      message.push_back(fruits[rand_r(&seed) % size]);
+    }
+
+    broadcaster.send(message);
 
     std::cout << "Sent: ";
-    for (int i = 0; i < message.size(); i++) {
+    for (int i = 0; i < message.size(); ++i) {
       std::cout << message[i];
       if (i != message.size() - 1) {
-        std::cout << delimiter;
+        std::cout << ",";
       }
     }
     std::cout << std::endl;

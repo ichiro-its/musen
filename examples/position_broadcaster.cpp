@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <ctime>
 #include <iostream>
 
 struct Position
@@ -34,6 +35,7 @@ struct Position
 
 int main()
 {
+  srand(time(NULL));
   housou::Broadcaster<Position> broadcaster(8080);
 
   broadcaster.enable_broadcast(false);

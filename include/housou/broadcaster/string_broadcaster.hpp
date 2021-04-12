@@ -42,18 +42,18 @@ public:
     return BaseBroadcaster::send(data.c_str(), data.size());
   }
 
-  int send(std::vector<std::string> data, std::string delimiter)
+  int send(std::vector<std::string> data, std::string delimiter = ",")
   {
     std::string message = "";
-    for (int i = 0; i < data.size(); i++) {
-      message.append(data[i]);
+    for (int i = 0; i < data.size(); ++i) {
+      message += data[i];
       if (i != data.size() - 1) {
-        message.append(delimiter);
+        message += delimiter;
       }
     }
-    message = message + '\0';
+    message += '\0';
 
-    return BaseBroadcaster::send(message.c_str(), message.size());
+    return StringBroadcaster::send(message);
   }
 };
 
