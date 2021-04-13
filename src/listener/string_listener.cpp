@@ -18,39 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#include <housou/listener/string_listener.hpp>
 
-#include <unistd.h>
-
-#include <iostream>
 #include <string>
+#include <vector>
 
-int main()
+namespace housou
 {
-  housou::StringListener listener(8080);
 
-  if (!listener.connect()) {
-    std::cerr << "Failed to connect listener on port " <<
-      listener.get_port() << "!" << std::endl;
-
-    return 1;
-  }
-
-  while (true) {
-    auto message = listener.receive(64, "-");
-
-    if (message.size() > 0) {
-      std::cout << "Received: ";
-      for (auto & value : message) {
-        std::cout << value << " ";
-      }
-      std::cout << std::endl;
-    }
-
-    usleep(100 * 1000);
-  }
-
-  listener.disconnect();
-
-  return 0;
+StringListener::StringListener(int port)
+: BaseListener(port)
+{
 }
+
+std::string StringListener::receive(int length)
+{
+  char * buffer = new char[length];
+
+  BaseListener::receive(buffer, length);
+
+  std::string message(buffer);
+  delete[] buffer;
+
+  return message;
+}
+
+std::vector<std::string> StringListener::receive(int length, std::string delimiter)
+{
+  std::vector<std::string> message;
+
+  std::string received_message = receive(length);
+
+  size_t pos = 0;
+  while ((pos = received_message.find(delimiter)) != std::string::npos) {
+    message.push_back(received_message.substr(0, pos));
+    received_message.erase(0, pos + delimiter.length());
+  }
+
+  // Insert the remaining token into the vector
+  if (received_message.length() > 0) {
+    message.push_back(received_message);
+  }
+
+  return message;
+}
+
+}  // namespace housou

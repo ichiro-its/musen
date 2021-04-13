@@ -18,39 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#include <housou/broadcaster/string_broadcaster.hpp>
 
-#include <unistd.h>
-
-#include <iostream>
 #include <string>
+#include <vector>
 
-int main()
+namespace housou
 {
-  housou::StringListener listener(8080);
 
-  if (!listener.connect()) {
-    std::cerr << "Failed to connect listener on port " <<
-      listener.get_port() << "!" << std::endl;
-
-    return 1;
-  }
-
-  while (true) {
-    auto message = listener.receive(64, "-");
-
-    if (message.size() > 0) {
-      std::cout << "Received: ";
-      for (auto & value : message) {
-        std::cout << value << " ";
-      }
-      std::cout << std::endl;
-    }
-
-    usleep(100 * 1000);
-  }
-
-  listener.disconnect();
-
-  return 0;
+StringBroadcaster::StringBroadcaster(int port)
+: BaseBroadcaster(port)
+{
 }
+
+int StringBroadcaster::send(std::string data)
+{
+  return BaseBroadcaster::send(data.c_str(), data.size());
+}
+
+int StringBroadcaster::send(std::vector<std::string> data, std::string delimiter)
+{
+  std::string message = "";
+  for (size_t i = 0; i < data.size(); ++i) {
+    message += data[i];
+    if (i != data.size() - 1) {
+      message += delimiter;
+    }
+  }
+  message += '\0';
+
+  return send(message);
+}
+
+}  // namespace housou

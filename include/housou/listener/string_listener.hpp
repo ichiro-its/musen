@@ -21,7 +21,6 @@
 #ifndef HOUSOU__LISTENER__STRING_LISTENER_HPP_
 #define HOUSOU__LISTENER__STRING_LISTENER_HPP_
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -33,43 +32,10 @@ namespace housou
 class StringListener : public BaseListener
 {
 public:
-  explicit StringListener(int port)
-  : BaseListener(port)
-  {
-  }
+  explicit StringListener(int port);
 
-  std::string receive(int length)
-  {
-    char * buffer = new char[length];
-
-    BaseListener::receive(buffer, length);
-
-    std::string message(buffer);
-    delete[] buffer;
-
-    return message;
-  }
-
-  std::vector<std::string> receive(int length, std::string delimiter)
-  {
-    std::vector<std::string> message;
-
-    std::string received_message = StringListener::receive(length);
-
-    size_t pos = 0;
-
-    while ((pos = received_message.find(delimiter)) != std::string::npos) {
-      message.push_back(received_message.substr(0, pos));
-      received_message.erase(0, pos + delimiter.length());
-    }
-
-    // enter remaining token into vector
-    if (received_message.length() > 0) {
-      message.push_back(received_message);
-    }
-
-    return message;
-  }
+  std::string receive(int length);
+  std::vector<std::string> receive(int length, std::string delimiter);
 };
 
 }  // namespace housou

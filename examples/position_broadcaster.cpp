@@ -35,7 +35,6 @@ struct Position
 
 int main()
 {
-  srand(time(NULL));
   housou::Broadcaster<Position> broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
@@ -48,10 +47,10 @@ int main()
     return 1;
   }
 
+  unsigned int seed = time(NULL);
+
   while (true) {
     Position position;
-
-    unsigned int seed;
 
     position.x = rand_r(&seed) % 100;
     position.y = rand_r(&seed) % 100;

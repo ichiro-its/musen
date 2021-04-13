@@ -32,29 +32,10 @@ namespace housou
 class StringBroadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringBroadcaster(int port)
-  : BaseBroadcaster(port)
-  {
-  }
+  explicit StringBroadcaster(int port);
 
-  int send(std::string data)
-  {
-    return BaseBroadcaster::send(data.c_str(), data.size());
-  }
-
-  int send(std::vector<std::string> data, std::string delimiter = ",")
-  {
-    std::string message = "";
-    for (int i = 0; i < data.size(); ++i) {
-      message += data[i];
-      if (i != data.size() - 1) {
-        message += delimiter;
-      }
-    }
-    message += '\0';
-
-    return StringBroadcaster::send(message);
-  }
+  int send(std::string data);
+  int send(std::vector<std::string> data, std::string delimiter = ",");
 };
 
 }  // namespace housou

@@ -29,8 +29,10 @@
 
 int main()
 {
-  srand(time(NULL));
   housou::StringBroadcaster broadcaster(8080);
+
+  broadcaster.enable_broadcast(false);
+  broadcaster.add_target_host("localhost");
 
   if (!broadcaster.connect()) {
     std::cerr << "Failed to connect broadcaster on port " <<
@@ -39,26 +41,24 @@ int main()
     return 1;
   }
 
+  std::vector<std::string> fruits = {"apple", "banana", "orange", "pear"};
+
+  unsigned int seed = time(NULL);
+
   while (true) {
-    std::string fruits[] = {"apple", "banana", "orange", "pear"};
     std::vector<std::string> message;
 
-    unsigned int seed;
-    int size = sizeof(fruits) / sizeof(fruits[0]);
-    int length = size - (rand_r(&seed) % 2);
+    size_t length = 3 + (rand_r(&seed) % 3);
 
-    for (int i = 0; i < length; ++i) {
-      message.push_back(fruits[rand_r(&seed) % size]);
+    for (size_t i = 0; i < length; ++i) {
+      message.push_back(fruits[rand_r(&seed) % fruits.size()]);
     }
 
-    broadcaster.send(message);
+    broadcaster.send(message, "-");
 
     std::cout << "Sent: ";
-    for (int i = 0; i < message.size(); ++i) {
-      std::cout << message[i];
-      if (i != message.size() - 1) {
-        std::cout << ",";
-      }
+    for (auto & value : message) {
+      std::cout << value << " ";
     }
     std::cout << std::endl;
 
