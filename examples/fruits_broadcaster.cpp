@@ -20,22 +20,16 @@
 
 #include <housou/housou.hpp>
 
-#include <stdlib.h>
 #include <unistd.h>
 
 #include <ctime>
 #include <iostream>
-
-struct Position
-{
-  int x;
-  int y;
-  int z;
-};
+#include <string>
+#include <vector>
 
 int main()
 {
-  housou::Broadcaster<Position> broadcaster(8080);
+  housou::StringBroadcaster broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
   broadcaster.add_target_host("localhost");
@@ -47,21 +41,26 @@ int main()
     return 1;
   }
 
+  std::vector<std::string> fruits = {"apple", "banana", "orange", "pear"};
+
   unsigned int seed = time(NULL);
 
   while (true) {
-    Position position;
+    std::vector<std::string> message;
 
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
+    size_t length = 3 + (rand_r(&seed) % 3);
 
-    broadcaster.send(position);
+    for (size_t i = 0; i < length; ++i) {
+      message.push_back(fruits[rand_r(&seed) % fruits.size()]);
+    }
 
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
+    broadcaster.send(message, "-");
+
+    std::cout << "Sent: ";
+    for (auto & value : message) {
+      std::cout << value << " ";
+    }
+    std::cout << std::endl;
 
     sleep(1);
   }

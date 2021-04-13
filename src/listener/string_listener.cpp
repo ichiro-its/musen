@@ -18,55 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#include <housou/listener/string_listener.hpp>
 
-#include <stdlib.h>
-#include <unistd.h>
+#include <string>
+#include <vector>
 
-#include <ctime>
-#include <iostream>
-
-struct Position
+namespace housou
 {
-  int x;
-  int y;
-  int z;
-};
 
-int main()
+StringListener::StringListener(int port)
+: BaseListener(port)
 {
-  housou::Broadcaster<Position> broadcaster(8080);
-
-  broadcaster.enable_broadcast(false);
-  broadcaster.add_target_host("localhost");
-
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.get_port() << "!" << std::endl;
-
-    return 1;
-  }
-
-  unsigned int seed = time(NULL);
-
-  while (true) {
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    broadcaster.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
-  }
-
-  broadcaster.disconnect();
-
-  return 0;
 }
+
+std::string StringListener::receive(int length)
+{
+  char * buffer = new char[length];
+
+  BaseListener::receive(buffer, length);
+
+  std::string message(buffer);
+  delete[] buffer;
+
+  return message;
+}
+
+std::vector<std::string> StringListener::receive(int length, std::string delimiter)
+{
+  std::vector<std::string> message;
+
+  std::string received_message = receive(length);
+
+  size_t pos = 0;
+  while ((pos = received_message.find(delimiter)) != std::string::npos) {
+    message.push_back(received_message.substr(0, pos));
+    received_message.erase(0, pos + delimiter.length());
+  }
+
+  // Insert the remaining token into the vector
+  if (received_message.length() > 0) {
+    message.push_back(received_message);
+  }
+
+  return message;
+}
+
+}  // namespace housou

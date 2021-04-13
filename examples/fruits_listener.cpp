@@ -27,26 +27,30 @@
 
 int main()
 {
-  housou::StringBroadcaster broadcaster(8080);
+  housou::StringListener listener(8080);
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.get_port() << "!" << std::endl;
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.get_port() << "!" << std::endl;
 
     return 1;
   }
 
   while (true) {
-    std::string message = "abc>=123>=56789>=lalala";
+    auto message = listener.receive(64, "-");
 
-    broadcaster.send(message);
+    if (message.size() > 0) {
+      std::cout << "Received: ";
+      for (auto & value : message) {
+        std::cout << value << " ";
+      }
+      std::cout << std::endl;
+    }
 
-    std::cout << "Sent: " << message << std::endl;
-
-    sleep(1);
+    usleep(100 * 1000);
   }
 
-  broadcaster.disconnect();
+  listener.disconnect();
 
   return 0;
 }

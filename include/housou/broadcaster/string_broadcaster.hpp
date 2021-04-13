@@ -22,6 +22,7 @@
 #define HOUSOU__BROADCASTER__STRING_BROADCASTER_HPP_
 
 #include <string>
+#include <vector>
 
 #include "./base_broadcaster.hpp"
 
@@ -31,15 +32,10 @@ namespace housou
 class StringBroadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringBroadcaster(int port)
-  : BaseBroadcaster(port)
-  {
-  }
+  explicit StringBroadcaster(int port);
 
-  int send(std::string data)
-  {
-    return BaseBroadcaster::send(data.c_str(), data.size());
-  }
+  int send(std::string data);
+  int send(std::vector<std::string> data, std::string delimiter = ",");
 };
 
 }  // namespace housou
