@@ -25,5 +25,6 @@
 #include "./broadcaster/string_broadcaster.hpp"
 #include "./listener/listener.hpp"
 #include "./listener/string_listener.hpp"
+#include "./udp_socket.hpp"
 
 #endif  // HOUSOU__HOUSOU_HPP_
