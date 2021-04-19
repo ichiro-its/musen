@@ -18,27 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__UDP_SOCKET_HPP_
-#define HOUSOU__UDP_SOCKET_HPP_
+#ifndef MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#define MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
 
-namespace housou
+#include <string>
+#include <vector>
+
+#include "../udp_socket.hpp"
+
+namespace musen
 {
 
-class UdpSocket
+class BaseBroadcaster : public UdpSocket
 {
 public:
-  UdpSocket();
-  ~UdpSocket();
+  explicit BaseBroadcaster(int port);
 
-  virtual bool connect();
-  virtual bool disconnect();
+  int send(const void * data, int length);
 
-  bool is_connected();
+  void enable_broadcast(bool enable);
+  void add_target_host(std::string host);
+
+  int get_port();
 
 protected:
-  int sockfd;
+  bool broadcast;
+  std::vector<std::string> target_hosts;
+
+  int port;
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__UDP_SOCKET_HPP_
+#endif  // MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#include <musen/musen.hpp>
 
 #include <unistd.h>
 
@@ -27,7 +27,7 @@
 
 int main()
 {
-  housou::StringListener listener(8080);
+  musen::StringListener listener(8080);
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<

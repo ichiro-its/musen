@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster/string_broadcaster.hpp>
+#include <musen/broadcaster/string_broadcaster.hpp>
 
 #include <string>
 #include <vector>
 
-namespace housou
+namespace musen
 {
 
 StringBroadcaster::StringBroadcaster(int port)
@@ -50,4 +50,4 @@ int StringBroadcaster::send(std::vector<std::string> data, std::string delimiter
   return send(message);
 }
 
-}  // namespace housou
+}  // namespace musen

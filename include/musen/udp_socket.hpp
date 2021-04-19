@@ -18,39 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__LISTENER_HPP_
-#define HOUSOU__LISTENER__LISTENER_HPP_
+#ifndef MUSEN__UDP_SOCKET_HPP_
+#define MUSEN__UDP_SOCKET_HPP_
 
-#include <memory>
-
-#include "./base_listener.hpp"
-
-namespace housou
+namespace musen
 {
 
-template<typename T>
-class Listener : public BaseListener
+class UdpSocket
 {
 public:
-  explicit Listener(int port)
-  : BaseListener(port)
-  {
-  }
+  UdpSocket();
+  ~UdpSocket();
 
-  std::shared_ptr<T> receive()
-  {
-    auto data = std::make_shared<T>();
+  virtual bool connect();
+  virtual bool disconnect();
 
-    int received = BaseListener::receive(data.get(), sizeof(T));
+  bool is_connected();
 
-    if (received < (signed)sizeof(T)) {
-      return nullptr;
-    }
-
-    return data;
-  }
+protected:
+  int sockfd;
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__LISTENER__LISTENER_HPP_
+#endif  // MUSEN__UDP_SOCKET_HPP_

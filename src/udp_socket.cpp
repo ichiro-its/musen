@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/udp_socket.hpp>
+#include <musen/udp_socket.hpp>
 
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-namespace housou
+namespace musen
 {
 
 UdpSocket::UdpSocket()
@@ -81,4 +81,4 @@ bool UdpSocket::is_connected()
   return sockfd >= 0;
 }
 
-}  // namespace housou
+}  // namespace musen

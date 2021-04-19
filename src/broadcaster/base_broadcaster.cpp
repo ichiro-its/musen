@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/broadcaster/base_broadcaster.hpp>
+#include <musen/broadcaster/base_broadcaster.hpp>
 
 #include <arpa/inet.h>
 #include <ifaddrs.h>
@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-namespace housou
+namespace musen
 {
 
 BaseBroadcaster::BaseBroadcaster(int port)
@@ -120,4 +120,4 @@ int BaseBroadcaster::get_port()
   return port;
 }
 
-}  // namespace housou
+}  // namespace musen

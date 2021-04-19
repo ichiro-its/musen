@@ -18,29 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__BROADCASTER__BROADCASTER_HPP_
-#define HOUSOU__BROADCASTER__BROADCASTER_HPP_
+#ifndef MUSEN__LISTENER__LISTENER_HPP_
+#define MUSEN__LISTENER__LISTENER_HPP_
 
-#include "./base_broadcaster.hpp"
+#include <memory>
 
-namespace housou
+#include "./base_listener.hpp"
+
+namespace musen
 {
 
 template<typename T>
-class Broadcaster : public BaseBroadcaster
+class Listener : public BaseListener
 {
 public:
-  explicit Broadcaster(int port)
-  : BaseBroadcaster(port)
+  explicit Listener(int port)
+  : BaseListener(port)
   {
   }
 
-  int send(const T data)
+  std::shared_ptr<T> receive()
   {
-    return BaseBroadcaster::send(&data, sizeof(data));
+    auto data = std::make_shared<T>();
+
+    int received = BaseListener::receive(data.get(), sizeof(T));
+
+    if (received < (signed)sizeof(T)) {
+      return nullptr;
+    }
+
+    return data;
   }
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__BROADCASTER__BROADCASTER_HPP_
+#endif  // MUSEN__LISTENER__LISTENER_HPP_

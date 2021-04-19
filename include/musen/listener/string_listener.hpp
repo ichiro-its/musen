@@ -18,13 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__HOUSOU_HPP_
-#define HOUSOU__HOUSOU_HPP_
+#ifndef MUSEN__LISTENER__STRING_LISTENER_HPP_
+#define MUSEN__LISTENER__STRING_LISTENER_HPP_
 
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./udp_socket.hpp"
+#include <string>
+#include <vector>
 
-#endif  // HOUSOU__HOUSOU_HPP_
+#include "./base_listener.hpp"
+
+namespace musen
+{
+
+class StringListener : public BaseListener
+{
+public:
+  explicit StringListener(int port);
+
+  std::string receive(int length);
+  std::vector<std::string> receive(int length, std::string delimiter);
+};
+
+}  // namespace musen
+
+#endif  // MUSEN__LISTENER__STRING_LISTENER_HPP_

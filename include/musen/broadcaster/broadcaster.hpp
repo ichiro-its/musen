@@ -18,26 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__STRING_LISTENER_HPP_
-#define HOUSOU__LISTENER__STRING_LISTENER_HPP_
+#ifndef MUSEN__BROADCASTER__BROADCASTER_HPP_
+#define MUSEN__BROADCASTER__BROADCASTER_HPP_
 
-#include <string>
-#include <vector>
+#include "./base_broadcaster.hpp"
 
-#include "./base_listener.hpp"
-
-namespace housou
+namespace musen
 {
 
-class StringListener : public BaseListener
+template<typename T>
+class Broadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringListener(int port);
+  explicit Broadcaster(int port)
+  : BaseBroadcaster(port)
+  {
+  }
 
-  std::string receive(int length);
-  std::vector<std::string> receive(int length, std::string delimiter);
+  int send(const T data)
+  {
+    return BaseBroadcaster::send(&data, sizeof(data));
+  }
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__LISTENER__STRING_LISTENER_HPP_
+#endif  // MUSEN__BROADCASTER__BROADCASTER_HPP_

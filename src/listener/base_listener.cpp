@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener/base_listener.hpp>
+#include <musen/listener/base_listener.hpp>
 
 #include <arpa/inet.h>
 #include <string.h>
 
-namespace housou
+namespace musen
 {
 
 BaseListener::BaseListener(int port)
@@ -76,4 +76,4 @@ int BaseListener::get_port()
   return port;
 }
 
-}  // namespace housou
+}  // namespace musen
