@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/housou.hpp>
+#include <musen/musen.hpp>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  housou::Listener<Position> listener(8080);
+  musen::Listener<Position> listener(8080);
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<

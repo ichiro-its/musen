@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__LISTENER_HPP_
-#define HOUSOU__LISTENER__LISTENER_HPP_
+#ifndef MUSEN__LISTENER__LISTENER_HPP_
+#define MUSEN__LISTENER__LISTENER_HPP_
 
 #include <memory>
 
 #include "./base_listener.hpp"
 
-namespace housou
+namespace musen
 {
 
 template<typename T>
@@ -51,6 +51,6 @@ public:
   }
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__LISTENER__LISTENER_HPP_
+#endif  // MUSEN__LISTENER__LISTENER_HPP_

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,13 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__HOUSOU_HPP_
-#define HOUSOU__HOUSOU_HPP_
+#ifndef MUSEN__BROADCASTER__BROADCASTER_HPP_
+#define MUSEN__BROADCASTER__BROADCASTER_HPP_
 
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./udp_socket.hpp"
+#include "./base_broadcaster.hpp"
 
-#endif  // HOUSOU__HOUSOU_HPP_
+namespace musen
+{
+
+template<typename T>
+class Broadcaster : public BaseBroadcaster
+{
+public:
+  explicit Broadcaster(int port)
+  : BaseBroadcaster(port)
+  {
+  }
+
+  int send(const T data)
+  {
+    return BaseBroadcaster::send(&data, sizeof(data));
+  }
+};
+
+}  // namespace musen
+
+#endif  // MUSEN__BROADCASTER__BROADCASTER_HPP_

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
-#define HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
+#ifndef MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#define MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
 
 #include <string>
 #include <vector>
 
 #include "../udp_socket.hpp"
 
-namespace housou
+namespace musen
 {
 
 class BaseBroadcaster : public UdpSocket
@@ -48,6 +48,6 @@ protected:
   int port;
 };
 
-}  // namespace housou
+}  // namespace musen
 
-#endif  // HOUSOU__BROADCASTER__BASE_BROADCASTER_HPP_
+#endif  // MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <housou/listener/string_listener.hpp>
+#include <musen/listener/string_listener.hpp>
 
 #include <string>
 #include <vector>
 
-namespace housou
+namespace musen
 {
 
 StringListener::StringListener(int port)
@@ -63,4 +63,4 @@ std::vector<std::string> StringListener::receive(int length, std::string delimit
   return message;
 }
 
-}  // namespace housou
+}  // namespace musen

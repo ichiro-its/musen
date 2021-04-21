@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Ichiro ITS
+// Copyright (c) 2021 ICHIRO ITS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef HOUSOU__LISTENER__BASE_LISTENER_HPP_
-#define HOUSOU__LISTENER__BASE_LISTENER_HPP_
+#ifndef MUSEN__MUSEN_HPP_
+#define MUSEN__MUSEN_HPP_
 
-#include "../udp_socket.hpp"
+#include "./broadcaster/broadcaster.hpp"
+#include "./broadcaster/string_broadcaster.hpp"
+#include "./listener/listener.hpp"
+#include "./listener/string_listener.hpp"
+#include "./udp_socket.hpp"
 
-namespace housou
-{
-
-class BaseListener : public UdpSocket
-{
-public:
-  explicit BaseListener(int port);
-
-  bool connect() override;
-
-  int receive(void * buffer, int length);
-
-  int get_port();
-
-protected:
-  int port;
-};
-
-}  // namespace housou
-
-#endif  // HOUSOU__LISTENER__BASE_LISTENER_HPP_
+#endif  // MUSEN__MUSEN_HPP_
