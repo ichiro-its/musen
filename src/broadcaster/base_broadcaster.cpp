@@ -22,8 +22,8 @@
 
 #include <arpa/inet.h>
 #include <ifaddrs.h>
-#include <string.h>
 
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -42,8 +42,10 @@ int BaseBroadcaster::send(const void * data, int length)
     return 0;
   }
 
+  // List of recipent socket address
   std::vector<struct sockaddr_in> sas;
 
+  // Append recpient socket addresses with broadcast address
   if (broadcast) {
     // Obtain all interfaces
     struct ifaddrs * ifas;
@@ -58,6 +60,7 @@ int BaseBroadcaster::send(const void * data, int length)
         continue;
       }
 
+      // Get the broadcast address
       auto broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
 
       // Configure the recipent address
@@ -76,6 +79,7 @@ int BaseBroadcaster::send(const void * data, int length)
     freeifaddrs(ifas);
   }
 
+  // Append recipent socket addresses with target address
   for (auto & target_host : target_hosts) {
     // Configure the recipent address
     struct sockaddr_in sa;
@@ -91,13 +95,14 @@ int BaseBroadcaster::send(const void * data, int length)
     sas.push_back(sa);
   }
 
-  int lowest_sent = 0;
+  int lowest_sent = -1;
 
+  // Sent to each recipent socket addresses
   for (auto & sa : sas) {
-    // Send data to the recipent address
     int sent = sendto(sockfd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
-    if (sent < lowest_sent) {
+    // If lowest_sent is not yet set (-1) or sent is less than lowest_sent
+    if (lowest_sent < 0 || sent < lowest_sent) {
       lowest_sent = sent;
     }
   }

@@ -21,8 +21,10 @@
 #ifndef MUSEN__MUSEN_HPP_
 #define MUSEN__MUSEN_HPP_
 
+#include "./broadcaster/base_broadcaster.hpp"
 #include "./broadcaster/broadcaster.hpp"
 #include "./broadcaster/string_broadcaster.hpp"
+#include "./listener/base_listener.hpp"
 #include "./listener/listener.hpp"
 #include "./listener/string_listener.hpp"
 #include "./udp_socket.hpp"

@@ -21,7 +21,8 @@
 #include <musen/listener/base_listener.hpp>
 
 #include <arpa/inet.h>
-#include <string.h>
+
+#include <cstring>
 
 namespace musen
 {

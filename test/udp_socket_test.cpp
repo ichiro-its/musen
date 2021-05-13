@@ -31,7 +31,7 @@ TEST(UdpSocketTest, ConnectDisconnect) {
   ASSERT_TRUE(udp_socket.connect());
   ASSERT_TRUE(udp_socket.is_connected());
 
-  // Should failed if the UDP socket is already connected
+  // Should failed because the UDP socket is already connected
   ASSERT_FALSE(udp_socket.connect());
   ASSERT_TRUE(udp_socket.is_connected());
 
@@ -39,7 +39,7 @@ TEST(UdpSocketTest, ConnectDisconnect) {
   ASSERT_TRUE(udp_socket.disconnect());
   ASSERT_FALSE(udp_socket.is_connected());
 
-  // Should failed if the UDP socket is already disconnected
+  // Should failed because the UDP socket is already disconnected
   ASSERT_FALSE(udp_socket.disconnect());
   ASSERT_FALSE(udp_socket.is_connected());
 }
