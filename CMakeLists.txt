@@ -16,6 +16,8 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
+install(DIRECTORY "include" DESTINATION ".")
+
 add_library(${PROJECT_NAME}
   "src/broadcaster/base_broadcaster.cpp"
   "src/broadcaster/string_broadcaster.cpp"
@@ -27,62 +29,39 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(DIRECTORY "include" DESTINATION ".")
-
 install(TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION "lib"
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
 
-add_executable(hello_world_broadcaster "examples/hello_world_broadcaster.cpp")
-target_include_directories(hello_world_broadcaster PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(hello_world_broadcaster ${PROJECT_NAME})
+set(EXECUTABLES
+  "examples/hello_world_broadcaster.cpp"
+  "examples/hello_world_listener.cpp"
+  "examples/position_broadcaster.cpp"
+  "examples/position_listener.cpp"
+  "examples/fruits_broadcaster.cpp"
+  "examples/fruits_listener.cpp")
 
-add_executable(hello_world_listener "examples/hello_world_listener.cpp")
-target_include_directories(hello_world_listener PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(hello_world_listener ${PROJECT_NAME})
+foreach(EXECUTABLE ${EXECUTABLES})
+  get_filename_component(TARGET ${EXECUTABLE} NAME_WE)
 
-add_executable(position_broadcaster "examples/position_broadcaster.cpp")
-target_include_directories(position_broadcaster PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(position_broadcaster ${PROJECT_NAME})
+  add_executable(${TARGET} ${EXECUTABLE})
+  target_link_libraries(${TARGET} ${PROJECT_NAME})
 
-add_executable(position_listener "examples/position_listener.cpp")
-target_include_directories(position_listener PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(position_listener ${PROJECT_NAME})
-
-add_executable(fruits_broadcaster "examples/fruits_broadcaster.cpp")
-target_include_directories(fruits_broadcaster PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(fruits_broadcaster ${PROJECT_NAME})
-
-add_executable(fruits_listener "examples/fruits_listener.cpp")
-target_include_directories(fruits_listener PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_link_libraries(fruits_listener ${PROJECT_NAME})
-
-install(
-  TARGETS
-    hello_world_broadcaster
-    hello_world_listener
-    position_broadcaster
-    position_listener
-    fruits_broadcaster
-    fruits_listener
-  DESTINATION lib/${PROJECT_NAME})
+  install(TARGETS ${TARGET}
+    DESTINATION "lib/${PROJECT_NAME}")
+endforeach()
 
 if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
   find_package(ament_lint_auto REQUIRED)
+
+  ament_add_gtest(${PROJECT_NAME}_tests
+    "test/udp_socket_test.cpp")
+
+  target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+
   ament_lint_auto_find_test_dependencies()
 endif()
 
