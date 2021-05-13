@@ -22,6 +22,7 @@
 #include <musen/musen.hpp>
 
 #include <string>
+#include <vector>
 
 TEST(StringBroadcasterAndListenerTest, SendAndReceive) {
   musen::StringBroadcaster broadcaster(5000);
@@ -31,22 +32,61 @@ TEST(StringBroadcasterAndListenerTest, SendAndReceive) {
   ASSERT_TRUE(broadcaster.connect());
   ASSERT_TRUE(listener.connect());
 
-  std::string broadcast_data = "Hello World!";
+  std::string broadcast_message = "Hello World!";
 
   // Do up to 3 times until the listener received a message
   int iteration = 0;
   while (iteration++ < 3) {
-    // Sending string data
-    broadcaster.send(broadcast_data);
+    // Sending message
+    broadcaster.send(broadcast_message);
 
-    // Wait a bit so listener could receive the data
+    // Wait a bit so the listener could receive the messages
     usleep(10 * 1000);
 
-    // Receiving string data
-    const auto & listen_data = listener.receive(32);
-    if (listen_data.size() > 0) {
-      // Compare the received and the sent string
-      ASSERT_STREQ(listen_data.c_str(), broadcast_data.c_str());
+    // Receiving message
+    const auto & listen_message = listener.receive(32);
+    if (listen_message.size() > 0) {
+      // Compare the received and the sent message
+      ASSERT_STREQ(listen_message.c_str(), broadcast_message.c_str());
+
+      return SUCCEED();
+    }
+  }
+
+  FAIL() << "listener did not receive any data";
+}
+
+TEST(StringBroadcasterAndListenerTest, SendAndReceiveWithDelimiter) {
+  musen::StringBroadcaster broadcaster(5000);
+  musen::StringListener listener(5000);
+
+  // Trying to connect both broadcaster and listener
+  ASSERT_TRUE(broadcaster.connect());
+  ASSERT_TRUE(listener.connect());
+
+  std::vector<std::string> broadcast_messages = {
+    "Hello World!",
+    "Hello Earth!",
+    "Hello Mars!"
+  };
+
+  // Do up to 3 times until the listener received messages
+  int iteration = 0;
+  while (iteration++ < 3) {
+    // Sending messages with a delimiter
+    broadcaster.send(broadcast_messages, ", ");
+
+    // Wait a bit so the listener could receive messages
+    usleep(10 * 1000);
+
+    // Receiving messages with a delimiter
+    const auto & listen_messages = listener.receive(64, ", ");
+    if (listen_messages.size() > 0) {
+      // Compare the received and the sent messages
+      ASSERT_EQ(listen_messages.size(), broadcast_messages.size());
+      for (size_t i = 0; i < listen_messages.size(); ++i) {
+        ASSERT_STREQ(listen_messages[i].c_str(), broadcast_messages[i].c_str());
+      }
 
       return SUCCEED();
     }
@@ -63,9 +103,26 @@ TEST(StringBroadcasterAndListenerTest, ReceiveNothing) {
 
   // Do for 3 times
   for (int i = 0; i < 3; ++i) {
-    // Must received empty string
-    const auto & data = listener.receive(32);
-    ASSERT_EQ(data.size(), 0u);
+    // Must received empty message
+    const auto & message = listener.receive(32);
+    ASSERT_EQ(message.size(), 0u);
+
+    // Wait a bit
+    usleep(10 * 1000);
+  }
+}
+
+TEST(StringBroadcasterAndListenerTest, ReceiveNothingWithDelimiter) {
+  musen::StringListener listener(5000);
+
+  // Trying to connect the listener
+  ASSERT_TRUE(listener.connect());
+
+  // Do for 3 times
+  for (int i = 0; i < 3; ++i) {
+    // Must received empty messages
+    const auto & messages = listener.receive(32, ", ");
+    ASSERT_EQ(messages.size(), 0u);
 
     // Wait a bit
     usleep(10 * 1000);

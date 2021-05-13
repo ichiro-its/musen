@@ -41,7 +41,7 @@ TEST(BaseBroadcasterAndListenerTest, SendAndReceive) {
         int sent = broadcaster.send(broadcast_data, 4);
         ASSERT_EQ(sent, 4);
 
-        // Wait a bit so listener could receive the data
+        // Wait a bit so the listener could receive the data
         usleep(10 * 1000);
 
         // Receiving data (must received 4 bytes even if requested 6 bytes)
