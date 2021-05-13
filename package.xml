@@ -4,6 +4,7 @@
   <name>musen</name>
   <version>1.1.0</version>
   <description>A UDP broadcast communication library</description>
+  <url>https://github.com/ichiro-its/musen</url>
   <maintainer email="alfi.maulana.f@gmail.com">Alfi Maulana</maintainer>
   <license>MIT License</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
