@@ -33,7 +33,7 @@ public:
   virtual bool connect();
   virtual bool disconnect();
 
-  bool is_connected();
+  bool is_connected() const;
 
 protected:
   int sockfd;

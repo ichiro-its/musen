@@ -29,13 +29,13 @@ namespace musen
 class BaseListener : public UdpSocket
 {
 public:
-  explicit BaseListener(int port);
+  explicit BaseListener(const int & port);
 
   bool connect() override;
 
-  int receive(void * buffer, int length);
+  int receive(void * buffer, const int & length);
 
-  int get_port();
+  const int & get_port() const;
 
 protected:
   int port;

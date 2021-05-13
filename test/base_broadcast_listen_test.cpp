@@ -32,32 +32,47 @@ TEST(BaseBroadcastListenTest, BroadcastListen) {
   char broadcast_data[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
   char listen_data[6];
 
-  // Do up to 3 times until the listener received a message
-  int iteration = 0;
-  while (iteration++ < 3) {
-    // Sending data (should sent 4 bytes event if has 6 bytes of data)
-    int sent = broadcaster.send(broadcast_data, 4);
-    ASSERT_EQ(sent, 4);
+  const auto & broadcast_and_listen =
+    [&]() {
+      // Do up to 3 times until the listener received a message
+      int iteration = 0;
+      while (iteration++ < 3) {
+        // Sending data (should sent 4 bytes event if has 6 bytes of data)
+        int sent = broadcaster.send(broadcast_data, 4);
+        ASSERT_EQ(sent, 4);
 
-    // Wait a bit so listener could receive the data
-    usleep(10 * 1000);
+        // Wait a bit so listener could receive the data
+        usleep(10 * 1000);
 
-    // Receiving data (should received 4 bytes even if requested 6 bytes)
-    int received = listener.receive(listen_data, 6);
-    if (received > 0) {
-      // The received size should equal to sent size
-      ASSERT_EQ(received, sent);
+        // Receiving data (should received 4 bytes even if requested 6 bytes)
+        int received = listener.receive(listen_data, 6);
+        if (received > 0) {
+          // The received size should equal to sent size
+          ASSERT_EQ(received, sent);
 
-      // The received content should equal to sent content
-      for (int i = 0; i < received; ++i) {
-        ASSERT_EQ(listen_data[i], broadcast_data[i]);
+          // The received content should equal to sent content
+          for (int i = 0; i < received; ++i) {
+            ASSERT_EQ(listen_data[i], broadcast_data[i]);
+          }
+
+          return SUCCEED();
+        }
       }
 
-      return SUCCEED();
-    }
+      FAIL() << "listener did not receive any data";
+    };
+
+  // Run with default configuration (broadcast send) for 3 times
+  for (int i = 0; i < 3; ++i) {
+    broadcast_and_listen();
   }
 
-  FAIL() << "listener did not receive any data";
+  // Run with specified target host and disable broadcast send for 3 times
+  broadcaster.enable_broadcast(false);
+  broadcaster.add_target_host("localhost");
+  for (int i = 0; i < 3; ++i) {
+    broadcast_and_listen();
+  }
 }
 
 TEST(BaseBroadcastListenTest, BroadcastNothing) {

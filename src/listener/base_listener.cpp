@@ -27,9 +27,8 @@
 namespace musen
 {
 
-BaseListener::BaseListener(int port)
-: UdpSocket(),
-  port(port)
+BaseListener::BaseListener(const int & port)
+: port(port)
 {
 }
 
@@ -57,7 +56,7 @@ bool BaseListener::connect()
   return true;
 }
 
-int BaseListener::receive(void * buffer, int length)
+int BaseListener::receive(void * buffer, const int & length)
 {
   if (!is_connected()) {
     return 0;
@@ -72,7 +71,7 @@ int BaseListener::receive(void * buffer, int length)
   return received;
 }
 
-int BaseListener::get_port()
+const int & BaseListener::get_port() const
 {
   return port;
 }
