@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
-TEST(BaseBroadcastListenTest, BroadcastListen) {
+TEST(BaseBroadcasterAndListenerTest, SendAndReceive) {
   musen::BaseBroadcaster broadcaster(5000);
   musen::BaseListener listener(5000);
 
@@ -37,20 +37,20 @@ TEST(BaseBroadcastListenTest, BroadcastListen) {
       // Do up to 3 times until the listener received a message
       int iteration = 0;
       while (iteration++ < 3) {
-        // Sending data (should sent 4 bytes event if has 6 bytes of data)
+        // Sending data (must sent 4 bytes event if has 6 bytes of data)
         int sent = broadcaster.send(broadcast_data, 4);
         ASSERT_EQ(sent, 4);
 
         // Wait a bit so listener could receive the data
         usleep(10 * 1000);
 
-        // Receiving data (should received 4 bytes even if requested 6 bytes)
+        // Receiving data (must received 4 bytes even if requested 6 bytes)
         int received = listener.receive(listen_data, 6);
         if (received > 0) {
-          // The received size should equal to sent size
+          // The received size must equal to sent size
           ASSERT_EQ(received, sent);
 
-          // The received content should equal to sent content
+          // The received content must equal to sent content
           for (int i = 0; i < received; ++i) {
             ASSERT_EQ(listen_data[i], broadcast_data[i]);
           }
@@ -75,7 +75,7 @@ TEST(BaseBroadcastListenTest, BroadcastListen) {
   }
 }
 
-TEST(BaseBroadcastListenTest, BroadcastNothing) {
+TEST(BaseBroadcasterAndListenerTest, SendToNoOne) {
   musen::BaseBroadcaster broadcaster(5000);
 
   // Disable broadcast so it won't sent to anyone
@@ -88,16 +88,16 @@ TEST(BaseBroadcastListenTest, BroadcastNothing) {
 
   // Do for 3 times
   for (int i = 0; i < 3; ++i) {
-    // Should sent nothing
+    // Must sent nothing
     int sent = broadcaster.send(broadcast_data, 4);
-    ASSERT_LE(sent, 0);
+    ASSERT_EQ(sent, 0);
 
     // Wait a bit
     usleep(10 * 1000);
   }
 }
 
-TEST(BaseBroadcastListenTest, ListenNothing) {
+TEST(BaseBroadcasterAndListenerTest, ReceiveNothing) {
   musen::BaseListener listener(5000);
 
   // Trying to connect the listener
@@ -107,9 +107,9 @@ TEST(BaseBroadcastListenTest, ListenNothing) {
 
   // Do for 3 times
   for (int i = 0; i < 3; ++i) {
-    // Should received nothing
+    // Must received nothing
     int received = listener.receive(listen_data, 6);
-    ASSERT_LE(received, 0);
+    ASSERT_EQ(received, 0);
 
     // Wait a bit
     usleep(10 * 1000);

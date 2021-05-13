@@ -22,6 +22,7 @@
 
 #include <ifaddrs.h>
 
+#include <algorithm>
 #include <cstring>
 #include <list>
 #include <string>
@@ -56,7 +57,7 @@ int BaseBroadcaster::send(const void * data, const int & length)
   }
 
   // Return the lowest sent size from all addresses
-  return lowest_sent;
+  return std::max(lowest_sent, 0);
 }
 
 void BaseBroadcaster::enable_broadcast(const bool & enable)

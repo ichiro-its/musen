@@ -32,10 +32,10 @@ namespace musen
 class StringBroadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringBroadcaster(int port);
+  explicit StringBroadcaster(const int & port);
 
-  int send(std::string data);
-  int send(std::vector<std::string> data, std::string delimiter = ",");
+  int send(const std::string & message);
+  int send(const std::vector<std::string> & messages, const std::string & delimiter = ",");
 };
 
 }  // namespace musen

@@ -22,6 +22,7 @@
 
 #include <arpa/inet.h>
 
+#include <algorithm>
 #include <cstring>
 
 namespace musen
@@ -58,7 +59,7 @@ bool BaseListener::connect()
 
 int BaseListener::receive(void * buffer, const int & length)
 {
-  if (!is_connected()) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -68,7 +69,7 @@ int BaseListener::receive(void * buffer, const int & length)
   // Receive data
   int received = recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
-  return received;
+  return std::max(received, 0);
 }
 
 const int & BaseListener::get_port() const

@@ -32,10 +32,10 @@ namespace musen
 class StringListener : public BaseListener
 {
 public:
-  explicit StringListener(int port);
+  explicit StringListener(const int & port);
 
-  std::string receive(int length);
-  std::vector<std::string> receive(int length, std::string delimiter);
+  std::string receive(const int & length);
+  std::vector<std::string> receive(const int & length, const std::string & delimiter);
 };
 
 }  // namespace musen
