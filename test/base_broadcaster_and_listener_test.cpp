@@ -34,7 +34,7 @@ TEST(BaseBroadcasterAndListenerTest, SendAndReceive) {
 
   const auto & broadcast_and_listen =
     [&]() {
-      // Do up to 3 times until the listener received a message
+      // Do up to 3 times until the listener has received the data
       int iteration = 0;
       while (iteration++ < 3) {
         // Sending data (must sent 4 bytes event if has 6 bytes of data)

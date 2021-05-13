@@ -59,6 +59,7 @@ if(BUILD_TESTING)
 
   ament_add_gtest(${PROJECT_NAME}_tests
     "test/base_broadcaster_and_listener_test.cpp"
+    "test/broadcaster_and_listener_test.cpp"
     "test/string_broadcaster_and_listener_test.cpp"
     "test/udp_socket_test.cpp")
 

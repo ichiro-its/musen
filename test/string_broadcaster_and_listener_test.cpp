@@ -34,7 +34,7 @@ TEST(StringBroadcasterAndListenerTest, SendAndReceive) {
 
   std::string broadcast_message = "Hello World!";
 
-  // Do up to 3 times until the listener received a message
+  // Do up to 3 times until the listener has received the message
   int iteration = 0;
   while (iteration++ < 3) {
     // Sending message
@@ -70,7 +70,7 @@ TEST(StringBroadcasterAndListenerTest, SendAndReceiveWithDelimiter) {
     "Hello Mars!"
   };
 
-  // Do up to 3 times until the listener received messages
+  // Do up to 3 times until the listener has received the messages
   int iteration = 0;
   while (iteration++ < 3) {
     // Sending messages with a delimiter
