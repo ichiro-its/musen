@@ -26,41 +26,53 @@
 namespace musen
 {
 
-StringListener::StringListener(int port)
+StringListener::StringListener(const int & port)
 : BaseListener(port)
 {
 }
 
-std::string StringListener::receive(int length)
+std::string StringListener::receive(const int & length)
 {
-  char * buffer = new char[length];
+  std::string message;
+  if (length <= 0) {
+    return message;
+  }
 
-  BaseListener::receive(buffer, length);
+  // Resize message buffer according to the requested size
+  message.resize(length);
 
-  std::string message(buffer);
-  delete[] buffer;
+  int received = BaseListener::receive(&message[0], length);
+
+  // Resize message according to the received bytes
+  message.resize(received);
+
+  // Add a string termination if it doesn't contain one
+  if (message[message.size() - 1] != '\0') {
+    message += '\0';
+  }
 
   return message;
 }
 
-std::vector<std::string> StringListener::receive(int length, std::string delimiter)
+std::vector<std::string> StringListener::receive(const int & length, const std::string & delimiter)
 {
-  std::vector<std::string> message;
+  std::vector<std::string> messages;
 
-  std::string received_message = receive(length);
+  auto received_message = receive(length);
 
+  // Separate the received message by the delimiter
   size_t pos = 0;
   while ((pos = received_message.find(delimiter)) != std::string::npos) {
-    message.push_back(received_message.substr(0, pos));
+    messages.push_back(received_message.substr(0, pos));
     received_message.erase(0, pos + delimiter.length());
   }
 
-  // Insert the remaining token into the vector
+  // Insert the remaining token into vector of strings
   if (received_message.length() > 0) {
-    message.push_back(received_message);
+    messages.push_back(received_message);
   }
 
-  return message;
+  return messages;
 }
 
 }  // namespace musen

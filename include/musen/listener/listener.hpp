@@ -32,7 +32,7 @@ template<typename T>
 class Listener : public BaseListener
 {
 public:
-  explicit Listener(int port)
+  explicit Listener(const int & port)
   : BaseListener(port)
   {
   }

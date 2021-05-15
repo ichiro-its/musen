@@ -26,28 +26,34 @@
 namespace musen
 {
 
-StringBroadcaster::StringBroadcaster(int port)
+StringBroadcaster::StringBroadcaster(const int & port)
 : BaseBroadcaster(port)
 {
 }
 
-int StringBroadcaster::send(std::string data)
+int StringBroadcaster::send(const std::string & message)
 {
-  return BaseBroadcaster::send(data.c_str(), data.size());
+  return BaseBroadcaster::send(message.c_str(), message.size());
 }
 
-int StringBroadcaster::send(std::vector<std::string> data, std::string delimiter)
+int StringBroadcaster::send(
+  const std::vector<std::string> & messages, const std::string & delimiter)
 {
-  std::string message = "";
-  for (size_t i = 0; i < data.size(); ++i) {
-    message += data[i];
-    if (i != data.size() - 1) {
-      message += delimiter;
+  // Merge vector of strings using the delimiter
+  std::string merged_message = "";
+  for (size_t i = 0; i < messages.size(); ++i) {
+    merged_message += messages[i];
+    if (i != messages.size() - 1) {
+      merged_message += delimiter;
     }
   }
-  message += '\0';
 
-  return send(message);
+  // Add a string termination if it doesn't contain one
+  if (merged_message[merged_message.size() - 1] != '\0') {
+    merged_message += '\0';
+  }
+
+  return send(merged_message);
 }
 
 }  // namespace musen

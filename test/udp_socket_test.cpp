@@ -18,29 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
-#include "../udp_socket.hpp"
+TEST(UdpSocketTest, ConnectDisconnect) {
+  musen::UdpSocket udp_socket;
 
-namespace musen
-{
+  // The UDP socket isn't connected yet
+  ASSERT_FALSE(udp_socket.is_connected());
 
-class BaseListener : public UdpSocket
-{
-public:
-  explicit BaseListener(const int & port);
+  // Trying to connect the UDP socket
+  ASSERT_TRUE(udp_socket.connect());
+  ASSERT_TRUE(udp_socket.is_connected());
 
-  bool connect() override;
+  // Must be failed because the UDP socket is already connected
+  ASSERT_FALSE(udp_socket.connect());
+  ASSERT_TRUE(udp_socket.is_connected());
 
-  int receive(void * buffer, const int & length);
+  // Trying to disconnect the UDP socket
+  ASSERT_TRUE(udp_socket.disconnect());
+  ASSERT_FALSE(udp_socket.is_connected());
 
-  const int & get_port() const;
-
-protected:
-  int port;
-};
-
-}  // namespace musen
-
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+  // Must be failed because the UDP socket is already disconnected
+  ASSERT_FALSE(udp_socket.disconnect());
+  ASSERT_FALSE(udp_socket.is_connected());
+}

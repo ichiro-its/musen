@@ -30,12 +30,12 @@ template<typename T>
 class Broadcaster : public BaseBroadcaster
 {
 public:
-  explicit Broadcaster(int port)
+  explicit Broadcaster(const int & port)
   : BaseBroadcaster(port)
   {
   }
 
-  int send(const T data)
+  int send(const T & data)
   {
     return BaseBroadcaster::send(&data, sizeof(data));
   }

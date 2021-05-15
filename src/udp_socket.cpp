@@ -76,7 +76,7 @@ bool UdpSocket::disconnect()
   return true;
 }
 
-bool UdpSocket::is_connected()
+bool UdpSocket::is_connected() const
 {
   return sockfd >= 0;
 }

@@ -11,6 +11,6 @@ jobs:
       - name: Checking out
         uses: actions/checkout@v2.3.4
       - name: Building and testing
-        uses: ichiro-its/ros2-ci@v0.4.1
+        uses: ichiro-its/ros2-ci@v1.0.0
         with:
           ros2-distro: foxy

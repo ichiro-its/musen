@@ -21,8 +21,10 @@
 #ifndef MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
 #define MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
 
+#include <arpa/inet.h>
+
 #include <string>
-#include <vector>
+#include <list>
 
 #include "../udp_socket.hpp"
 
@@ -32,18 +34,22 @@ namespace musen
 class BaseBroadcaster : public UdpSocket
 {
 public:
-  explicit BaseBroadcaster(int port);
+  explicit BaseBroadcaster(const int & port);
 
-  int send(const void * data, int length);
+  int send(const void * data, const int & length);
 
-  void enable_broadcast(bool enable);
-  void add_target_host(std::string host);
+  void enable_broadcast(const bool & enable);
+  void add_target_host(const std::string & host);
 
-  int get_port();
+  const int & get_port() const;
 
 protected:
+  std::list<struct sockaddr_in> get_recipent_sas() const;
+  std::list<struct sockaddr_in> get_recipent_sas_from_broadcast_ifas() const;
+  std::list<struct sockaddr_in> get_recipent_sas_from_target_hosts() const;
+
   bool broadcast;
-  std::vector<std::string> target_hosts;
+  std::list<std::string> target_hosts;
 
   int port;
 };

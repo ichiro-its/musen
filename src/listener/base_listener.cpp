@@ -21,14 +21,15 @@
 #include <musen/listener/base_listener.hpp>
 
 #include <arpa/inet.h>
-#include <string.h>
+
+#include <algorithm>
+#include <cstring>
 
 namespace musen
 {
 
-BaseListener::BaseListener(int port)
-: UdpSocket(),
-  port(port)
+BaseListener::BaseListener(const int & port)
+: port(port)
 {
 }
 
@@ -56,9 +57,9 @@ bool BaseListener::connect()
   return true;
 }
 
-int BaseListener::receive(void * buffer, int length)
+int BaseListener::receive(void * buffer, const int & length)
 {
-  if (!is_connected()) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -68,10 +69,10 @@ int BaseListener::receive(void * buffer, int length)
   // Receive data
   int received = recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
 
-  return received;
+  return std::max(received, 0);
 }
 
-int BaseListener::get_port()
+const int & BaseListener::get_port() const
 {
   return port;
 }
