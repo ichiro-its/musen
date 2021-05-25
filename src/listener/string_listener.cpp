@@ -20,14 +20,15 @@
 
 #include <musen/listener/string_listener.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace musen
 {
 
-StringListener::StringListener(const int & port)
-: BaseListener(port)
+StringListener::StringListener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
+: BaseListener(port, udp_socket)
 {
 }
 

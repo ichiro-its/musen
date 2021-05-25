@@ -23,23 +23,30 @@
 
 #include <arpa/inet.h>
 
-#include <string>
 #include <list>
+#include <memory>
+#include <string>
 
 #include "../udp_socket.hpp"
 
 namespace musen
 {
 
-class BaseBroadcaster : public UdpSocket
+class BaseBroadcaster
 {
 public:
-  explicit BaseBroadcaster(const int & port);
+  explicit BaseBroadcaster(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
-  int send(const void * data, const int & length);
+  bool connect();
+  bool disconnect();
+
+  int send(const char * data, const int & length);
 
   void enable_broadcast(const bool & enable);
   void add_target_host(const std::string & host);
+
+  std::shared_ptr<UdpSocket> get_udp_socket() const;
 
   const int & get_port() const;
 
@@ -47,6 +54,8 @@ protected:
   std::list<struct sockaddr_in> get_recipent_sas() const;
   std::list<struct sockaddr_in> get_recipent_sas_from_broadcast_ifas() const;
   std::list<struct sockaddr_in> get_recipent_sas_from_target_hosts() const;
+
+  std::shared_ptr<UdpSocket> udp_socket;
 
   bool broadcast;
   std::list<std::string> target_hosts;

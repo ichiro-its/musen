@@ -25,20 +25,32 @@
 #include <algorithm>
 #include <cstring>
 #include <list>
+#include <memory>
 #include <string>
 
 namespace musen
 {
 
-BaseBroadcaster::BaseBroadcaster(const int & port)
-: broadcast(true),
+BaseBroadcaster::BaseBroadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket)
+: udp_socket(udp_socket),
+  broadcast(true),
   port(port)
 {
 }
 
-int BaseBroadcaster::send(const void * data, const int & length)
+bool BaseBroadcaster::connect()
 {
-  if (!is_connected() || length <= 0) {
+  return udp_socket->connect();
+}
+
+bool BaseBroadcaster::disconnect()
+{
+  return udp_socket->disconnect();
+}
+
+int BaseBroadcaster::send(const char * data, const int & length)
+{
+  if (!udp_socket->is_connected() || length <= 0) {
     return 0;
   }
 
@@ -48,7 +60,8 @@ int BaseBroadcaster::send(const void * data, const int & length)
   // Sent to each recipent socket addresses
   int lowest_sent = -1;
   for (const auto & sa : sas) {
-    int sent = sendto(sockfd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
+    int sent = sendto(
+      udp_socket->get_sockfd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
     // If lowest_sent is not yet set (-1) or sent is less than lowest_sent
     if (lowest_sent < 0 || sent < lowest_sent) {
@@ -68,6 +81,11 @@ void BaseBroadcaster::enable_broadcast(const bool & enable)
 void BaseBroadcaster::add_target_host(const std::string & target_host)
 {
   target_hosts.push_back(target_host);
+}
+
+std::shared_ptr<UdpSocket> BaseBroadcaster::get_udp_socket() const
+{
+  return udp_socket;
 }
 
 const int & BaseBroadcaster::get_port() const

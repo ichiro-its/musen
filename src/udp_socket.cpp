@@ -46,19 +46,19 @@ bool UdpSocket::connect()
 
   // Create a new socket
   sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sockfd < 0) {
+  if (get_sockfd() < 0) {
     return false;
   }
 
   // Enable broadcast
   int opt = 1;
   setsockopt(
-    sockfd, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    get_sockfd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
     sizeof(opt));
 
   // Enable non-blocking
-  int flags = fcntl(sockfd, F_GETFL, 0);
-  fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+  int flags = fcntl(get_sockfd(), F_GETFL, 0);
+  fcntl(get_sockfd(), F_SETFL, flags | O_NONBLOCK);
 
   return true;
 }
@@ -76,9 +76,14 @@ bool UdpSocket::disconnect()
   return true;
 }
 
+const int & UdpSocket::get_sockfd() const
+{
+  return sockfd;
+}
+
 bool UdpSocket::is_connected() const
 {
-  return sockfd >= 0;
+  return get_sockfd() >= 0;
 }
 
 }  // namespace musen

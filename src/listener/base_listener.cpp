@@ -24,18 +24,20 @@
 
 #include <algorithm>
 #include <cstring>
+#include <memory>
 
 namespace musen
 {
 
-BaseListener::BaseListener(const int & port)
-: port(port)
+BaseListener::BaseListener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
+: udp_socket(udp_socket),
+  port(port)
 {
 }
 
 bool BaseListener::connect()
 {
-  if (!UdpSocket::connect()) {
+  if (!udp_socket->connect()) {
     return false;
   }
 
@@ -50,16 +52,21 @@ bool BaseListener::connect()
   }
 
   // Bind the socket with the recipent address
-  if (bind(sockfd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (bind(udp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 
   return true;
 }
 
+bool BaseListener::disconnect()
+{
+  return udp_socket->disconnect();
+}
+
 int BaseListener::receive(void * buffer, const int & length)
 {
-  if (!is_connected() || length <= 0) {
+  if (!udp_socket->is_connected() || length <= 0) {
     return 0;
   }
 
@@ -67,9 +74,14 @@ int BaseListener::receive(void * buffer, const int & length)
   socklen_t sa_len = sizeof(sa);
 
   // Receive data
-  int received = recvfrom(sockfd, buffer, length, 0, &sa, &sa_len);
+  int received = recvfrom(udp_socket->get_sockfd(), buffer, length, 0, &sa, &sa_len);
 
   return std::max(received, 0);
+}
+
+std::shared_ptr<UdpSocket> BaseListener::get_udp_socket() const
+{
+  return udp_socket;
 }
 
 const int & BaseListener::get_port() const
