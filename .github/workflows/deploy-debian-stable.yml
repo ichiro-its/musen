@@ -1,0 +1,38 @@
+name: Deploy Debian Stable
+on:
+  release:
+    types: [created]
+jobs:
+  deploy-debian-stable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2.3.4
+        with:
+          path: musen
+
+      - name: Build stable Debian package
+        uses: ichiro-its/ros2-build-debian-action@main
+
+      - name: Deploy stable Debian package to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          source: "package/*.deb"
+          target: "~/temp/stable/musen/"
+          rm: true
+
+      - name: Prepare stable Debian package in the server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          script: |
+            cd ~/repository/debian
+            reprepro includedeb stable ~/temp/stable/musen/package/*.deb
+            rm -rf ~/temp/stable/musen/
