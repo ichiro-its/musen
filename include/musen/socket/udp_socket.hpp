@@ -18,72 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/udp_socket.hpp>
+#ifndef MUSEN__UDP_SOCKET_HPP_
+#define MUSEN__UDP_SOCKET_HPP_
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <sys/socket.h>
-#include <unistd.h>
+#include "./base_socket.hpp"
 
 namespace musen
 {
 
-UdpSocket::UdpSocket()
-: sockfd(-1)
+class UdpSocket : public BaseSocket
 {
-}
-
-UdpSocket::~UdpSocket()
-{
-  disconnect();
-}
-
-bool UdpSocket::connect()
-{
-  if (is_connected()) {
-    return false;
-  }
-
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (get_sockfd() < 0) {
-    return false;
-  }
-
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    get_sockfd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
-
-  // Enable non-blocking
-  int flags = fcntl(get_sockfd(), F_GETFL, 0);
-  fcntl(get_sockfd(), F_SETFL, flags | O_NONBLOCK);
-
-  return true;
-}
-
-bool UdpSocket::disconnect()
-{
-  if (!is_connected()) {
-    return false;
-  }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
-}
-
-const int & UdpSocket::get_sockfd() const
-{
-  return sockfd;
-}
-
-bool UdpSocket::is_connected() const
-{
-  return get_sockfd() >= 0;
-}
+public:
+  bool connect();
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__UDP_SOCKET_HPP_

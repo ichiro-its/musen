@@ -18,17 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#ifndef MUSEN__BASE_SOCKET_HPP_
+#define MUSEN__BASE_SOCKET_HPP_
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
+namespace musen
+{
 
-#endif  // MUSEN__MUSEN_HPP_
+class BaseSocket
+{
+public:
+  BaseSocket();
+  ~BaseSocket();
+
+  virtual bool disconnect();
+
+  const int & get_sockfd() const;
+
+  bool is_connected() const;
+
+protected:
+  int sockfd;
+};
+
+}  // namespace musen
+
+#endif  // MUSEN__BASE_SOCKET_HPP_

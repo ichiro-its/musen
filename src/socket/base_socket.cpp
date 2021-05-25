@@ -18,17 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#include <musen/socket/base_socket.hpp>
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
-#endif  // MUSEN__MUSEN_HPP_
+namespace musen
+{
+
+BaseSocket::BaseSocket()
+: sockfd(-1)
+{
+}
+
+BaseSocket::~BaseSocket()
+{
+  disconnect();
+}
+
+bool BaseSocket::disconnect()
+{
+  if (!is_connected()) {
+    return false;
+  }
+
+  // Close the socket
+  close(sockfd);
+  sockfd = -1;
+
+  return true;
+}
+
+const int & BaseSocket::get_sockfd() const
+{
+  return sockfd;
+}
+
+bool BaseSocket::is_connected() const
+{
+  return get_sockfd() >= 0;
+}
+
+}  // namespace musen

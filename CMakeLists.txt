@@ -23,7 +23,9 @@ add_library(${PROJECT_NAME}
   "src/broadcaster/string_broadcaster.cpp"
   "src/listener/base_listener.cpp"
   "src/listener/string_listener.cpp"
-  "src/udp_socket.cpp")
+  "src/socket/base_socket.cpp"
+  "src/socket/tcp_socket.cpp"
+  "src/socket/udp_socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

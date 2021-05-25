@@ -18,17 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#include <musen/socket/udp_socket.hpp>
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
-#endif  // MUSEN__MUSEN_HPP_
+namespace musen
+{
+
+bool UdpSocket::connect()
+{
+  if (is_connected()) {
+    return false;
+  }
+
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (get_sockfd() < 0) {
+    return false;
+  }
+
+  // Enable broadcast
+  int opt = 1;
+  setsockopt(
+    get_sockfd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
+
+  // Enable non-blocking
+  int flags = fcntl(get_sockfd(), F_GETFL, 0);
+  fcntl(get_sockfd(), F_SETFL, flags | O_NONBLOCK);
+
+  return true;
+}
+
+}  // namespace musen
