@@ -40,7 +40,14 @@ BaseBroadcaster::BaseBroadcaster(const int & port, std::shared_ptr<UdpSocket> ud
 
 bool BaseBroadcaster::connect()
 {
-  return udp_socket->connect();
+  auto result = udp_socket->connect();
+
+  if (result) {
+    // Reobtain recipent socket addresses after connected
+    recipent_sas = obtain_recipent_sas();
+  }
+
+  return result;
 }
 
 bool BaseBroadcaster::disconnect()
@@ -54,12 +61,9 @@ int BaseBroadcaster::send(const char * data, const int & length)
     return 0;
   }
 
-  // Get list of recipent socket addresses
-  const auto & sas = get_recipent_sas();
-
   // Sent to each recipent socket addresses
   int lowest_sent = -1;
-  for (const auto & sa : sas) {
+  for (const auto & sa : recipent_sas) {
     int sent = sendto(
       udp_socket->get_sockfd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
@@ -76,11 +80,17 @@ int BaseBroadcaster::send(const char * data, const int & length)
 void BaseBroadcaster::enable_broadcast(const bool & enable)
 {
   broadcast = enable;
+
+  // Reobtain recipent socket addresses after broadcast changed
+  recipent_sas = obtain_recipent_sas();
 }
 
 void BaseBroadcaster::add_target_host(const std::string & target_host)
 {
   target_hosts.push_back(target_host);
+
+  // Reobtain recipent socket addresses after target host changed
+  recipent_sas = obtain_recipent_sas();
 }
 
 std::shared_ptr<UdpSocket> BaseBroadcaster::get_udp_socket() const
@@ -93,17 +103,17 @@ const int & BaseBroadcaster::get_port() const
   return port;
 }
 
-std::list<struct sockaddr_in> BaseBroadcaster::get_recipent_sas() const
+std::list<struct sockaddr_in> BaseBroadcaster::obtain_recipent_sas() const
 {
   std::list<struct sockaddr_in> sas;
 
-  sas.splice(sas.end(), get_recipent_sas_from_broadcast_ifas());
-  sas.splice(sas.end(), get_recipent_sas_from_target_hosts());
+  sas.splice(sas.end(), obtain_recipent_sas_from_broadcast_ifas());
+  sas.splice(sas.end(), obtain_recipent_sas_from_target_hosts());
 
   return sas;
 }
 
-std::list<struct sockaddr_in> BaseBroadcaster::get_recipent_sas_from_broadcast_ifas() const
+std::list<struct sockaddr_in> BaseBroadcaster::obtain_recipent_sas_from_broadcast_ifas() const
 {
   std::list<struct sockaddr_in> sas;
 
@@ -145,7 +155,7 @@ std::list<struct sockaddr_in> BaseBroadcaster::get_recipent_sas_from_broadcast_i
   return sas;
 }
 
-std::list<struct sockaddr_in> BaseBroadcaster::get_recipent_sas_from_target_hosts() const
+std::list<struct sockaddr_in> BaseBroadcaster::obtain_recipent_sas_from_target_hosts() const
 {
   std::list<struct sockaddr_in> sas;
 
