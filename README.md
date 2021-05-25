@@ -2,9 +2,10 @@
 
 [![latest version](https://img.shields.io/github/v/release/ichiro-its/musen)](https://github.com/ichiro-its/musen/releases/)
 [![commits since latest version](https://img.shields.io/github/commits-since/ichiro-its/musen/latest)](https://github.com/ichiro-its/musen/commits/master)
-[![milestone](https://img.shields.io/github/milestones/progress/ichiro-its/musen/1?label=milestone)](https://github.com/ichiro-its/musen/milestone/2)
 [![license](https://img.shields.io/github/license/ichiro-its/musen)](./LICENSE)
-[![build and test status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Build%20and%20Test?label=build%20and%20test)](https://github.com/ichiro-its/musen/actions)
+[![test status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Build%20and%20Test?label=test)](https://github.com/ichiro-its/musen/actions)
+[![deploy stable status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Deploy%20Debian%20Stable?label=deploy%20stable)](https://repository.ichiro-its.org/)
+[![deploy nightly status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Deploy%20Debian%20Nightly?label=deploy%20nightly)](https://repository.ichiro-its.org/)
 
 Musen (無線, wireless) is a [ROS 2](https://docs.ros.org/en/foxy/index.html) package that provides a [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) broadcast communication library for a ROS 2 project.
 This package is written in C++ and currently only works on Linux based operating system.
