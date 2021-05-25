@@ -25,7 +25,7 @@ In this package, the broadcast communication will be handled by a Broadcaster ob
 ### Binary Packages
 
 - See [releases](https://github.com/ichiro-its/musen/releases) for the latest version of this package.
-- Alternatively, this package also available on [ICHIRO ITS Repository](https://repository.ichiro-its.org/) as a `ros-foxy-musen` package.
+- Alternatively, this package also available on [ICHIRO ITS Repository](https://repository.ichiro-its.org/) as `ros-foxy-musen` package.
 
 ### Build From Source
 
