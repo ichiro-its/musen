@@ -21,6 +21,8 @@
 #ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
 #define MUSEN__LISTENER__BASE_LISTENER_HPP_
 
+#include <memory>
+
 #include "../udp_socket.hpp"
 
 namespace musen
@@ -29,15 +31,21 @@ namespace musen
 class BaseListener : public UdpSocket
 {
 public:
-  explicit BaseListener(const int & port);
+  explicit BaseListener(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
-  bool connect() override;
+  bool connect();
+  bool disconnect();
 
   int receive(void * buffer, const int & length);
+
+  std::shared_ptr<UdpSocket> get_udp_socket() const;
 
   const int & get_port() const;
 
 protected:
+  std::shared_ptr<UdpSocket> udp_socket;
+
   int port;
 };
 

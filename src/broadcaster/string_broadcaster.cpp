@@ -20,14 +20,15 @@
 
 #include <musen/broadcaster/string_broadcaster.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace musen
 {
 
-StringBroadcaster::StringBroadcaster(const int & port)
-: BaseBroadcaster(port)
+StringBroadcaster::StringBroadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket)
+: BaseBroadcaster(port, udp_socket)
 {
 }
 

@@ -21,6 +21,7 @@
 #ifndef MUSEN__BROADCASTER__STRING_BROADCASTER_HPP_
 #define MUSEN__BROADCASTER__STRING_BROADCASTER_HPP_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -32,7 +33,8 @@ namespace musen
 class StringBroadcaster : public BaseBroadcaster
 {
 public:
-  explicit StringBroadcaster(const int & port);
+  explicit StringBroadcaster(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
   int send(const std::string & message);
   int send(const std::vector<std::string> & messages, const std::string & delimiter = ",");

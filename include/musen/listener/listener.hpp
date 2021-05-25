@@ -32,8 +32,9 @@ template<typename T>
 class Listener : public BaseListener
 {
 public:
-  explicit Listener(const int & port)
-  : BaseListener(port)
+  explicit Listener(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>())
+  : BaseListener(port, udp_socket)
   {
   }
 

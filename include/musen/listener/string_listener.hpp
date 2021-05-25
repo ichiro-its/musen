@@ -21,6 +21,7 @@
 #ifndef MUSEN__LISTENER__STRING_LISTENER_HPP_
 #define MUSEN__LISTENER__STRING_LISTENER_HPP_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -32,7 +33,8 @@ namespace musen
 class StringListener : public BaseListener
 {
 public:
-  explicit StringListener(const int & port);
+  explicit StringListener(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
   std::string receive(const int & length);
   std::vector<std::string> receive(const int & length, const std::string & delimiter);

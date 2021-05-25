@@ -21,6 +21,8 @@
 #ifndef MUSEN__BROADCASTER__BROADCASTER_HPP_
 #define MUSEN__BROADCASTER__BROADCASTER_HPP_
 
+#include <memory>
+
 #include "./base_broadcaster.hpp"
 
 namespace musen
@@ -30,14 +32,15 @@ template<typename T>
 class Broadcaster : public BaseBroadcaster
 {
 public:
-  explicit Broadcaster(const int & port)
-  : BaseBroadcaster(port)
+  explicit Broadcaster(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>())
+  : BaseBroadcaster(port, udp_socket)
   {
   }
 
   int send(const T & data)
   {
-    return BaseBroadcaster::send(&data, sizeof(data));
+    return BaseBroadcaster::send((const char *)&data, sizeof(data));
   }
 };
 
