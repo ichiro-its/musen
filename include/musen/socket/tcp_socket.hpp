@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__TCP_SOCKET_HPP_
-#define MUSEN__TCP_SOCKET_HPP_
+#ifndef MUSEN__SOCKET__TCP_SOCKET_HPP_
+#define MUSEN__SOCKET__TCP_SOCKET_HPP_
 
 #include "./base_socket.hpp"
 
@@ -29,9 +29,9 @@ namespace musen
 class TcpSocket : public BaseSocket
 {
 public:
-  bool connect();
+  bool connect_socket();
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__TCP_SOCKET_HPP_
+#endif  // MUSEN__SOCKET__TCP_SOCKET_HPP_

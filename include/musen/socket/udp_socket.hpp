@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__UDP_SOCKET_HPP_
-#define MUSEN__UDP_SOCKET_HPP_
+#ifndef MUSEN__SOCKET__UDP_SOCKET_HPP_
+#define MUSEN__SOCKET__UDP_SOCKET_HPP_
 
 #include "./base_socket.hpp"
 
@@ -34,4 +34,4 @@ public:
 
 }  // namespace musen
 
-#endif  // MUSEN__UDP_SOCKET_HPP_
+#endif  // MUSEN__SOCKET__UDP_SOCKET_HPP_

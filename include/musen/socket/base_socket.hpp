@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__BASE_SOCKET_HPP_
-#define MUSEN__BASE_SOCKET_HPP_
+#ifndef MUSEN__SOCKET__BASE_SOCKET_HPP_
+#define MUSEN__SOCKET__BASE_SOCKET_HPP_
 
 namespace musen
 {
@@ -42,4 +42,4 @@ protected:
 
 }  // namespace musen
 
-#endif  // MUSEN__BASE_SOCKET_HPP_
+#endif  // MUSEN__SOCKET__BASE_SOCKET_HPP_
