@@ -18,21 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#ifndef MUSEN__CLIENT__CLIENT_HPP_
+#define MUSEN__CLIENT__CLIENT_HPP_
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
+#include <memory>
+#include <string>
 
-#endif  // MUSEN__MUSEN_HPP_
+#include "./base_client.hpp"
+
+namespace musen
+{
+
+template<typename T>
+class Client : public BaseClient
+{
+public:
+  explicit Client(
+    const std::string & host, const int & port,
+    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
+  : BaseClient(host, port, tcp_socket)
+  {
+  }
+
+  std::shared_ptr<T> receive()
+  {
+    auto data = std::make_shared<T>();
+
+    int received = BaseClient::receive(data.get(), sizeof(T));
+
+    if (received < (signed)sizeof(T)) {
+      return nullptr;
+    }
+
+    return data;
+  }
+
+  int send(const T & data)
+  {
+    return BaseClient::send((const char *)&data, sizeof(data));
+  }
+};
+
+}  // namespace musen
+
+#endif  // MUSEN__CLIENT__CLIENT_HPP_

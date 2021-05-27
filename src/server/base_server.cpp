@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/client.hpp>
+#include <musen/server/base_server.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -34,14 +34,15 @@ namespace musen
 const auto & connect_socket = connect;
 const auto & socket_send = send;
 
-Client::Client(const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
+BaseServer::BaseServer(
+  const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
   host(host),
   port(port)
 {
 }
 
-bool Client::connect()
+bool BaseServer::connect()
 {
   if (!tcp_socket->connect()) {
     return false;
@@ -53,61 +54,74 @@ bool Client::connect()
     memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = inet_addr(host.c_str());
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
     sa.sin_port = htons(port);
   }
 
-  // Connect to the server address
-  if (connect_socket(1, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  // Bind the socket to server address
+  if (bind(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+    return false;
+  }
+
+  // Listen to incoming connection
+  if (listen(tcp_socket->get_sockfd(), 3) < 0) {
+    return false;
+  }
+
+  // Accept incoming connection
+  new_sockfd = accept(
+    tcp_socket->get_sockfd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(sizeof(sa)));
+
+  if (get_new_sockfd() < 0) {
     return false;
   }
 
   return true;
 }
 
-bool Client::disconnect()
+bool BaseServer::disconnect()
 {
   return tcp_socket->disconnect();
 }
 
-int Client::receive(void * buffer, const int & length)
+int BaseServer::receive(void * buffer, const int & length)
 {
   if (!tcp_socket->is_connected() || length <= 0) {
     return 0;
   }
 
   // Receive data
-  int received = recv(tcp_socket->get_sockfd(), buffer, length, 0);
+  int received = recv(get_new_sockfd(), buffer, length, 0);
 
   return std::max(received, 0);
 }
 
-int Client::send(void * buffer, const int & length)
+int BaseServer::send(const char * buffer, const int & length)
 {
   if (!tcp_socket->is_connected() || length <= 0) {
     return false;
   }
 
   // Send data
-  int sent = socket_send(tcp_socket->get_sockfd(), buffer, length, 0);
+  int sent = socket_send(get_new_sockfd(), buffer, length, 0);
 
   return std::max(sent, 0);
   return true;
 }
 
-std::shared_ptr<TcpSocket> Client::get_tcp_socket() const
+std::shared_ptr<TcpSocket> BaseServer::get_tcp_socket() const
 {
   return tcp_socket;
 }
 
-const std::string & Client::get_host() const
-{
-  return host;
-}
-
-const int & Client::get_port() const
+const int & BaseServer::get_port() const
 {
   return port;
+}
+
+const int & BaseServer::get_new_sockfd() const
+{
+  return new_sockfd;
 }
 
 }  // namespace musen

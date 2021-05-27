@@ -18,21 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#ifndef MUSEN__SERVER__BASE_SERVER_HPP_
+#define MUSEN__SERVER__BASE_SERVER_HPP_
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
+#include <memory>
+#include <string>
 
-#endif  // MUSEN__MUSEN_HPP_
+#include "../socket/tcp_socket.hpp"
+
+namespace musen
+{
+
+class BaseServer : public TcpSocket
+{
+public:
+  explicit BaseServer(
+    const std::string & host, const int & port,
+    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+
+  bool connect();
+  bool disconnect();
+
+  int receive(void * buffer, const int & length);
+  int send(const char * buffer, const int & length);
+
+  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+
+  const int & get_port() const;
+  const int & get_new_sockfd() const;
+
+protected:
+  std::shared_ptr<TcpSocket> tcp_socket;
+
+  std::string host;
+  int port;
+  int new_sockfd;
+};
+
+}  // namespace musen
+
+#endif  // MUSEN__SERVER__BASE_SERVER_HPP_

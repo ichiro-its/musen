@@ -18,42 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__CLIENT_HPP_
-#define MUSEN__CLIENT_HPP_
+#ifndef MUSEN__SERVER__SERVER_HPP_
+#define MUSEN__SERVER__SERVER_HPP_
 
 #include <memory>
 #include <string>
 
-#include "socket/tcp_socket.hpp"
+#include "./base_server.hpp"
 
 namespace musen
 {
 
-class Client : public TcpSocket
+template<typename T>
+class Server : public BaseServer
 {
 public:
-  explicit Client(
+  explicit Server(
     const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
+  : BaseServer(host, port, tcp_socket)
+  {
+  }
 
-  bool connect();
-  bool disconnect();
+  std::shared_ptr<T> receive()
+  {
+    auto data = std::make_shared<T>();
 
-  int receive(void * buffer, const int & length);
-  int send(void * buffer, const int & length);
+    int received = BaseServer::receive(data.get(), sizeof(T));
 
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+    if (received < (signed)sizeof(T)) {
+      return nullptr;
+    }
 
-  const std::string & get_host() const;
-  const int & get_port() const;
+    return data;
+  }
 
-protected:
-  std::shared_ptr<TcpSocket> tcp_socket;
-
-  std::string host;
-  int port;
+  int send(const T & data)
+  {
+    return BaseServer::send((const char *)&data, sizeof(data));
+  }
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__CLIENT_HPP_
+#endif  // MUSEN__SERVER__SERVER_HPP_

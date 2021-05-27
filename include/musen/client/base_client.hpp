@@ -18,43 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SERVER_HPP_
-#define MUSEN__SERVER_HPP_
+#ifndef MUSEN__CLIENT__BASE_CLIENT_HPP_
+#define MUSEN__CLIENT__BASE_CLIENT_HPP_
 
 #include <memory>
 #include <string>
 
-#include "socket/tcp_socket.hpp"
+#include "../socket/tcp_socket.hpp"
 
 namespace musen
 {
 
-class Server : public TcpSocket
+class BaseClient : public TcpSocket
 {
 public:
-  explicit Server(
-    const int & port,
+  explicit BaseClient(
+    const std::string & host, const int & port,
     std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
   bool connect();
   bool disconnect();
 
   int receive(void * buffer, const int & length);
-  int send(void * buffer, const int & length);
+  int send(const char * buffer, const int & length);
 
   std::shared_ptr<TcpSocket> get_tcp_socket() const;
 
+  const std::string & get_host() const;
   const int & get_port() const;
-  const int & get_new_sockfd() const;
 
 protected:
   std::shared_ptr<TcpSocket> tcp_socket;
 
   std::string host;
   int port;
-  int new_sockfd;
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__SERVER_HPP_
+#endif  // MUSEN__CLIENT__BASE_CLIENT_HPP_
