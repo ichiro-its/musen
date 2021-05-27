@@ -59,7 +59,7 @@ bool BaseClient::connect()
   }
 
   // Connect to the server address
-  if (connect_socket(1, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (connect_socket(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 

@@ -67,8 +67,9 @@ bool BaseServer::connect()
   }
 
   // Accept incoming connection
+  auto sa_size = sizeof(sa);
   new_sockfd = accept(
-    tcp_socket->get_sockfd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(sizeof(sa)));
+    tcp_socket->get_sockfd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(&sa_size));
 
   if (get_new_sockfd() < 0) {
     return false;
