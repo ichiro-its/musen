@@ -34,9 +34,8 @@ class Server : public BaseServer
 {
 public:
   explicit Server(
-    const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
-  : BaseServer(host, port, tcp_socket)
+    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
+  : BaseServer(port, tcp_socket)
   {
   }
 

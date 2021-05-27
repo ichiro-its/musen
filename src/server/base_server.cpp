@@ -34,10 +34,8 @@ namespace musen
 const auto & connect_socket = connect;
 const auto & socket_send = send;
 
-BaseServer::BaseServer(
-  const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
+BaseServer::BaseServer(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
-  host(host),
   port(port)
 {
 }

@@ -33,8 +33,7 @@ class BaseServer : public TcpSocket
 {
 public:
   explicit BaseServer(
-    const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
   bool connect();
   bool disconnect();
@@ -50,7 +49,6 @@ public:
 protected:
   std::shared_ptr<TcpSocket> tcp_socket;
 
-  std::string host;
   int port;
   int new_sockfd;
 };
