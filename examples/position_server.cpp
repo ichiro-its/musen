@@ -36,7 +36,6 @@ int main()
 {
   musen::Server<Position> server(8080);
 
-
   if (!server.connect()) {
     std::cerr << "Failed to connect to port " <<
       server.get_port() << "!" << std::endl;

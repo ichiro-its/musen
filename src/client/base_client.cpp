@@ -31,8 +31,8 @@
 namespace musen
 {
 
-const auto & connect_socket = connect;
-const auto & socket_send = send;
+constexpr auto connect_socket = connect;
+constexpr auto socket_send = send;
 
 BaseClient::BaseClient(
   const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
