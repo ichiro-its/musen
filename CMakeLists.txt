@@ -67,6 +67,7 @@ if(BUILD_TESTING)
     "test/base_broadcaster_and_listener_test.cpp"
     "test/broadcaster_and_listener_test.cpp"
     "test/string_broadcaster_and_listener_test.cpp"
+    "test/tcp_socket_test.cpp"
     "test/udp_socket_test.cpp")
 
   target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
