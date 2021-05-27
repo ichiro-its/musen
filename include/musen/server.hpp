@@ -39,8 +39,8 @@ public:
   bool connect();
   bool disconnect();
 
-  int receive_message(void * buffer, const int & length);
-  int send_message(void * buffer, const int & length);
+  int receive(void * buffer, const int & length);
+  int send(void * buffer, const int & length);
 
   std::shared_ptr<TcpSocket> get_tcp_socket() const;
 

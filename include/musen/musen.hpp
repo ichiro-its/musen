@@ -30,5 +30,7 @@
 #include "./socket/base_socket.hpp"
 #include "./socket/tcp_socket.hpp"
 #include "./socket/udp_socket.hpp"
+#include "./client.hpp"
+#include "./server.hpp"
 
 #endif  // MUSEN__MUSEN_HPP_

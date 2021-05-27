@@ -32,6 +32,7 @@ namespace musen
 {
 
 const auto & connect_socket = connect;
+const auto & socket_send = send;
 
 Server::Server(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
@@ -81,7 +82,7 @@ bool Server::disconnect()
   return tcp_socket->disconnect();
 }
 
-int Server::receive_message(void * buffer, const int & length)
+int Server::receive(void * buffer, const int & length)
 {
   if (!tcp_socket->is_connected() || length <= 0) {
     return 0;
@@ -93,14 +94,14 @@ int Server::receive_message(void * buffer, const int & length)
   return std::max(received, 0);
 }
 
-int Server::send_message(void * buffer, const int & length)
+int Server::send(void * buffer, const int & length)
 {
   if (!tcp_socket->is_connected() || length <= 0) {
     return false;
   }
 
   // Send data
-  int sent = send(get_new_sockfd(), buffer, length, 0);
+  int sent = socket_send(get_new_sockfd(), buffer, length, 0);
 
   return std::max(sent, 0);
   return true;
