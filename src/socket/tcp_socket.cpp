@@ -27,7 +27,7 @@
 namespace musen
 {
 
-bool TcpSocket::connect_socket()
+bool TcpSocket::connect()
 {
   if (is_connected()) {
     return false;

@@ -31,6 +31,8 @@
 namespace musen
 {
 
+const auto & connect_socket = connect;
+
 Client::Client(const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
   host(host),
@@ -38,9 +40,9 @@ Client::Client(const std::string & host, const int & port, std::shared_ptr<TcpSo
 {
 }
 
-bool Client::connect_client()
+bool Client::connect()
 {
-  if (!tcp_socket->connect_socket()) {
+  if (!tcp_socket->connect()) {
     return false;
   }
 
@@ -55,14 +57,14 @@ bool Client::connect_client()
   }
 
   // Connect to the server address
-  if (connect(1, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (connect_socket(1, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 
   return true;
 }
 
-bool Client::disconnect_client()
+bool Client::disconnect()
 {
   return tcp_socket->disconnect();
 }
@@ -95,6 +97,11 @@ int Client::send_message(void * buffer, const int & length)
 std::shared_ptr<TcpSocket> Client::get_tcp_socket() const
 {
   return tcp_socket;
+}
+
+const std::string & Client::get_host() const
+{
+  return host;
 }
 
 const int & Client::get_port() const

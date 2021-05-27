@@ -36,8 +36,8 @@ public:
     const std::string & host, const int & port,
     std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
-  bool connect_client();
-  bool disconnect_client();
+  bool connect();
+  bool disconnect();
 
   int receive_message(void * buffer, const int & length);
   int send_message(void * buffer, const int & length);
