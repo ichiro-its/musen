@@ -44,6 +44,8 @@ set(EXECUTABLES
   "examples/hello_world_listener.cpp"
   "examples/position_broadcaster.cpp"
   "examples/position_listener.cpp"
+  "examples/position_client.cpp"
+  "examples/position_server.cpp"
   "examples/fruits_broadcaster.cpp"
   "examples/fruits_listener.cpp")
 
