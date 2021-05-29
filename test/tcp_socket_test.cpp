@@ -18,37 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
-#include <memory>
+TEST(TcpSocketTest, ConnectDisconnect) {
+  musen::TcpSocket udp_socket;
 
-#include "../socket/udp_socket.hpp"
+  // The TCP socket isn't connected yet
+  ASSERT_FALSE(udp_socket.is_connected());
 
-namespace musen
-{
+  // Trying to connect the TCP socket
+  ASSERT_TRUE(udp_socket.connect());
+  ASSERT_TRUE(udp_socket.is_connected());
 
-class BaseListener : public UdpSocket
-{
-public:
-  explicit BaseListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  // Must be failed because the TCP socket is already connected
+  ASSERT_FALSE(udp_socket.connect());
+  ASSERT_TRUE(udp_socket.is_connected());
 
-  bool connect();
-  bool disconnect();
+  // Trying to disconnect the TCP socket
+  ASSERT_TRUE(udp_socket.disconnect());
+  ASSERT_FALSE(udp_socket.is_connected());
 
-  int receive(void * buffer, const int & length);
-
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
-
-  const int & get_port() const;
-
-protected:
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  int port;
-};
-
-}  // namespace musen
-
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+  // Must be failed because the TCP socket is already disconnected
+  ASSERT_FALSE(udp_socket.disconnect());
+  ASSERT_FALSE(udp_socket.is_connected());
+}

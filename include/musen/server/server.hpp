@@ -18,72 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/udp_socket.hpp>
+#ifndef MUSEN__SERVER__SERVER_HPP_
+#define MUSEN__SERVER__SERVER_HPP_
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <sys/socket.h>
-#include <unistd.h>
+#include <memory>
+#include <string>
+
+#include "./base_server.hpp"
 
 namespace musen
 {
 
-UdpSocket::UdpSocket()
-: sockfd(-1)
+template<typename T>
+class Server : public BaseServer
 {
-}
-
-UdpSocket::~UdpSocket()
-{
-  disconnect();
-}
-
-bool UdpSocket::connect()
-{
-  if (is_connected()) {
-    return false;
+public:
+  explicit Server(
+    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
+  : BaseServer(port, tcp_socket)
+  {
   }
 
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (get_sockfd() < 0) {
-    return false;
+  std::shared_ptr<T> receive()
+  {
+    auto data = std::make_shared<T>();
+
+    int received = BaseServer::receive(data.get(), sizeof(T));
+
+    if (received < (signed)sizeof(T)) {
+      return nullptr;
+    }
+
+    return data;
   }
 
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    get_sockfd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
-
-  // Enable non-blocking
-  int flags = fcntl(get_sockfd(), F_GETFL, 0);
-  fcntl(get_sockfd(), F_SETFL, flags | O_NONBLOCK);
-
-  return true;
-}
-
-bool UdpSocket::disconnect()
-{
-  if (!is_connected()) {
-    return false;
+  int send(const T & data)
+  {
+    return BaseServer::send((const char *)&data, sizeof(data));
   }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
-}
-
-const int & UdpSocket::get_sockfd() const
-{
-  return sockfd;
-}
-
-bool UdpSocket::is_connected() const
-{
-  return get_sockfd() >= 0;
-}
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__SERVER__SERVER_HPP_

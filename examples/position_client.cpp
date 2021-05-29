@@ -18,37 +18,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#include <musen/musen.hpp>
 
-#include <memory>
+#include <unistd.h>
 
-#include "../socket/udp_socket.hpp"
+#include <iostream>
+#include <string>
 
-namespace musen
+struct Position
 {
-
-class BaseListener : public UdpSocket
-{
-public:
-  explicit BaseListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
-
-  bool connect();
-  bool disconnect();
-
-  int receive(void * buffer, const int & length);
-
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
-
-  const int & get_port() const;
-
-protected:
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  int port;
+  int x;
+  int y;
+  int z;
 };
 
-}  // namespace musen
+int main()
+{
+  musen::Client<Position> client("127.0.0.1", 8080);
 
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+  if (!client.connect()) {
+    std::cerr << "Failed to connect to server on port " <<
+      client.get_port() << "!" << std::endl;
+
+    return 1;
+  }
+
+  unsigned int seed = time(NULL);
+
+  while (true) {
+    auto received_position = client.receive();
+
+    if (received_position != nullptr) {
+      std::cout << "Received: " <<
+        received_position->x << ", " <<
+        received_position->y << ", " <<
+        received_position->z << std::endl;
+    }
+
+    Position position;
+
+    position.x = rand_r(&seed) % 100;
+    position.y = rand_r(&seed) % 100;
+    position.z = rand_r(&seed) % 100;
+
+    client.send(position);
+
+    std::cout << "Sent: " <<
+      position.x << ", " <<
+      position.y << ", " <<
+      position.z << std::endl;
+
+    sleep(1);
+  }
+
+  client.disconnect();
+
+  return 0;
+}

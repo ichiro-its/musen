@@ -27,7 +27,7 @@
 #include <memory>
 #include <string>
 
-#include "../udp_socket.hpp"
+#include "../socket/udp_socket.hpp"
 
 namespace musen
 {

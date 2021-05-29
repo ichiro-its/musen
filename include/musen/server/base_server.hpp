@@ -18,37 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#ifndef MUSEN__SERVER__BASE_SERVER_HPP_
+#define MUSEN__SERVER__BASE_SERVER_HPP_
 
 #include <memory>
+#include <string>
 
-#include "../socket/udp_socket.hpp"
+#include "../socket/tcp_socket.hpp"
 
 namespace musen
 {
 
-class BaseListener : public UdpSocket
+class BaseServer : public TcpSocket
 {
 public:
-  explicit BaseListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  explicit BaseServer(
+    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
   bool connect();
   bool disconnect();
 
   int receive(void * buffer, const int & length);
+  int send(const char * buffer, const int & length);
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+  std::shared_ptr<TcpSocket> get_tcp_socket() const;
 
   const int & get_port() const;
+  const int & get_new_sockfd() const;
 
 protected:
-  std::shared_ptr<UdpSocket> udp_socket;
+  std::shared_ptr<TcpSocket> tcp_socket;
 
   int port;
+  int new_sockfd;
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+#endif  // MUSEN__SERVER__BASE_SERVER_HPP_

@@ -18,37 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#include <musen/socket/udp_socket.hpp>
 
-#include <memory>
-
-#include "../socket/udp_socket.hpp"
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 namespace musen
 {
 
-class BaseListener : public UdpSocket
+bool UdpSocket::connect()
 {
-public:
-  explicit BaseListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  if (is_connected()) {
+    return false;
+  }
 
-  bool connect();
-  bool disconnect();
+  // Create a new socket
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (get_sockfd() < 0) {
+    return false;
+  }
 
-  int receive(void * buffer, const int & length);
+  // Enable broadcast
+  int opt = 1;
+  setsockopt(
+    get_sockfd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+  // Enable non-blocking
+  int flags = fcntl(get_sockfd(), F_GETFL, 0);
+  fcntl(get_sockfd(), F_SETFL, flags | O_NONBLOCK);
 
-  const int & get_port() const;
-
-protected:
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  int port;
-};
+  return true;
+}
 
 }  // namespace musen
-
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_

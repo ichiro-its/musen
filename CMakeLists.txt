@@ -23,7 +23,11 @@ add_library(${PROJECT_NAME}
   "src/broadcaster/string_broadcaster.cpp"
   "src/listener/base_listener.cpp"
   "src/listener/string_listener.cpp"
-  "src/udp_socket.cpp")
+  "src/socket/base_socket.cpp"
+  "src/socket/tcp_socket.cpp"
+  "src/socket/udp_socket.cpp"
+  "src/client/base_client.cpp"
+  "src/server/base_server.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -40,6 +44,8 @@ set(EXECUTABLES
   "examples/hello_world_listener.cpp"
   "examples/position_broadcaster.cpp"
   "examples/position_listener.cpp"
+  "examples/position_client.cpp"
+  "examples/position_server.cpp"
   "examples/fruits_broadcaster.cpp"
   "examples/fruits_listener.cpp")
 
@@ -61,6 +67,9 @@ if(BUILD_TESTING)
     "test/base_broadcaster_and_listener_test.cpp"
     "test/broadcaster_and_listener_test.cpp"
     "test/string_broadcaster_and_listener_test.cpp"
+    "test/base_client_and_server_test.cpp"
+    "test/client_and_server_test.cpp"
+    "test/tcp_socket_test.cpp"
     "test/udp_socket_test.cpp")
 
   target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})

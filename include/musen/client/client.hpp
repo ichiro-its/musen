@@ -18,37 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#ifndef MUSEN__CLIENT__CLIENT_HPP_
+#define MUSEN__CLIENT__CLIENT_HPP_
 
 #include <memory>
+#include <string>
 
-#include "../socket/udp_socket.hpp"
+#include "./base_client.hpp"
 
 namespace musen
 {
 
-class BaseListener : public UdpSocket
+template<typename T>
+class Client : public BaseClient
 {
 public:
-  explicit BaseListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  explicit Client(
+    const std::string & host, const int & port,
+    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>())
+  : BaseClient(host, port, tcp_socket)
+  {
+  }
 
-  bool connect();
-  bool disconnect();
+  std::shared_ptr<T> receive()
+  {
+    auto data = std::make_shared<T>();
 
-  int receive(void * buffer, const int & length);
+    int received = BaseClient::receive(data.get(), sizeof(T));
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+    if (received < (signed)sizeof(T)) {
+      return nullptr;
+    }
 
-  const int & get_port() const;
+    return data;
+  }
 
-protected:
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  int port;
+  int send(const T & data)
+  {
+    return BaseClient::send((const char *)&data, sizeof(data));
+  }
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+#endif  // MUSEN__CLIENT__CLIENT_HPP_
