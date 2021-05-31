@@ -50,7 +50,7 @@ TEST(BroadcasterAndListenerTest, SendAndReceive) {
 
     // Receiving data
     auto listen_data = listener.receive();
-    if (listen_data != nullptr) {
+    if (listen_data.has_value()) {
       // Compare the received and the sent data
       ASSERT_EQ(listen_data->a, broadcast_data.a);
       ASSERT_DOUBLE_EQ(listen_data->b, broadcast_data.b);
@@ -72,7 +72,7 @@ TEST(BroadcasterAndListenerTest, ReceiveNothing) {
   for (int i = 0; i < 3; ++i) {
     // Must received nothing
     auto listen_data = listener.receive();
-    ASSERT_EQ(listen_data, nullptr);
+    ASSERT_FALSE(listen_data.has_value());
 
     // Wait a bit
     usleep(10 * 1000);

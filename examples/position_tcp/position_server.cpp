@@ -61,7 +61,7 @@ int main()
 
     auto received_position = server.receive();
 
-    if (received_position != nullptr) {
+    if (received_position.has_value()) {
       std::cout << "Received: " <<
         received_position->x << ", " <<
         received_position->y << ", " <<

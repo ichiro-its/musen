@@ -46,7 +46,7 @@ int main()
   while (true) {
     auto position = listener.receive();
 
-    if (position != nullptr) {
+    if (position.has_value()) {
       std::cout << "Received: " <<
         position->x << ", " <<
         position->y << ", " <<

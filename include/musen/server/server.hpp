@@ -22,7 +22,9 @@
 #define MUSEN__SERVER__SERVER_HPP_
 
 #include <memory>
+#include <optional>  // NOLINT
 #include <string>
+#include <utility>
 
 #include "./base_server.hpp"
 
@@ -39,17 +41,17 @@ public:
   {
   }
 
-  std::shared_ptr<T> receive()
+  std::optional<T> receive()
   {
-    auto data = std::make_shared<T>();
+    T data;
 
-    int received = BaseServer::receive(data.get(), sizeof(T));
+    int received = BaseServer::receive(&data, sizeof(T));
 
     if (received < (signed)sizeof(T)) {
-      return nullptr;
+      return std::nullopt;
     }
 
-    return data;
+    return std::make_optional<T>(std::move(data));
   }
 
   int send(const T & data)

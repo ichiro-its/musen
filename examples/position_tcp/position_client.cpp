@@ -48,7 +48,7 @@ int main()
   while (true) {
     auto received_position = client.receive();
 
-    if (received_position != nullptr) {
+    if (received_position.has_value()) {
       std::cout << "Received: " <<
         received_position->x << ", " <<
         received_position->y << ", " <<
