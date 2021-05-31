@@ -28,7 +28,7 @@
 namespace musen
 {
 
-class BaseListener : public UdpSocket
+class BaseListener
 {
 public:
   explicit BaseListener(

@@ -29,7 +29,7 @@
 namespace musen
 {
 
-class BaseClient : public TcpSocket
+class BaseClient
 {
 public:
   explicit BaseClient(
