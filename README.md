@@ -21,7 +21,8 @@ In this package, the UDP socket communication will be handled by Broadcaster and
 
 ## Requirement
 
-- This package requires [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/).
+- [ROS 2 Foxy Fitzroy](https://docs.ros.org/en/foxy/).
+- [C++17](https://en.cppreference.com/w/cpp/compiler_support).
 
 ## Installation
 
