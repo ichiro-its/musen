@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <memory>
 #include <queue>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -105,7 +106,7 @@ TEST_F(SendAndReceiveTest, RawData) {
   ASSERT_EQ(received, 6u) << "Must received 6 bytes of data";
 
   for (size_t i = 0; i < 6; ++i) {
-    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
   }
 }
 
@@ -120,7 +121,7 @@ TEST_F(SendAndReceiveTest, RawDataReceiveLess) {
   ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
 
   for (size_t i = 0; i < 4; ++i) {
-    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
   }
 }
 
@@ -135,7 +136,7 @@ TEST_F(SendAndReceiveTest, RawDataSendLess) {
   ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
 
   for (size_t i = 0; i < 4; ++i) {
-    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
   }
 }
 
@@ -144,4 +145,29 @@ TEST_F(SendAndReceiveTest, RawDataReceiveNothing) {
 
   auto received = receiver->receive_raw(receive_data, 6);
   ASSERT_EQ(received, 0u) << "Must received 0 bytes of data";
+}
+
+TEST_F(SendAndReceiveTest, StringData) {
+  std::string send_data = "Hello World!";
+  sender->send_string(send_data);
+
+  auto receive_data = receiver->receive_string(32);
+
+  ASSERT_STREQ(receive_data.c_str(), send_data.c_str()) << "Unequal sent and received data";
+}
+
+TEST_F(SendAndReceiveTest, StringDataReceivePartial) {
+  std::string send_data = "Hello World!";
+  sender->send_string(send_data);
+
+  auto receive_data = receiver->receive_string(5);
+
+  ASSERT_STREQ(receive_data.c_str(), send_data.substr(0, 5).c_str()) <<
+    "Unequal sent and received data";
+}
+
+TEST_F(SendAndReceiveTest, StringDataReceiveNothing) {
+  auto receive_data = receiver->receive_string(32);
+
+  ASSERT_EQ(receive_data.size(), 0u) << "Must received nothing";
 }
