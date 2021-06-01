@@ -24,8 +24,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
-class SendAndReceiveStringTest : public ::testing::Test
+class SendAndReceiveStringsTest : public ::testing::Test
 {
 protected:
   void SetUp() override
@@ -39,25 +40,38 @@ protected:
   std::shared_ptr<musen_test::MockSender> sender;
   std::shared_ptr<musen_test::MockReceiver> receiver;
 
-  std::string send_data = "Hello World!";
+  std::vector<std::string> send_data = {
+    "Hello World!",
+    "Hello Earth!",
+    "Hello Mars!"
+  };
 };
 
-TEST_F(SendAndReceiveStringTest, ReceiveAll) {
-  sender->send_string(send_data);
+TEST_F(SendAndReceiveStringsTest, ReceiveAll) {
+  sender->send_strings(send_data);
+  auto receive_data = receiver->receive_strings(64);
 
-  auto receive_data = receiver->receive_string(16);
-  ASSERT_STREQ(receive_data.c_str(), send_data.c_str()) << "Unequal sent and received data";
+  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal sent and received data size";
+
+  for (size_t i = 0; i < receive_data.size(); ++i) {
+    ASSERT_STREQ(receive_data[i].c_str(), send_data[i].c_str()) <<
+      "Sent and received data differs at index " << i;
+  }
 }
 
-TEST_F(SendAndReceiveStringTest, ReceivePartial) {
-  sender->send_string(send_data);
+TEST_F(SendAndReceiveStringsTest, ReceiveCustomDelimiter) {
+  sender->send_strings(send_data, "-+-");
+  auto receive_data = receiver->receive_strings(64, "-+-");
 
-  auto receive_data = receiver->receive_string(5);
-  ASSERT_STREQ(receive_data.c_str(), send_data.substr(0, 5).c_str()) <<
-    "Unequal sent and received data";
+  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal sent and received data size";
+
+  for (size_t i = 0; i < receive_data.size(); ++i) {
+    ASSERT_STREQ(receive_data[i].c_str(), send_data[i].c_str()) <<
+      "Sent and received data differs at index " << i;
+  }
 }
 
-TEST_F(SendAndReceiveStringTest, ReceiveNothing) {
-  auto receive_data = receiver->receive_string(16);
+TEST_F(SendAndReceiveStringsTest, ReceiveNothing) {
+  auto receive_data = receiver->receive_string(64);
   ASSERT_EQ(receive_data.size(), 0u) << "Must received nothing";
 }
