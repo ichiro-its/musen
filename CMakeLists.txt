@@ -70,8 +70,7 @@ if(BUILD_TESTING)
     "test/send_and_receive/struct_test.cpp"
     "test/broadcast_and_listen_test.cpp"
     "test/server_and_client_test.cpp"
-    "test/tcp_socket_test.cpp"
-    "test/udp_socket_test.cpp")
+    "test/socket_test.cpp")
 
   target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
 

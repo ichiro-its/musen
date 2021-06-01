@@ -37,6 +37,11 @@ BaseSocket::~BaseSocket()
   disconnect();
 }
 
+bool BaseSocket::connect()
+{
+  return false;
+}
+
 bool BaseSocket::disconnect()
 {
   if (!is_connected()) {

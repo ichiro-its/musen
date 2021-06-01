@@ -30,6 +30,7 @@ public:
   BaseSocket();
   ~BaseSocket();
 
+  virtual bool connect();
   virtual bool disconnect();
 
   const int & get_sockfd() const;
