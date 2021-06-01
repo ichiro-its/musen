@@ -59,6 +59,10 @@ public:
 
   size_t receive_raw(char * data, const size_t & length) override
   {
+    if (buffers->empty()) {
+      return 0;
+    }
+
     auto buffer = buffers->front();
     buffers->pop();
 
@@ -92,14 +96,52 @@ protected:
 
 TEST_F(SendAndReceiveTest, RawData) {
   char send_data[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
-  auto sent = sender->send_raw(send_data, 6);
-
   char receive_data[6];
-  auto received = receiver->receive_raw(receive_data, 6);
 
-  // Must received the same amount of data
-  ASSERT_EQ(sent, received);
-  for (size_t i = 0; i < received; ++i) {
-    ASSERT_EQ(send_data[i], receive_data[i]);
+  auto sent = sender->send_raw(send_data, 6);
+  ASSERT_EQ(sent, 6u) << "Must sent 6 bytes of data";
+
+  auto received = receiver->receive_raw(receive_data, 6);
+  ASSERT_EQ(received, 6u) << "Must received 6 bytes of data";
+
+  for (size_t i = 0; i < 6; ++i) {
+    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
   }
+}
+
+TEST_F(SendAndReceiveTest, RawDataReceiveLess) {
+  char send_data[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
+  char receive_data[4];
+
+  auto sent = sender->send_raw(send_data, 6);
+  ASSERT_EQ(sent, 6u) << "Must sent 6 bytes of data";
+
+  auto received = receiver->receive_raw(receive_data, 4);
+  ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
+
+  for (size_t i = 0; i < 4; ++i) {
+    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
+  }
+}
+
+TEST_F(SendAndReceiveTest, RawDataSendLess) {
+  char send_data[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
+  char receive_data[6];
+
+  auto sent = sender->send_raw(send_data, 4);
+  ASSERT_EQ(sent, 4u) << "Must sent 4 bytes of data";
+
+  auto received = receiver->receive_raw(receive_data, 6);
+  ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
+
+  for (size_t i = 0; i < 4; ++i) {
+    ASSERT_EQ(send_data[i], receive_data[i]) << "Sent and received data differs at index " << i;
+  }
+}
+
+TEST_F(SendAndReceiveTest, RawDataReceiveNothing) {
+  char receive_data[6];
+
+  auto received = receiver->receive_raw(receive_data, 6);
+  ASSERT_EQ(received, 0u) << "Must received 0 bytes of data";
 }
