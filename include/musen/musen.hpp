@@ -21,15 +21,12 @@
 #ifndef MUSEN__MUSEN_HPP_
 #define MUSEN__MUSEN_HPP_
 
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
-
 #include "./socket/base_socket.hpp"
 #include "./socket/tcp_socket.hpp"
 #include "./socket/udp_socket.hpp"
+
+#include "./tcp/client.hpp"
+#include "./tcp/server.hpp"
 
 #include "./udp/broadcaster.hpp"
 #include "./udp/listener.hpp"

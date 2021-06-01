@@ -51,11 +51,11 @@ TEST_F(SendAndReceiveStringsTest, ReceiveAll) {
   sender->send_strings(send_data);
   auto receive_data = receiver->receive_strings(64);
 
-  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal sent and received data size";
+  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal received and sent data size";
 
   for (size_t i = 0; i < receive_data.size(); ++i) {
     ASSERT_STREQ(receive_data[i].c_str(), send_data[i].c_str()) <<
-      "Sent and received data differs at index " << i;
+      "Received and sent data differs at index " << i;
   }
 }
 
@@ -63,11 +63,11 @@ TEST_F(SendAndReceiveStringsTest, ReceiveCustomDelimiter) {
   sender->send_strings(send_data, "-+-");
   auto receive_data = receiver->receive_strings(64, "-+-");
 
-  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal sent and received data size";
+  ASSERT_EQ(receive_data.size(), send_data.size()) << "Unequal received and sent data size";
 
   for (size_t i = 0; i < receive_data.size(); ++i) {
     ASSERT_STREQ(receive_data[i].c_str(), send_data[i].c_str()) <<
-      "Sent and received data differs at index " << i;
+      "Received and sent data differs at index " << i;
   }
 }
 

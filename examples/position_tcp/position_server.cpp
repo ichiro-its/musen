@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  musen::Server<Position> server(8080);
+  musen::Server server(8080);
 
   if (!server.connect()) {
     std::cerr << "Failed to connect to port " <<
@@ -59,7 +59,7 @@ int main()
       position.y << ", " <<
       position.z << std::endl;
 
-    auto received_position = server.receive();
+    auto received_position = server.receive<Position>();
 
     if (received_position.has_value()) {
       std::cout << "Received: " <<

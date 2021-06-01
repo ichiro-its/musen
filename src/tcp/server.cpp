@@ -18,28 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/server/base_server.hpp>
+#include <musen/tcp/server.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
 #include <algorithm>
-#include <string>
 #include <cstring>
 #include <memory>
+#include <string>
 
 namespace musen
 {
 
 constexpr auto socket_send = send;
 
-BaseServer::BaseServer(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
+Server::Server(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
   port(port)
 {
 }
 
-bool BaseServer::connect()
+bool Server::connect()
 {
   if (!tcp_socket->connect()) {
     return false;
@@ -77,47 +77,51 @@ bool BaseServer::connect()
   return true;
 }
 
-bool BaseServer::disconnect()
+bool Server::disconnect()
 {
   return tcp_socket->disconnect();
 }
 
-int BaseServer::receive(void * buffer, const int & length)
+size_t Server::send_raw(const char * data, const size_t & length)
 {
-  if (!tcp_socket->is_connected() || length <= 0) {
+  if (!is_connected() || length <= 0) {
+    return 0;
+  }
+
+  // Send data
+  int sent = socket_send(get_new_sockfd(), data, length, 0);
+
+  return std::max(sent, 0);
+}
+
+size_t Server::receive_raw(char * data, const size_t & length)
+{
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
   // Receive data
-  int received = recv(get_new_sockfd(), buffer, length, 0);
+  int received = recv(get_new_sockfd(), data, length, 0);
 
   return std::max(received, 0);
 }
 
-int BaseServer::send(const char * buffer, const int & length)
-{
-  if (!tcp_socket->is_connected() || length <= 0) {
-    return false;
-  }
-
-  // Send data
-  int sent = socket_send(get_new_sockfd(), buffer, length, 0);
-
-  return std::max(sent, 0);
-  return true;
-}
-
-std::shared_ptr<TcpSocket> BaseServer::get_tcp_socket() const
+std::shared_ptr<TcpSocket> Server::get_tcp_socket() const
 {
   return tcp_socket;
 }
 
-const int & BaseServer::get_port() const
+bool Server::is_connected() const
+{
+  return tcp_socket->is_connected();
+}
+
+const int & Server::get_port() const
 {
   return port;
 }
 
-const int & BaseServer::get_new_sockfd() const
+const int & Server::get_new_sockfd() const
 {
   return new_sockfd;
 }

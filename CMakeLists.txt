@@ -19,11 +19,11 @@ find_package(ament_cmake REQUIRED)
 install(DIRECTORY "include" DESTINATION ".")
 
 add_library(${PROJECT_NAME}
-  "src/client/base_client.cpp"
-  "src/server/base_server.cpp"
   "src/socket/base_socket.cpp"
   "src/socket/tcp_socket.cpp"
   "src/socket/udp_socket.cpp"
+  "src/tcp/client.cpp"
+  "src/tcp/server.cpp"
   "src/udp/broadcaster.cpp"
   "src/udp/listener.cpp"
   "src/receiver.cpp"
@@ -68,9 +68,8 @@ if(BUILD_TESTING)
     "test/send_and_receive/string_test.cpp"
     "test/send_and_receive/strings_test.cpp"
     "test/send_and_receive/struct_test.cpp"
-    "test/base_client_and_server_test.cpp"
     "test/broadcast_and_listen_test.cpp"
-    "test/client_and_server_test.cpp"
+    "test/server_and_client_test.cpp"
     "test/tcp_socket_test.cpp"
     "test/udp_socket_test.cpp")
 

@@ -57,7 +57,7 @@ bool Broadcaster::disconnect()
 
 size_t Broadcaster::send_raw(const char * data, const size_t & length)
 {
-  if (!udp_socket->is_connected() || length <= 0) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -96,6 +96,11 @@ void Broadcaster::add_target_host(const std::string & target_host)
 std::shared_ptr<UdpSocket> Broadcaster::get_udp_socket() const
 {
   return udp_socket;
+}
+
+bool Broadcaster::is_connected() const
+{
+  return udp_socket->is_connected();
 }
 
 const int & Broadcaster::get_port() const

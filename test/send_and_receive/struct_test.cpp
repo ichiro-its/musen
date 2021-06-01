@@ -53,8 +53,8 @@ TEST_F(SendAndReceiveStructTest, ReceiveAll) {
 
   ASSERT_TRUE(receive_data.has_value()) << "Received data must not be empty";
 
-  ASSERT_EQ(receive_data->a, send_data.a) << "Sent and received data differs at a";
-  ASSERT_DOUBLE_EQ(receive_data->b, send_data.b) << "Sent and received data differs at b";
+  ASSERT_EQ(receive_data->a, send_data.a) << "Received and sent data differs at a";
+  ASSERT_DOUBLE_EQ(receive_data->b, send_data.b) << "Received and sent data differs at b";
 }
 
 TEST_F(SendAndReceiveStructTest, ReceiveNothing) {

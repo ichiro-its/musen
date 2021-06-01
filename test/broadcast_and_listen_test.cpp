@@ -21,35 +21,53 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
+#include <memory>
 #include <string>
 
-TEST(BroadcastAndListenTest, SingleListener) {
-  musen::Broadcaster broadcaster(5000);
-  musen::Listener listener(5000);
+class BroadcastAndListenTest : public ::testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    broadcaster = std::make_shared<musen::Broadcaster>(5000);
+    listener = std::make_shared<musen::Listener>(5000);
 
-  // Trying to connect both broadcaster and listener
-  ASSERT_TRUE(broadcaster.connect()) << "Unable to connect the broadcaster";
-  ASSERT_TRUE(listener.connect()) << "Unable to connect the listener";
+    // Trying to connect both broadcaster and listener
+    ASSERT_TRUE(broadcaster->connect()) << "Unable to connect the broadcaster";
+    ASSERT_TRUE(listener->connect()) << "Unable to connect the listener";
+  }
 
+  void TearDown() override
+  {
+    // Trying to disconnect both broadcaster and listener
+    ASSERT_TRUE(broadcaster->disconnect()) << "Unable to disconnect the broadcaster";
+    ASSERT_TRUE(listener->disconnect()) << "Unable to disconnect the listener";
+  }
+
+  std::shared_ptr<musen::Broadcaster> broadcaster;
+  std::shared_ptr<musen::Listener> listener;
+};
+
+TEST_F(BroadcastAndListenTest, SingleListener) {
   std::string broadcast_message = "Hello World!";
 
   // Do up to 3 times until the listener has received the message
   int iteration = 0;
   while (iteration++ < 3) {
     // Sending message
-    broadcaster.send_string(broadcast_message);
+    broadcaster->send_string(broadcast_message);
 
     // Wait 10ms so the listener could receive the messages
     usleep(10 * 1000);
 
-    auto listen_message = listener.receive_string(32);
+    auto listen_message = listener->receive_string(32);
     if (listen_message.size() > 0) {
       ASSERT_STREQ(listen_message.c_str(), broadcast_message.c_str()) <<
-        "Unequal broadcast and listen message size";
+        "Unequal listened and broadcasted message";
 
       return SUCCEED();
     }
   }
 
-  FAIL() << "listener did not receive any data";
+  FAIL() << "Listener did not receive any data";
 }

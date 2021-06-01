@@ -49,6 +49,8 @@ public:
 
   std::shared_ptr<UdpSocket> get_udp_socket() const;
 
+  bool is_connected() const;
+
   const int & get_port() const;
 
 protected:

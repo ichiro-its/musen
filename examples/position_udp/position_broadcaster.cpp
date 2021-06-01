@@ -56,7 +56,7 @@ int main()
     position.y = rand_r(&seed) % 100;
     position.z = rand_r(&seed) % 100;
 
-    broadcaster.send<Position>(position);
+    broadcaster.send(position);
 
     std::cout << "Sent: " <<
       position.x << ", " <<

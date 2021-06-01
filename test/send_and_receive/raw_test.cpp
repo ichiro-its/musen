@@ -50,7 +50,7 @@ TEST_F(SendAndReceiveRawTest, ReceiveAll) {
   ASSERT_EQ(received, 6u) << "Must received 6 bytes of data";
 
   for (size_t i = 0; i < 6; ++i) {
-    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Received and sent data differs at index " << i;
   }
 }
 
@@ -62,7 +62,7 @@ TEST_F(SendAndReceiveRawTest, ReceiveLess) {
   ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
 
   for (size_t i = 0; i < 4; ++i) {
-    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Received and sent data differs at index " << i;
   }
 }
 
@@ -74,7 +74,7 @@ TEST_F(SendAndReceiveRawTest, SendLess) {
   ASSERT_EQ(received, 4u) << "Must received 4 bytes of data";
 
   for (size_t i = 0; i < 4; ++i) {
-    ASSERT_EQ(receive_data[i], send_data[i]) << "Sent and received data differs at index " << i;
+    ASSERT_EQ(receive_data[i], send_data[i]) << "Received and sent data differs at index " << i;
   }
 }
 

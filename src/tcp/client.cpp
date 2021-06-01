@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/client/base_client.hpp>
+#include <musen/tcp/client.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
 #include <algorithm>
-#include <string>
 #include <cstring>
 #include <memory>
+#include <string>
 
 namespace musen
 {
@@ -34,7 +34,7 @@ namespace musen
 constexpr auto connect_socket = connect;
 constexpr auto socket_send = send;
 
-BaseClient::BaseClient(
+Client::Client(
   const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
 : tcp_socket(tcp_socket),
   host(host),
@@ -42,7 +42,7 @@ BaseClient::BaseClient(
 {
 }
 
-bool BaseClient::connect()
+bool Client::connect()
 {
   if (!tcp_socket->connect()) {
     return false;
@@ -54,8 +54,9 @@ bool BaseClient::connect()
     memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = inet_addr(host.c_str());
     sa.sin_port = htons(port);
+
+    inet_aton(host.c_str(), &sa.sin_addr);
   }
 
   // Connect to the server address
@@ -66,47 +67,51 @@ bool BaseClient::connect()
   return true;
 }
 
-bool BaseClient::disconnect()
+bool Client::disconnect()
 {
   return tcp_socket->disconnect();
 }
 
-int BaseClient::receive(void * buffer, const int & length)
+size_t Client::send_raw(const char * data, const size_t & length)
 {
-  if (!tcp_socket->is_connected() || length <= 0) {
+  if (!is_connected() || length <= 0) {
+    return 0;
+  }
+
+  // Send data
+  int sent = socket_send(tcp_socket->get_sockfd(), data, length, 0);
+
+  return std::max(sent, 0);
+}
+
+size_t Client::receive_raw(char * data, const size_t & length)
+{
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
   // Receive data
-  int received = recv(tcp_socket->get_sockfd(), buffer, length, 0);
+  int received = recv(tcp_socket->get_sockfd(), data, length, 0);
 
   return std::max(received, 0);
 }
 
-int BaseClient::send(const char * buffer, const int & length)
-{
-  if (!tcp_socket->is_connected() || length <= 0) {
-    return false;
-  }
-
-  // Send data
-  int sent = socket_send(tcp_socket->get_sockfd(), buffer, length, 0);
-
-  return std::max(sent, 0);
-  return true;
-}
-
-std::shared_ptr<TcpSocket> BaseClient::get_tcp_socket() const
+std::shared_ptr<TcpSocket> Client::get_tcp_socket() const
 {
   return tcp_socket;
 }
 
-const std::string & BaseClient::get_host() const
+bool Client::is_connected() const
+{
+  return tcp_socket->is_connected();
+}
+
+const std::string & Client::get_host() const
 {
   return host;
 }
 
-const int & BaseClient::get_port() const
+const int & Client::get_port() const
 {
   return port;
 }

@@ -66,7 +66,7 @@ bool Listener::disconnect()
 
 size_t Listener::receive_raw(char * data, const size_t & length)
 {
-  if (!udp_socket->is_connected() || length <= 0) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
@@ -82,6 +82,11 @@ size_t Listener::receive_raw(char * data, const size_t & length)
 std::shared_ptr<UdpSocket> Listener::get_udp_socket() const
 {
   return udp_socket;
+}
+
+bool Listener::is_connected() const
+{
+  return udp_socket->is_connected();
 }
 
 const int & Listener::get_port() const
