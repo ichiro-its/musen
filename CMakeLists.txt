@@ -67,10 +67,11 @@ if(BUILD_TESTING)
 
   ament_add_gtest(${PROJECT_NAME}_tests
     "test/base_broadcaster_and_listener_test.cpp"
-    "test/broadcaster_and_listener_test.cpp"
-    "test/string_broadcaster_and_listener_test.cpp"
     "test/base_client_and_server_test.cpp"
+    "test/broadcaster_and_listener_test.cpp"
     "test/client_and_server_test.cpp"
+    "test/send_and_receive_test.cpp"
+    "test/string_broadcaster_and_listener_test.cpp"
     "test/tcp_socket_test.cpp"
     "test/udp_socket_test.cpp")
 

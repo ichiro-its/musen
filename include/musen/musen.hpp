@@ -35,5 +35,6 @@
 #include "./server/base_server.hpp"
 #include "./server/server.hpp"
 #include "./sender.hpp"
+#include "./receiver.hpp"
 
 #endif  // MUSEN__MUSEN_HPP_
