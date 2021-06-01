@@ -18,22 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#include <musen/sender.hpp>
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
-#include "./sender.hpp"
+#include <string>
+#include <vector>
 
-#endif  // MUSEN__MUSEN_HPP_
+namespace musen
+{
+
+size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/)
+{
+  return 0;
+}
+
+size_t Sender::send_string(const std::string & data)
+{
+  return send_raw(data.c_str(), data.size());
+}
+
+size_t Sender::send_string(
+  const std::vector<std::string> & data, const std::string & delimiter)
+{
+  // Merge data using the delimiter
+  std::string merged_data = "";
+  for (size_t i = 0; i < data.size(); ++i) {
+    merged_data += data[i];
+    if (i != data.size() - 1) {
+      merged_data += delimiter;
+    }
+  }
+
+  // Add a string termination if it doesn't contain one
+  if (merged_data[merged_data.size() - 1] != '\0') {
+    merged_data += '\0';
+  }
+
+  return send_string(merged_data);
+}
+
+}  // namespace musen

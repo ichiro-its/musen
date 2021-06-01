@@ -27,7 +27,8 @@ add_library(${PROJECT_NAME}
   "src/socket/tcp_socket.cpp"
   "src/socket/udp_socket.cpp"
   "src/client/base_client.cpp"
-  "src/server/base_server.cpp")
+  "src/server/base_server.cpp"
+  "src/sender.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

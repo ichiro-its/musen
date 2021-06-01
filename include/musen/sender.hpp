@@ -18,22 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#ifndef MUSEN__SENDER_HPP_
+#define MUSEN__SENDER_HPP_
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
-#include "./sender.hpp"
+#include <string>
+#include <vector>
 
-#endif  // MUSEN__MUSEN_HPP_
+namespace musen
+{
+
+class Sender
+{
+public:
+  virtual size_t send_raw(const char * data, const size_t & length);
+
+  size_t send_string(const std::string & data);
+  size_t send_string(const std::vector<std::string> & data, const std::string & delimiter = ",");
+
+  template<typename T>
+  size_t send(const T & data);
+};
+
+template<typename T>
+size_t Sender::send(const T & data)
+{
+  return send_raw((const char *)&data, sizeof(data));
+}
+
+}  // namespace musen
+
+#endif  // MUSEN__SENDER_HPP_
