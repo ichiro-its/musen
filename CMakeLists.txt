@@ -28,6 +28,7 @@ add_library(${PROJECT_NAME}
   "src/socket/udp_socket.cpp"
   "src/client/base_client.cpp"
   "src/server/base_server.cpp"
+  "src/receiver.cpp"
   "src/sender.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC

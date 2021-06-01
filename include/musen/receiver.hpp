@@ -18,33 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SENDER_HPP_
-#define MUSEN__SENDER_HPP_
+#ifndef MUSEN__RECEIVER_HPP_
+#define MUSEN__RECEIVER_HPP_
 
+#include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace musen
 {
 
-class Sender
+class Receiver
 {
 public:
-  virtual size_t send_raw(const char * data, const size_t & length);
+  virtual size_t receive_raw(char * data, const size_t & length);
 
-  size_t send_string(const std::string & data);
-  size_t send_strings(const std::vector<std::string> & data, const std::string & delimiter = ",");
+  std::string receive_string(const size_t & length);
+  std::vector<std::string> receive_strings(
+    const size_t & length, const std::string & delimiter = ",");
 
   template<typename T>
-  size_t send(const T & data);
+  std::optional<T> receive();
 };
 
 template<typename T>
-size_t Sender::send(const T & data)
+std::optional<T> Receiver::receive()
 {
-  return send_raw((const char *)&data, sizeof(data));
+  T data;
+
+  auto received = receive_raw(&data, sizeof(T));
+
+  if (received < sizeof(T)) {
+    return std::nullopt;
+  }
+
+  return std::make_optional<T>(std::move(data));
 }
 
 }  // namespace musen
 
-#endif  // MUSEN__SENDER_HPP_
+#endif  // MUSEN__RECEIVER_HPP_

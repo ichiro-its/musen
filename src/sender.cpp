@@ -36,7 +36,7 @@ size_t Sender::send_string(const std::string & data)
   return send_raw(data.c_str(), data.size());
 }
 
-size_t Sender::send_string(
+size_t Sender::send_strings(
   const std::vector<std::string> & data, const std::string & delimiter)
 {
   // Merge data using the delimiter
