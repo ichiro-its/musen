@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  musen::Listener<Position> listener(8080);
+  musen::Listener listener(8080);
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<
@@ -44,7 +44,7 @@ int main()
   }
 
   while (true) {
-    auto position = listener.receive();
+    auto position = listener.receive<Position>();
 
     if (position.has_value()) {
       std::cout << "Received: " <<

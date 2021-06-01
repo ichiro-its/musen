@@ -35,7 +35,7 @@ struct Position
 
 int main()
 {
-  musen::Broadcaster<Position> broadcaster(8080);
+  musen::Broadcaster broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
   broadcaster.add_target_host("localhost");
@@ -56,7 +56,7 @@ int main()
     position.y = rand_r(&seed) % 100;
     position.z = rand_r(&seed) % 100;
 
-    broadcaster.send(position);
+    broadcaster.send<Position>(position);
 
     std::cout << "Sent: " <<
       position.x << ", " <<

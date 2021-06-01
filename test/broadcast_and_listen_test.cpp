@@ -18,43 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/broadcaster/string_broadcaster.hpp>
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
-#include <memory>
 #include <string>
-#include <vector>
 
-namespace musen
-{
+TEST(BroadcastAndListenTest, SingleListener) {
+  musen::Broadcaster broadcaster(5000);
+  musen::Listener listener(5000);
 
-StringBroadcaster::StringBroadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: BaseBroadcaster(port, udp_socket)
-{
-}
+  // Trying to connect both broadcaster and listener
+  ASSERT_TRUE(broadcaster.connect()) << "Unable to connect the broadcaster";
+  ASSERT_TRUE(listener.connect()) << "Unable to connect the listener";
 
-int StringBroadcaster::send(const std::string & message)
-{
-  return BaseBroadcaster::send(message.c_str(), message.size());
-}
+  std::string broadcast_message = "Hello World!";
 
-int StringBroadcaster::send(
-  const std::vector<std::string> & messages, const std::string & delimiter)
-{
-  // Merge vector of strings using the delimiter
-  std::string merged_message = "";
-  for (size_t i = 0; i < messages.size(); ++i) {
-    merged_message += messages[i];
-    if (i != messages.size() - 1) {
-      merged_message += delimiter;
+  // Do up to 3 times until the listener has received the message
+  int iteration = 0;
+  while (iteration++ < 3) {
+    // Sending message
+    broadcaster.send_string(broadcast_message);
+
+    // Wait 10ms so the listener could receive the messages
+    usleep(10 * 1000);
+
+    auto listen_message = listener.receive_string(32);
+    if (listen_message.size() > 0) {
+      ASSERT_STREQ(listen_message.c_str(), broadcast_message.c_str()) <<
+        "Unequal broadcast and listen message size";
+
+      return SUCCEED();
     }
   }
 
-  // Add a string termination if it doesn't contain one
-  if (merged_message[merged_message.size() - 1] != '\0') {
-    merged_message += '\0';
-  }
-
-  return send(merged_message);
+  FAIL() << "listener did not receive any data";
 }
-
-}  // namespace musen

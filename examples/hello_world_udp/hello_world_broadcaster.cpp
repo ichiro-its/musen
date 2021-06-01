@@ -27,7 +27,7 @@
 
 int main()
 {
-  musen::StringBroadcaster broadcaster(8080);
+  musen::Broadcaster broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
   broadcaster.add_target_host("localhost");
@@ -43,7 +43,7 @@ int main()
   while (true) {
     std::string message = "Hello world! " + std::to_string(counter++);
 
-    broadcaster.send(message);
+    broadcaster.send_string(message);
 
     std::cout << "Sent: " << message << std::endl;
 

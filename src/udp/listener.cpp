@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/listener/base_listener.hpp>
+#include <musen/udp/listener.hpp>
 
 #include <arpa/inet.h>
 
@@ -29,13 +29,13 @@
 namespace musen
 {
 
-BaseListener::BaseListener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
+Listener::Listener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
 : udp_socket(udp_socket),
   port(port)
 {
 }
 
-bool BaseListener::connect()
+bool Listener::connect()
 {
   if (!udp_socket->connect()) {
     return false;
@@ -59,12 +59,12 @@ bool BaseListener::connect()
   return true;
 }
 
-bool BaseListener::disconnect()
+bool Listener::disconnect()
 {
   return udp_socket->disconnect();
 }
 
-int BaseListener::receive(void * buffer, const int & length)
+size_t Listener::receive_raw(char * data, const size_t & length)
 {
   if (!udp_socket->is_connected() || length <= 0) {
     return 0;
@@ -74,17 +74,17 @@ int BaseListener::receive(void * buffer, const int & length)
   socklen_t sa_len = sizeof(sa);
 
   // Receive data
-  int received = recvfrom(udp_socket->get_sockfd(), buffer, length, 0, &sa, &sa_len);
+  int received = recvfrom(udp_socket->get_sockfd(), data, length, 0, &sa, &sa_len);
 
   return std::max(received, 0);
 }
 
-std::shared_ptr<UdpSocket> BaseListener::get_udp_socket() const
+std::shared_ptr<UdpSocket> Listener::get_udp_socket() const
 {
   return udp_socket;
 }
 
-const int & BaseListener::get_port() const
+const int & Listener::get_port() const
 {
   return port;
 }

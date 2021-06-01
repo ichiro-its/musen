@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
-#define MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#ifndef MUSEN__UDP__BROADCASTER_HPP_
+#define MUSEN__UDP__BROADCASTER_HPP_
 
 #include <arpa/inet.h>
 
@@ -28,20 +28,21 @@
 #include <string>
 
 #include "../socket/udp_socket.hpp"
+#include "../sender.hpp"
 
 namespace musen
 {
 
-class BaseBroadcaster
+class Broadcaster : public Sender
 {
 public:
-  explicit BaseBroadcaster(
+  explicit Broadcaster(
     const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
   bool connect();
   bool disconnect();
 
-  int send(const char * data, const int & length);
+  size_t send_raw(const char * data, const size_t & length) override;
 
   void enable_broadcast(const bool & enable);
   void add_target_host(const std::string & host);
@@ -67,4 +68,4 @@ protected:
 
 }  // namespace musen
 
-#endif  // MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#endif  // MUSEN__UDP__BROADCASTER_HPP_
