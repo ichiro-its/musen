@@ -34,11 +34,11 @@ struct Position
 
 int main()
 {
-  musen::Server<Position> server(8080);
+  musen::Client<Position> client("127.0.0.1", 8080);
 
-  if (!server.connect()) {
-    std::cerr << "Failed to connect to port " <<
-      server.get_port() << "!" << std::endl;
+  if (!client.connect()) {
+    std::cerr << "Failed to connect to server on port " <<
+      client.get_port() << "!" << std::endl;
 
     return 1;
   }
@@ -46,32 +46,32 @@ int main()
   unsigned int seed = time(NULL);
 
   while (true) {
-    Position position;
+    auto received_position = client.receive();
 
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    server.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    auto received_position = server.receive();
-
-    if (received_position != nullptr) {
+    if (received_position.has_value()) {
       std::cout << "Received: " <<
         received_position->x << ", " <<
         received_position->y << ", " <<
         received_position->z << std::endl;
     }
 
+    Position position;
+
+    position.x = rand_r(&seed) % 100;
+    position.y = rand_r(&seed) % 100;
+    position.z = rand_r(&seed) % 100;
+
+    client.send(position);
+
+    std::cout << "Sent: " <<
+      position.x << ", " <<
+      position.y << ", " <<
+      position.z << std::endl;
+
     sleep(1);
   }
 
-  server.disconnect();
+  client.disconnect();
 
   return 0;
 }

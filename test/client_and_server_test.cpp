@@ -71,7 +71,7 @@ TEST(ClientAndServerTest, SendAndReceive) {
         // Client receiving data
         auto received_data = client->receive();
 
-        if (received_data != nullptr) {
+        if (received_data.has_value()) {
           // Compare the received and the sent data
           ASSERT_EQ(received_data->a, sent_data.a);
           ASSERT_DOUBLE_EQ(received_data->b, sent_data.b);

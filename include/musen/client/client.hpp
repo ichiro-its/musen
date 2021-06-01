@@ -22,7 +22,9 @@
 #define MUSEN__CLIENT__CLIENT_HPP_
 
 #include <memory>
+#include <optional>  // NOLINT
 #include <string>
+#include <utility>
 
 #include "./base_client.hpp"
 
@@ -40,17 +42,17 @@ public:
   {
   }
 
-  std::shared_ptr<T> receive()
+  std::optional<T> receive()
   {
-    auto data = std::make_shared<T>();
+    T data;
 
-    int received = BaseClient::receive(data.get(), sizeof(T));
+    int received = BaseClient::receive(&data, sizeof(T));
 
     if (received < (signed)sizeof(T)) {
-      return nullptr;
+      return std::nullopt;
     }
 
-    return data;
+    return std::make_optional<T>(std::move(data));
   }
 
   int send(const T & data)

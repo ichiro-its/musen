@@ -7,7 +7,7 @@ if(NOT CMAKE_C_STANDARD)
 endif()
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -40,14 +40,14 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION "bin")
 
 set(EXECUTABLES
-  "examples/hello_world_broadcaster.cpp"
-  "examples/hello_world_listener.cpp"
-  "examples/position_broadcaster.cpp"
-  "examples/position_listener.cpp"
-  "examples/position_client.cpp"
-  "examples/position_server.cpp"
-  "examples/fruits_broadcaster.cpp"
-  "examples/fruits_listener.cpp")
+  "examples/fruits_udp/fruits_broadcaster.cpp"
+  "examples/fruits_udp/fruits_listener.cpp"
+  "examples/hello_world_udp/hello_world_broadcaster.cpp"
+  "examples/hello_world_udp/hello_world_listener.cpp"
+  "examples/position_tcp/position_client.cpp"
+  "examples/position_tcp/position_server.cpp"
+  "examples/position_udp/position_broadcaster.cpp"
+  "examples/position_udp/position_listener.cpp")
 
 foreach(EXECUTABLE ${EXECUTABLES})
   get_filename_component(TARGET ${EXECUTABLE} NAME_WE)

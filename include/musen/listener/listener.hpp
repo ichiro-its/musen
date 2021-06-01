@@ -22,6 +22,8 @@
 #define MUSEN__LISTENER__LISTENER_HPP_
 
 #include <memory>
+#include <optional>  // NOLINT
+#include <utility>
 
 #include "./base_listener.hpp"
 
@@ -38,17 +40,17 @@ public:
   {
   }
 
-  std::shared_ptr<T> receive()
+  std::optional<T> receive()
   {
-    auto data = std::make_shared<T>();
+    T data;
 
-    int received = BaseListener::receive(data.get(), sizeof(T));
+    int received = BaseListener::receive(&data, sizeof(T));
 
     if (received < (signed)sizeof(T)) {
-      return nullptr;
+      return std::nullopt;
     }
 
-    return data;
+    return std::make_optional<T>(std::move(data));
   }
 };
 

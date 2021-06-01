@@ -20,10 +20,10 @@
 
 #include <musen/musen.hpp>
 
+#include <stdlib.h>
 #include <unistd.h>
 
 #include <iostream>
-#include <string>
 
 struct Position
 {
@@ -34,44 +34,29 @@ struct Position
 
 int main()
 {
-  musen::Client<Position> client("127.0.0.1", 8080);
+  musen::Listener<Position> listener(8080);
 
-  if (!client.connect()) {
-    std::cerr << "Failed to connect to server on port " <<
-      client.get_port() << "!" << std::endl;
+  if (!listener.connect()) {
+    std::cerr << "Failed to connect listener on port " <<
+      listener.get_port() << "!" << std::endl;
 
     return 1;
   }
 
-  unsigned int seed = time(NULL);
-
   while (true) {
-    auto received_position = client.receive();
+    auto position = listener.receive();
 
-    if (received_position != nullptr) {
+    if (position.has_value()) {
       std::cout << "Received: " <<
-        received_position->x << ", " <<
-        received_position->y << ", " <<
-        received_position->z << std::endl;
+        position->x << ", " <<
+        position->y << ", " <<
+        position->z << std::endl;
     }
 
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    client.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
+    usleep(100 * 1000);
   }
 
-  client.disconnect();
+  listener.disconnect();
 
   return 0;
 }
