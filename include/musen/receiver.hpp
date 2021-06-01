@@ -47,7 +47,7 @@ std::optional<T> Receiver::receive()
 {
   T data;
 
-  auto received = receive_raw(&data, sizeof(T));
+  auto received = receive_raw(reinterpret_cast<char *>(&data), sizeof(T));
 
   if (received < sizeof(T)) {
     return std::nullopt;

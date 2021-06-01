@@ -69,6 +69,7 @@ if(BUILD_TESTING)
     "test/send_and_receive/raw_test.cpp"
     "test/send_and_receive/string_test.cpp"
     "test/send_and_receive/strings_test.cpp"
+    "test/send_and_receive/struct_test.cpp"
     "test/base_broadcaster_and_listener_test.cpp"
     "test/base_client_and_server_test.cpp"
     "test/broadcaster_and_listener_test.cpp"
