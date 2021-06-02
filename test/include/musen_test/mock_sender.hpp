@@ -18,28 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
+#ifndef MUSEN_TEST__MOCK_SENDER_HPP_
+#define MUSEN_TEST__MOCK_SENDER_HPP_
+
 #include <musen/musen.hpp>
 
-TEST(TcpSocketTest, ConnectDisconnect) {
-  musen::TcpSocket udp_socket;
+#include <memory>
+#include <queue>
+#include <vector>
 
-  // The TCP socket isn't connected yet
-  ASSERT_FALSE(udp_socket.is_connected());
+namespace musen_test
+{
 
-  // Trying to connect the TCP socket
-  ASSERT_TRUE(udp_socket.connect());
-  ASSERT_TRUE(udp_socket.is_connected());
+using Buffers = std::queue<std::vector<char>>;
 
-  // Must be failed because the TCP socket is already connected
-  ASSERT_FALSE(udp_socket.connect());
-  ASSERT_TRUE(udp_socket.is_connected());
+class MockSender : public musen::Sender
+{
+public:
+  explicit MockSender(std::shared_ptr<Buffers> buffers)
+  : buffers(buffers)
+  {
+  }
 
-  // Trying to disconnect the TCP socket
-  ASSERT_TRUE(udp_socket.disconnect());
-  ASSERT_FALSE(udp_socket.is_connected());
+  size_t send_raw(const char * data, const size_t & length) override
+  {
+    std::vector buffer(data, data + length);
+    buffers->push(buffer);
 
-  // Must be failed because the TCP socket is already disconnected
-  ASSERT_FALSE(udp_socket.disconnect());
-  ASSERT_FALSE(udp_socket.is_connected());
-}
+    return buffer.size();
+  }
+
+private:
+  std::shared_ptr<Buffers> buffers;
+};
+
+}  // namespace musen_test
+
+#endif  // MUSEN_TEST__MOCK_SENDER_HPP_

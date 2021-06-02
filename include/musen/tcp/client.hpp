@@ -18,32 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__BROADCASTER__BROADCASTER_HPP_
-#define MUSEN__BROADCASTER__BROADCASTER_HPP_
+#ifndef MUSEN__TCP__CLIENT_HPP_
+#define MUSEN__TCP__CLIENT_HPP_
 
 #include <memory>
+#include <string>
 
-#include "./base_broadcaster.hpp"
+#include "../socket/tcp_socket.hpp"
+#include "../receiver.hpp"
+#include "../sender.hpp"
 
 namespace musen
 {
 
-template<typename T>
-class Broadcaster : public BaseBroadcaster
+class Client : public Sender, public Receiver
 {
 public:
-  explicit Broadcaster(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>())
-  : BaseBroadcaster(port, udp_socket)
-  {
-  }
+  explicit Client(
+    const std::string & host, const int & port,
+    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
-  int send(const T & data)
-  {
-    return BaseBroadcaster::send((const char *)&data, sizeof(data));
-  }
+  bool connect();
+  bool disconnect();
+
+  size_t send_raw(const char * data, const size_t & length) override;
+  size_t receive_raw(char * data, const size_t & length) override;
+
+  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+
+  bool is_connected() const;
+
+  const std::string & get_host() const;
+  const int & get_port() const;
+
+protected:
+  std::shared_ptr<TcpSocket> tcp_socket;
+
+  std::string host;
+  int port;
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__BROADCASTER__BROADCASTER_HPP_
+#endif  // MUSEN__TCP__CLIENT_HPP_

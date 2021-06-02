@@ -29,7 +29,7 @@ namespace musen
 class UdpSocket : public BaseSocket
 {
 public:
-  bool connect();
+  bool connect() override;
 };
 
 }  // namespace musen

@@ -29,7 +29,7 @@ namespace musen
 class TcpSocket : public BaseSocket
 {
 public:
-  bool connect();
+  bool connect() override;
 };
 
 }  // namespace musen

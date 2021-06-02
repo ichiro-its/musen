@@ -18,53 +18,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
-#define MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#ifndef MUSEN__TCP__SERVER_HPP_
+#define MUSEN__TCP__SERVER_HPP_
 
-#include <arpa/inet.h>
-
-#include <list>
 #include <memory>
 #include <string>
 
-#include "../socket/udp_socket.hpp"
+#include "../socket/tcp_socket.hpp"
+#include "../receiver.hpp"
+#include "../sender.hpp"
 
 namespace musen
 {
 
-class BaseBroadcaster
+class Server : public Sender, public Receiver
 {
 public:
-  explicit BaseBroadcaster(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  explicit Server(
+    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
 
   bool connect();
   bool disconnect();
 
-  int send(const char * data, const int & length);
+  size_t send_raw(const char * data, const size_t & length) override;
+  size_t receive_raw(char * data, const size_t & length) override;
 
-  void enable_broadcast(const bool & enable);
-  void add_target_host(const std::string & host);
+  std::shared_ptr<TcpSocket> get_tcp_socket() const;
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+  bool is_connected() const;
 
   const int & get_port() const;
+  const int & get_new_sockfd() const;
 
 protected:
-  std::list<struct sockaddr_in> obtain_recipent_sas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_broadcast_ifas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
-
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  bool broadcast;
-  std::list<std::string> target_hosts;
+  std::shared_ptr<TcpSocket> tcp_socket;
 
   int port;
-
-  std::list<struct sockaddr_in> recipent_sas;
+  int new_sockfd;
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__BROADCASTER__BASE_BROADCASTER_HPP_
+#endif  // MUSEN__TCP__SERVER_HPP_

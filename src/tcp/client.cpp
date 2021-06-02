@@ -18,73 +18,100 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/listener/base_listener.hpp>
+#include <musen/tcp/client.hpp>
 
 #include <arpa/inet.h>
+#include <sys/socket.h>
 
 #include <algorithm>
 #include <cstring>
 #include <memory>
+#include <string>
 
 namespace musen
 {
 
-BaseListener::BaseListener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: udp_socket(udp_socket),
+constexpr auto connect_socket = connect;
+constexpr auto socket_send = send;
+
+Client::Client(
+  const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
+: tcp_socket(tcp_socket),
+  host(host),
   port(port)
 {
 }
 
-bool BaseListener::connect()
+bool Client::connect()
 {
-  if (!udp_socket->connect()) {
+  if (!tcp_socket->connect()) {
     return false;
   }
 
-  // Configure the recipent address
+  // Configure the server address
   struct sockaddr_in sa;
   {
     memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
 
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
     sa.sin_port = htons(port);
+
+    inet_aton(host.c_str(), &sa.sin_addr);
   }
 
-  // Bind the socket with the recipent address
-  if (bind(udp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  // Connect to the server address
+  if (connect_socket(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 
   return true;
 }
 
-bool BaseListener::disconnect()
+bool Client::disconnect()
 {
-  return udp_socket->disconnect();
+  return tcp_socket->disconnect();
 }
 
-int BaseListener::receive(void * buffer, const int & length)
+size_t Client::send_raw(const char * data, const size_t & length)
 {
-  if (!udp_socket->is_connected() || length <= 0) {
+  if (!is_connected() || length <= 0) {
     return 0;
   }
 
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
+  // Send data
+  int sent = socket_send(tcp_socket->get_sockfd(), data, length, 0);
+
+  return std::max(sent, 0);
+}
+
+size_t Client::receive_raw(char * data, const size_t & length)
+{
+  if (!is_connected() || length <= 0) {
+    return 0;
+  }
 
   // Receive data
-  int received = recvfrom(udp_socket->get_sockfd(), buffer, length, 0, &sa, &sa_len);
+  int received = recv(tcp_socket->get_sockfd(), data, length, 0);
 
   return std::max(received, 0);
 }
 
-std::shared_ptr<UdpSocket> BaseListener::get_udp_socket() const
+std::shared_ptr<TcpSocket> Client::get_tcp_socket() const
 {
-  return udp_socket;
+  return tcp_socket;
 }
 
-const int & BaseListener::get_port() const
+bool Client::is_connected() const
+{
+  return tcp_socket->is_connected();
+}
+
+const std::string & Client::get_host() const
+{
+  return host;
+}
+
+const int & Client::get_port() const
 {
   return port;
 }

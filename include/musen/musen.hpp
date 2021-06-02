@@ -21,18 +21,17 @@
 #ifndef MUSEN__MUSEN_HPP_
 #define MUSEN__MUSEN_HPP_
 
-#include "./broadcaster/base_broadcaster.hpp"
-#include "./broadcaster/broadcaster.hpp"
-#include "./broadcaster/string_broadcaster.hpp"
-#include "./listener/base_listener.hpp"
-#include "./listener/listener.hpp"
-#include "./listener/string_listener.hpp"
 #include "./socket/base_socket.hpp"
 #include "./socket/tcp_socket.hpp"
 #include "./socket/udp_socket.hpp"
-#include "./client/base_client.hpp"
-#include "./client/client.hpp"
-#include "./server/base_server.hpp"
-#include "./server/server.hpp"
+
+#include "./tcp/client.hpp"
+#include "./tcp/server.hpp"
+
+#include "./udp/broadcaster.hpp"
+#include "./udp/listener.hpp"
+
+#include "./sender.hpp"
+#include "./receiver.hpp"
 
 #endif  // MUSEN__MUSEN_HPP_

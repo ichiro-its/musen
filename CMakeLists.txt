@@ -19,15 +19,15 @@ find_package(ament_cmake REQUIRED)
 install(DIRECTORY "include" DESTINATION ".")
 
 add_library(${PROJECT_NAME}
-  "src/broadcaster/base_broadcaster.cpp"
-  "src/broadcaster/string_broadcaster.cpp"
-  "src/listener/base_listener.cpp"
-  "src/listener/string_listener.cpp"
   "src/socket/base_socket.cpp"
   "src/socket/tcp_socket.cpp"
   "src/socket/udp_socket.cpp"
-  "src/client/base_client.cpp"
-  "src/server/base_server.cpp")
+  "src/tcp/client.cpp"
+  "src/tcp/server.cpp"
+  "src/udp/broadcaster.cpp"
+  "src/udp/listener.cpp"
+  "src/receiver.cpp"
+  "src/sender.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -64,13 +64,15 @@ if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
 
   ament_add_gtest(${PROJECT_NAME}_tests
-    "test/base_broadcaster_and_listener_test.cpp"
-    "test/broadcaster_and_listener_test.cpp"
-    "test/string_broadcaster_and_listener_test.cpp"
-    "test/base_client_and_server_test.cpp"
-    "test/client_and_server_test.cpp"
-    "test/tcp_socket_test.cpp"
-    "test/udp_socket_test.cpp")
+    "test/send_and_receive/raw_test.cpp"
+    "test/send_and_receive/string_test.cpp"
+    "test/send_and_receive/strings_test.cpp"
+    "test/send_and_receive/struct_test.cpp"
+    "test/broadcast_and_listen_test.cpp"
+    "test/server_and_client_test.cpp"
+    "test/socket_test.cpp")
+
+  target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
 
   target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
 

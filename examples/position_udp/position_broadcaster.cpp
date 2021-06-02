@@ -35,7 +35,7 @@ struct Position
 
 int main()
 {
-  musen::Broadcaster<Position> broadcaster(8080);
+  musen::Broadcaster broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
   broadcaster.add_target_host("localhost");

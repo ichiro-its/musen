@@ -18,41 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SERVER__BASE_SERVER_HPP_
-#define MUSEN__SERVER__BASE_SERVER_HPP_
+#ifndef MUSEN__RECEIVER_HPP_
+#define MUSEN__RECEIVER_HPP_
 
-#include <memory>
+#include <optional>
 #include <string>
-
-#include "../socket/tcp_socket.hpp"
+#include <utility>
+#include <vector>
 
 namespace musen
 {
 
-class BaseServer
+class Receiver
 {
 public:
-  explicit BaseServer(
-    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+  virtual size_t receive_raw(char * data, const size_t & length);
 
-  bool connect();
-  bool disconnect();
+  std::string receive_string(const size_t & length);
+  std::vector<std::string> receive_strings(
+    const size_t & length, const std::string & delimiter = ",");
 
-  int receive(void * buffer, const int & length);
-  int send(const char * buffer, const int & length);
-
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
-
-  const int & get_port() const;
-  const int & get_new_sockfd() const;
-
-protected:
-  std::shared_ptr<TcpSocket> tcp_socket;
-
-  int port;
-  int new_sockfd;
+  template<typename T>
+  std::optional<T> receive();
 };
+
+template<typename T>
+std::optional<T> Receiver::receive()
+{
+  T data;
+
+  auto received = receive_raw(reinterpret_cast<char *>(&data), sizeof(T));
+
+  if (received < sizeof(T)) {
+    return std::nullopt;
+  }
+
+  return std::make_optional<T>(std::move(data));
+}
 
 }  // namespace musen
 
-#endif  // MUSEN__SERVER__BASE_SERVER_HPP_
+#endif  // MUSEN__RECEIVER_HPP_

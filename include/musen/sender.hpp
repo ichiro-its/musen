@@ -18,28 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__STRING_LISTENER_HPP_
-#define MUSEN__LISTENER__STRING_LISTENER_HPP_
+#ifndef MUSEN__SENDER_HPP_
+#define MUSEN__SENDER_HPP_
 
-#include <memory>
 #include <string>
 #include <vector>
-
-#include "./base_listener.hpp"
 
 namespace musen
 {
 
-class StringListener : public BaseListener
+class Sender
 {
 public:
-  explicit StringListener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+  virtual size_t send_raw(const char * data, const size_t & length);
 
-  std::string receive(const int & length);
-  std::vector<std::string> receive(const int & length, const std::string & delimiter);
+  size_t send_string(const std::string & data);
+  size_t send_strings(const std::vector<std::string> & data, const std::string & delimiter = ",");
+
+  template<typename T>
+  size_t send(const T & data);
 };
+
+template<typename T>
+size_t Sender::send(const T & data)
+{
+  return send_raw((const char *)&data, sizeof(data));
+}
 
 }  // namespace musen
 
-#endif  // MUSEN__LISTENER__STRING_LISTENER_HPP_
+#endif  // MUSEN__SENDER_HPP_

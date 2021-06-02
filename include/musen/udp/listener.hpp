@@ -18,28 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__BASE_LISTENER_HPP_
-#define MUSEN__LISTENER__BASE_LISTENER_HPP_
+#ifndef MUSEN__UDP__LISTENER_HPP_
+#define MUSEN__UDP__LISTENER_HPP_
 
 #include <memory>
 
 #include "../socket/udp_socket.hpp"
+#include "../receiver.hpp"
 
 namespace musen
 {
 
-class BaseListener
+class Listener : public Receiver
 {
 public:
-  explicit BaseListener(
+  explicit Listener(
     const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
   bool connect();
   bool disconnect();
 
-  int receive(void * buffer, const int & length);
+  size_t receive_raw(char * data, const size_t & length) override;
 
   std::shared_ptr<UdpSocket> get_udp_socket() const;
+
+  bool is_connected() const;
 
   const int & get_port() const;
 
@@ -51,4 +54,4 @@ protected:
 
 }  // namespace musen
 
-#endif  // MUSEN__LISTENER__BASE_LISTENER_HPP_
+#endif  // MUSEN__UDP__LISTENER_HPP_

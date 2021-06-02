@@ -18,43 +18,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/broadcaster/string_broadcaster.hpp>
+#ifndef MUSEN__UDP__BROADCASTER_HPP_
+#define MUSEN__UDP__BROADCASTER_HPP_
 
+#include <arpa/inet.h>
+
+#include <list>
 #include <memory>
 #include <string>
-#include <vector>
+
+#include "../socket/udp_socket.hpp"
+#include "../sender.hpp"
 
 namespace musen
 {
 
-StringBroadcaster::StringBroadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: BaseBroadcaster(port, udp_socket)
+class Broadcaster : public Sender
 {
-}
+public:
+  explicit Broadcaster(
+    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
 
-int StringBroadcaster::send(const std::string & message)
-{
-  return BaseBroadcaster::send(message.c_str(), message.size());
-}
+  bool connect();
+  bool disconnect();
 
-int StringBroadcaster::send(
-  const std::vector<std::string> & messages, const std::string & delimiter)
-{
-  // Merge vector of strings using the delimiter
-  std::string merged_message = "";
-  for (size_t i = 0; i < messages.size(); ++i) {
-    merged_message += messages[i];
-    if (i != messages.size() - 1) {
-      merged_message += delimiter;
-    }
-  }
+  size_t send_raw(const char * data, const size_t & length) override;
 
-  // Add a string termination if it doesn't contain one
-  if (merged_message[merged_message.size() - 1] != '\0') {
-    merged_message += '\0';
-  }
+  void enable_broadcast(const bool & enable);
+  void add_target_host(const std::string & host);
 
-  return send(merged_message);
-}
+  std::shared_ptr<UdpSocket> get_udp_socket() const;
+
+  bool is_connected() const;
+
+  const int & get_port() const;
+
+protected:
+  std::list<struct sockaddr_in> obtain_recipent_sas() const;
+  std::list<struct sockaddr_in> obtain_recipent_sas_from_broadcast_ifas() const;
+  std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
+
+  std::shared_ptr<UdpSocket> udp_socket;
+
+  bool broadcast;
+  std::list<std::string> target_hosts;
+
+  int port;
+
+  std::list<struct sockaddr_in> recipent_sas;
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__UDP__BROADCASTER_HPP_

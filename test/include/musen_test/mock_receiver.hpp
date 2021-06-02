@@ -18,42 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__LISTENER__LISTENER_HPP_
-#define MUSEN__LISTENER__LISTENER_HPP_
+#ifndef MUSEN_TEST__MOCK_RECEIVER_HPP_
+#define MUSEN_TEST__MOCK_RECEIVER_HPP_
 
+#include <musen/musen.hpp>
+
+#include <algorithm>
 #include <memory>
-#include <optional>  // NOLINT
-#include <utility>
+#include <queue>
+#include <vector>
 
-#include "./base_listener.hpp"
-
-namespace musen
+namespace musen_test
 {
 
-template<typename T>
-class Listener : public BaseListener
+using Buffers = std::queue<std::vector<char>>;
+
+class MockReceiver : public musen::Receiver
 {
 public:
-  explicit Listener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>())
-  : BaseListener(port, udp_socket)
+  explicit MockReceiver(std::shared_ptr<Buffers> buffers)
+  : buffers(buffers)
   {
   }
 
-  std::optional<T> receive()
+  size_t receive_raw(char * data, const size_t & length) override
   {
-    T data;
-
-    int received = BaseListener::receive(&data, sizeof(T));
-
-    if (received < (signed)sizeof(T)) {
-      return std::nullopt;
+    if (buffers->empty()) {
+      return 0;
     }
 
-    return std::make_optional<T>(std::move(data));
+    auto buffer = buffers->front();
+    buffers->pop();
+
+    if (length >= buffer.size()) {
+      std::copy(buffer.begin(), buffer.end(), data);
+      return buffer.size();
+    } else {
+      std::copy_n(buffer.begin(), length, data);
+      return length;
+    }
   }
+
+private:
+  std::shared_ptr<Buffers> buffers;
 };
 
-}  // namespace musen
+}  // namespace musen_test
 
-#endif  // MUSEN__LISTENER__LISTENER_HPP_
+#endif  // MUSEN_TEST__MOCK_RECEIVER_HPP_

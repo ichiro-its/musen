@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  musen::Client<Position> client("127.0.0.1", 8080);
+  musen::Client client("localhost", 8080);
 
   if (!client.connect()) {
     std::cerr << "Failed to connect to server on port " <<
@@ -46,7 +46,7 @@ int main()
   unsigned int seed = time(NULL);
 
   while (true) {
-    auto received_position = client.receive();
+    auto received_position = client.receive<Position>();
 
     if (received_position.has_value()) {
       std::cout << "Received: " <<

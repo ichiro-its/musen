@@ -29,7 +29,7 @@
 
 int main()
 {
-  musen::StringBroadcaster broadcaster(8080);
+  musen::Broadcaster broadcaster(8080);
 
   broadcaster.enable_broadcast(false);
   broadcaster.add_target_host("localhost");
@@ -54,7 +54,7 @@ int main()
       message.push_back(fruits[rand_r(&seed) % fruits.size()]);
     }
 
-    broadcaster.send(message, "-");
+    broadcaster.send_strings(message, "-");
 
     std::cout << "Sent: ";
     for (auto & value : message) {

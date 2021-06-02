@@ -27,7 +27,7 @@
 
 int main()
 {
-  musen::StringListener listener(8080);
+  musen::Listener listener(8080);
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<
@@ -37,7 +37,7 @@ int main()
   }
 
   while (true) {
-    auto message = listener.receive(64);
+    auto message = listener.receive_string(64);
 
     if (message.size() > 0) {
       std::cout << "Received: " << message << std::endl;

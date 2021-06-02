@@ -18,42 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__CLIENT__BASE_CLIENT_HPP_
-#define MUSEN__CLIENT__BASE_CLIENT_HPP_
+#include <musen/sender.hpp>
 
-#include <memory>
 #include <string>
-
-#include "../socket/tcp_socket.hpp"
+#include <vector>
 
 namespace musen
 {
 
-class BaseClient
+size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/)
 {
-public:
-  explicit BaseClient(
-    const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+  return 0;
+}
 
-  bool connect();
-  bool disconnect();
+size_t Sender::send_string(const std::string & data)
+{
+  return send_raw(data.c_str(), data.size());
+}
 
-  int receive(void * buffer, const int & length);
-  int send(const char * buffer, const int & length);
+size_t Sender::send_strings(
+  const std::vector<std::string> & data, const std::string & delimiter)
+{
+  // Merge data using the delimiter
+  std::string merged_data = "";
+  for (size_t i = 0; i < data.size(); ++i) {
+    merged_data += data[i];
+    if (i != data.size() - 1) {
+      merged_data += delimiter;
+    }
+  }
 
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+  // Add a string termination if it doesn't contain one
+  if (merged_data[merged_data.size() - 1] != '\0') {
+    merged_data += '\0';
+  }
 
-  const std::string & get_host() const;
-  const int & get_port() const;
-
-protected:
-  std::shared_ptr<TcpSocket> tcp_socket;
-
-  std::string host;
-  int port;
-};
+  return send_string(merged_data);
+}
 
 }  // namespace musen
-
-#endif  // MUSEN__CLIENT__BASE_CLIENT_HPP_
