@@ -5,6 +5,6 @@ TAB_SIZE               = 2
 INPUT                  = ./include README.md
 RECURSIVE              = YES
 GENERATE_HTML          = YES
-HTML_OUTPUT            = html
+HTML_OUTPUT            = doc
 GENERATE_LATEX         = NO
 USE_MDFILE_AS_MAINPAGE = README.md

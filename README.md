@@ -47,7 +47,7 @@ See [examples](https://github.com/ichiro-its/musen/blob/master/examples) for inf
 
 ## Documentation
 
-You can read the full API documentation in the generated `html` directory or in [here](https://ichiro-its.github.io/musen).
+You can read the full API documentation in the generated `doc` directory or in [here](https://ichiro-its.github.io/musen).
 
 ## License
 

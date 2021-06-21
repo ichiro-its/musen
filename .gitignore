@@ -9,7 +9,7 @@ install
 debian
 obj-x86_64-linux-gnu
 
-html
+doc
 
 CHANGELOG.rst
 
