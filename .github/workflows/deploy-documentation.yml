@@ -1,0 +1,18 @@
+name: Deploy Documentation
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master]
+jobs:
+  deploy-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2.3.4
+      - name: Build documentation
+        uses: mattnotmitt/doxygen-action@v1.3.1
+      - name: Deploy documentation
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: html
