@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  musen::Server server(8080);
+  musen::Server server(5000);
 
   if (!server.connect()) {
     std::cerr << "Failed to connect to port " <<

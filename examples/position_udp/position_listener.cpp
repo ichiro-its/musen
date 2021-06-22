@@ -34,7 +34,7 @@ struct Position
 
 int main()
 {
-  musen::Listener listener(8080);
+  musen::Listener listener(5000);
 
   if (!listener.connect()) {
     std::cerr << "Failed to connect listener on port " <<
