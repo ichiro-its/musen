@@ -41,6 +41,12 @@ bool Listener::connect()
     return false;
   }
 
+  // Enable reuse port
+  int opt = 1;
+  setsockopt(
+    udp_socket->get_sockfd(), SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<void *>(&opt),
+    sizeof(opt));
+
   // Configure the recipent address
   struct sockaddr_in sa;
   {
