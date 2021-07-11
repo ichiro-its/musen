@@ -43,8 +43,12 @@ In this package, the UDP socket communication will be handled by Broadcaster and
 
 ## Usages
 
-See [examples](./examples) for information on how to use this package.
+See [examples](https://github.com/ichiro-its/musen/blob/master/examples) for information on how to use this package.
+
+## Documentation
+
+You can read the full API documentation in the generated `doc` directory or in [here](https://ichiro-its.github.io/musen).
 
 ## License
 
-This project is maintained by [ICHIRO ITS](https://ichiro-its.org/) and licensed under the [MIT License](./LICENSE).
+This project is maintained by [ICHIRO ITS](https://ichiro-its.org/) and licensed under the [MIT License](https://github.com/ichiro-its/musen/blob/master/LICENSE).
