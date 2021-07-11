@@ -35,7 +35,7 @@ bool UdpSocket::connect()
   }
 
   // Create a new socket
-  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
   if (get_sockfd() < 0) {
     return false;
   }

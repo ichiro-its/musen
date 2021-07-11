@@ -29,10 +29,7 @@
 
 int main()
 {
-  musen::Broadcaster broadcaster(8080);
-
-  broadcaster.enable_broadcast(false);
-  broadcaster.add_target_host("localhost");
+  musen::Broadcaster broadcaster(5000);
 
   if (!broadcaster.connect()) {
     std::cerr << "Failed to connect broadcaster on port " <<

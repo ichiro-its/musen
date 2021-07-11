@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 class BroadcastAndListenTest : public ::testing::Test
 {
@@ -30,26 +31,35 @@ protected:
   void SetUp() override
   {
     broadcaster = std::make_shared<musen::Broadcaster>(5000);
-    listener = std::make_shared<musen::Listener>(5000);
+    listeners = {
+      std::make_shared<musen::Listener>(5000),
+      std::make_shared<musen::Listener>(5000),
+      std::make_shared<musen::Listener>(5000)
+    };
 
     // Trying to connect both broadcaster and listener
     ASSERT_TRUE(broadcaster->connect()) << "Unable to connect the broadcaster";
-    ASSERT_TRUE(listener->connect()) << "Unable to connect the listener";
+    for (size_t i = 0; i < listeners.size(); ++i) {
+      ASSERT_TRUE(listeners[i]->connect()) << "Unable to connect listener " << i;
+    }
   }
 
   void TearDown() override
   {
     // Trying to disconnect both broadcaster and listener
     ASSERT_TRUE(broadcaster->disconnect()) << "Unable to disconnect the broadcaster";
-    ASSERT_TRUE(listener->disconnect()) << "Unable to disconnect the listener";
+    for (size_t i = 0; i < listeners.size(); ++i) {
+      ASSERT_TRUE(listeners[i]->disconnect()) << "Unable to disconnect listener " << i;
+    }
   }
 
   std::shared_ptr<musen::Broadcaster> broadcaster;
-  std::shared_ptr<musen::Listener> listener;
+  std::vector<std::shared_ptr<musen::Listener>> listeners;
 };
 
 TEST_F(BroadcastAndListenTest, SingleListener) {
   std::string broadcast_message = "Hello World!";
+  auto active_listeners = listeners;
 
   // Do up to 3 times until the listener has received the message
   int iteration = 0;
@@ -60,14 +70,21 @@ TEST_F(BroadcastAndListenTest, SingleListener) {
     // Wait 10ms so the listener could receive the messages
     usleep(10 * 1000);
 
-    auto listen_message = listener->receive_string(32);
-    if (listen_message.size() > 0) {
-      ASSERT_STREQ(listen_message.c_str(), broadcast_message.c_str()) <<
-        "Unequal listened and broadcasted message";
+    for (size_t i = 0; i < active_listeners.size(); ++i) {
+      auto listen_message = active_listeners[i]->receive_string(32);
+      if (listen_message.size() > 0) {
+        ASSERT_STREQ(listen_message.c_str(), broadcast_message.c_str()) <<
+          "Unequal listened and broadcasted message";
 
+        active_listeners.erase(active_listeners.begin() + i);
+        --i;
+      }
+    }
+
+    if (active_listeners.size() <= 0) {
       return SUCCEED();
     }
   }
 
-  FAIL() << "Listener did not receive any data";
+  FAIL() << "Several listener did not receive any data";
 }
