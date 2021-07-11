@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>musen</b></li><li class="navelem"><a class="el" href="classmusen_1_1Receiver.html">Receiver</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacemusen.html">musen</a></li><li class="navelem"><a class="el" href="classmusen_1_1Receiver.html">Receiver</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,6 +74,8 @@ $(function() {
 <div class="title">musen::Receiver Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="receiver_8hpp_source.html">receiver.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for musen::Receiver:</div>
 <div class="dyncontent">
@@ -88,20 +90,117 @@ Inheritance diagram for musen::Receiver:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aab5d5f4496cdde9717ba079b0513b580"><td class="memItemLeft" align="right" valign="top"><a id="aab5d5f4496cdde9717ba079b0513b580"></a>
-virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><b>receive_raw</b> (char *data, const size_t &amp;length)</td></tr>
+<tr class="memitem:aab5d5f4496cdde9717ba079b0513b580"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#aab5d5f4496cdde9717ba079b0513b580">receive_raw</a> (char *data, const size_t &amp;length)</td></tr>
 <tr class="separator:aab5d5f4496cdde9717ba079b0513b580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12a370f3778e35143f23868dd9570455"><td class="memItemLeft" align="right" valign="top"><a id="a12a370f3778e35143f23868dd9570455"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>receive_string</b> (const size_t &amp;length)</td></tr>
+<tr class="memitem:a12a370f3778e35143f23868dd9570455"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a12a370f3778e35143f23868dd9570455">receive_string</a> (const size_t &amp;length)</td></tr>
 <tr class="separator:a12a370f3778e35143f23868dd9570455"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17ec374ad8c25c4fb9acb670653672ef"><td class="memItemLeft" align="right" valign="top"><a id="a17ec374ad8c25c4fb9acb670653672ef"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>receive_strings</b> (const size_t &amp;length, const std::string &amp;delimiter=&quot;,&quot;)</td></tr>
+<tr class="memitem:a17ec374ad8c25c4fb9acb670653672ef"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a17ec374ad8c25c4fb9acb670653672ef">receive_strings</a> (const size_t &amp;length, const std::string &amp;delimiter=&quot;,&quot;)</td></tr>
 <tr class="separator:a17ec374ad8c25c4fb9acb670653672ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1"><td class="memTemplParams" colspan="2"><a id="a46a7ad6abe46a61513423f2baf6b44f1"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>receive</b> ()</td></tr>
+<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a46a7ad6abe46a61513423f2baf6b44f1">receive</a> ()</td></tr>
 <tr class="separator:a46a7ad6abe46a61513423f2baf6b44f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aab5d5f4496cdde9717ba079b0513b580"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab5d5f4496cdde9717ba079b0513b580">&#9670;&nbsp;</a></span>receive_raw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual size_t musen::Receiver::receive_raw </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t &amp;&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classmusen_1_1Listener.html#ac18d68fcb2c5226feb28a038fec74123">musen::Listener</a>, <a class="el" href="classmusen_1_1Server.html#a4a82e562ce65ab4ee1030155ec1dbe76">musen::Server</a>, and <a class="el" href="classmusen_1_1Client.html#a90bd2169cf2c66b6b9807f3ca914dfb5">musen::Client</a>.</p>
+
+</div>
+</div>
+<a id="a12a370f3778e35143f23868dd9570455"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12a370f3778e35143f23868dd9570455">&#9670;&nbsp;</a></span>receive_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string musen::Receiver::receive_string </td>
+          <td>(</td>
+          <td class="paramtype">const size_t &amp;&#160;</td>
+          <td class="paramname"><em>length</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a17ec374ad8c25c4fb9acb670653672ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17ec374ad8c25c4fb9acb670653672ef">&#9670;&nbsp;</a></span>receive_strings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; musen::Receiver::receive_strings </td>
+          <td>(</td>
+          <td class="paramtype">const size_t &amp;&#160;</td>
+          <td class="paramname"><em>length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>delimiter</em> = <code>&quot;,&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a46a7ad6abe46a61513423f2baf6b44f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a7ad6abe46a61513423f2baf6b44f1">&#9670;&nbsp;</a></span>receive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; T &gt; musen::Receiver::receive</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/musen/<a class="el" href="receiver_8hpp_source.html">receiver.hpp</a></li>
 </ul>

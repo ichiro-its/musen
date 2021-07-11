@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['basesocket_0',['BaseSocket',['../classmusen_1_1BaseSocket.html',1,'musen']]],
-  ['broadcaster_1',['Broadcaster',['../classmusen_1_1Broadcaster.html',1,'musen']]]
+  ['add_5ftarget_5fhost_0',['add_target_host',['../classmusen_1_1Broadcaster.html#a144c6d4574526a331488c8cce19e3588',1,'musen::Broadcaster']]]
 ];

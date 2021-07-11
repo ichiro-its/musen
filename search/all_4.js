@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['receiver_5',['Receiver',['../classmusen_1_1Receiver.html',1,'musen']]]
+  ['enable_5fbroadcast_10',['enable_broadcast',['../classmusen_1_1Broadcaster.html#a0e5656b93828d1775dc603c336144f88',1,'musen::Broadcaster']]]
 ];
