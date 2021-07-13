@@ -37,7 +37,7 @@ protected:
       std::make_shared<musen::Listener>(5000)
     };
 
-    // Trying to connect both broadcaster and listener
+    // Trying to connect both broadcaster and listeners
     ASSERT_TRUE(broadcaster->connect()) << "Unable to connect the broadcaster";
     for (size_t i = 0; i < listeners.size(); ++i) {
       ASSERT_TRUE(listeners[i]->connect()) << "Unable to connect listener " << i;
@@ -46,7 +46,7 @@ protected:
 
   void TearDown() override
   {
-    // Trying to disconnect both broadcaster and listener
+    // Trying to disconnect both broadcaster and listeners
     ASSERT_TRUE(broadcaster->disconnect()) << "Unable to disconnect the broadcaster";
     for (size_t i = 0; i < listeners.size(); ++i) {
       ASSERT_TRUE(listeners[i]->disconnect()) << "Unable to disconnect listener " << i;
@@ -61,13 +61,13 @@ TEST_F(BroadcastAndListenTest, SingleListener) {
   std::string broadcast_message = "Hello World!";
   auto active_listeners = listeners;
 
-  // Do up to 3 times until the listener has received the message
+  // Do up to 3 times until all listeners have received the message
   int iteration = 0;
   while (iteration++ < 3) {
     // Sending message
     broadcaster->send_string(broadcast_message);
 
-    // Wait 10ms so the listener could receive the messages
+    // Wait 10ms so listeners could receive the messages
     usleep(10 * 1000);
 
     for (size_t i = 0; i < active_listeners.size(); ++i) {
@@ -86,5 +86,5 @@ TEST_F(BroadcastAndListenTest, SingleListener) {
     }
   }
 
-  FAIL() << "Several listener did not receive any data";
+  FAIL() << "Several listeners did not receive any data";
 }

@@ -18,61 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/musen.hpp>
+#ifndef MUSEN__TCP__SESSION_HPP_
+#define MUSEN__TCP__SESSION_HPP_
 
-#include <unistd.h>
+#include <arpa/inet.h>
 
-#include <iostream>
-#include <string>
+#include <memory>
 
-struct Position
+#include "../socket/base_socket.hpp"
+#include "../sender.hpp"
+#include "../receiver.hpp"
+
+namespace musen
 {
-  int x;
-  int y;
-  int z;
+
+class Session : public Sender, public Receiver
+{
+public:
+  explicit Session(std::shared_ptr<BaseSocket> socket);
+
+  size_t send_raw(const char * data, const size_t & length) override;
+  size_t receive_raw(char * data, const size_t & length) override;
+
+  std::shared_ptr<BaseSocket> get_socket() const;
+
+  bool is_connected() const;
+
+protected:
+  std::shared_ptr<BaseSocket> socket;
 };
 
-int main()
-{
-  musen::Client client("localhost", 5000);
-
-  if (!client.connect()) {
-    std::cerr << "Failed to connect to server on port " <<
-      client.get_port() << "!" << std::endl;
-
-    return 1;
-  }
-
-  unsigned int seed = time(NULL);
-
-  while (true) {
-    std::cout << "test" << std::endl;
-    auto received_position = client.receive<Position>();
-
-    if (received_position.has_value()) {
-      std::cout << "Received: " <<
-        received_position->x << ", " <<
-        received_position->y << ", " <<
-        received_position->z << std::endl;
-    }
-
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    client.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
-  }
-
-  client.disconnect();
-
-  return 0;
 }
+
+#endif  // MUSEN__TCP__SESSION_HPP_

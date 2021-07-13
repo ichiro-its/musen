@@ -21,9 +21,11 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
+#include <list>
 #include <memory>
 #include <string>
 #include <thread>
+#include <vector>
 
 class ServerAndClientTest : public ::testing::Test
 {
@@ -31,34 +33,55 @@ protected:
   void SetUp() override
   {
     server = std::make_shared<musen::Server>(5000);
-    client = std::make_shared<musen::Client>("localhost", 5000);
+    clients = {
+      std::make_shared<musen::Client>("localhost", 5000),
+      std::make_shared<musen::Client>("localhost", 5000),
+      std::make_shared<musen::Client>("localhost", 5000)
+    };
 
+    // Process the server on a separate thread
     server_thread = std::make_shared<std::thread>(
       [this]() {
         // Trying to connect the server
         ASSERT_TRUE(server->connect()) << "Unable to connect the server";
 
-        // Echo the received message while the server connected
+        std::list<std::shared_ptr<musen::Session>> sessions;
+
+        // Process each client while the server is connected
         while (server->is_connected()) {
-          auto receive_message = server->receive_string(32);
-          if (receive_message.size() > 0) {
-            server->send_string(receive_message);
+          // Accept a new client
+          auto new_session = server->accept();
+          if (new_session != nullptr) {
+            sessions.push_back(new_session);
+          }
+
+          // Echo the received message from each client
+          for (auto session : sessions) {
+            auto receive_message = session->receive_string(32);
+            if (receive_message.size() > 0) {
+              session->send_string(receive_message);
+            }
           }
         }
       });
 
-    // Wait 10ms so the client could connect to the server
+    // Wait 10ms so each client could connect to the server
     usleep(10 * 1000);
 
-    // Trying to connect the client
-    ASSERT_TRUE(client->connect()) << "Unable to connect the client";
+    // Trying to connect each client
+    for (size_t i = 0; i < clients.size(); ++i) {
+      ASSERT_TRUE(clients[i]->connect()) << "Unable to connect client " << i;
+    }
+
   }
 
   void TearDown() override
   {
-    // Trying to disconnect both server and client
+    // Trying to disconnect both server and clients
     ASSERT_TRUE(server->disconnect()) << "Unable to disconnect the server";
-    ASSERT_TRUE(client->disconnect()) << "Unable to disconnect the client";
+    for (size_t i = 0; i < clients.size(); ++i) {
+      ASSERT_TRUE(clients[i]->disconnect()) << "Unable to disconnect client " << i;
+    }
 
     if (server_thread) {
       server_thread->join();
@@ -66,31 +89,42 @@ protected:
   }
 
   std::shared_ptr<musen::Server> server;
-  std::shared_ptr<musen::Client> client;
+  std::vector<std::shared_ptr<musen::Client>> clients;
 
   std::shared_ptr<std::thread> server_thread;
 };
 
 TEST_F(ServerAndClientTest, SingleClient) {
   std::string send_message = "Hello World!";
+  auto active_clients = clients;
 
-  // Do up to 3 times until the client has received the message back
+  // Do up to 3 times until all clients have received the message back
   int iteration = 0;
   while (iteration++ < 3) {
-    // Sending message
-    client->send_string(send_message);
+    for (size_t i = 0; i < active_clients.size(); ++i) {
+      auto client = active_clients[i];
+      std::string send_message = "Hello World! " + std::to_string(i);
 
-    // Wait 10ms so the server could receive the messages
-    usleep(10 * 1000);
+      // Sending message
+      client->send_string(send_message);
 
-    auto receive_message = client->receive_string(32);
-    if (receive_message.size() > 0) {
-      ASSERT_STREQ(receive_message.c_str(), send_message.c_str()) <<
-        "Unequal received and sent message";
+      // Wait 10ms so the server could receive the messages
+      usleep(10 * 1000);
 
+      auto receive_message = client->receive_string(32);
+      if (receive_message.size() > 0) {
+        ASSERT_STREQ(receive_message.c_str(), send_message.c_str()) <<
+          "Unequal received and sent message";
+
+        active_clients.erase(active_clients.begin() + i);
+        --i;
+      }
+    }
+
+    if (active_clients.size() <= 0) {
       return SUCCEED();
     }
   }
 
-  FAIL() << "Client did not receive any data";
+  FAIL() << "Several clients did not receive any data";
 }

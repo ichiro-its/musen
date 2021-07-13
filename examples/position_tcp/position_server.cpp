@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include <iostream>
+#include <list>
 #include <string>
 
 struct Position
@@ -43,29 +44,38 @@ int main()
     return 1;
   }
 
+  std::list<std::shared_ptr<musen::Session>> sessions;
   unsigned int seed = time(NULL);
 
   while (true) {
-    Position position;
+    std::cout << "test" << std::endl;
+    auto new_session = server.accept();
+    if (new_session != nullptr) {
+      sessions.push_back(new_session);
+    }
 
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
+    for (auto session : sessions) {
+      Position position;
 
-    server.send(position);
+      position.x = rand_r(&seed) % 100;
+      position.y = rand_r(&seed) % 100;
+      position.z = rand_r(&seed) % 100;
 
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
+      server.send(position);
 
-    auto received_position = server.receive<Position>();
+      std::cout << "Sent: " <<
+        position.x << ", " <<
+        position.y << ", " <<
+        position.z << std::endl;
 
-    if (received_position.has_value()) {
-      std::cout << "Received: " <<
-        received_position->x << ", " <<
-        received_position->y << ", " <<
-        received_position->z << std::endl;
+      auto received_position = session->receive<Position>();
+
+      if (received_position.has_value()) {
+        std::cout << "Received: " <<
+          received_position->x << ", " <<
+          received_position->y << ", " <<
+          received_position->z << std::endl;
+      }
     }
 
     sleep(1);

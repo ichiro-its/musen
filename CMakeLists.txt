@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME} SHARED
   "src/socket/udp_socket.cpp"
   "src/tcp/client.cpp"
   "src/tcp/server.cpp"
+  "src/tcp/session.cpp"
   "src/udp/broadcaster.cpp"
   "src/udp/listener.cpp"
   "src/receiver.cpp"

@@ -24,6 +24,7 @@
 #include <memory>
 #include <string>
 
+#include "./session.hpp"
 #include "../socket/tcp_socket.hpp"
 #include "../receiver.hpp"
 #include "../sender.hpp"
@@ -40,21 +41,20 @@ public:
   bool connect();
   bool disconnect();
 
-  size_t send_raw(const char * data, const size_t & length) override;
-  size_t receive_raw(char * data, const size_t & length) override;
+  std::shared_ptr<Session> accept();
 
   std::shared_ptr<TcpSocket> get_tcp_socket() const;
 
   bool is_connected() const;
 
   const int & get_port() const;
-  const int & get_new_sockfd() const;
 
 protected:
+  struct sockaddr_in obtain_client_sa() const;
+
   std::shared_ptr<TcpSocket> tcp_socket;
 
   int port;
-  int new_sockfd;
 };
 
 }  // namespace musen

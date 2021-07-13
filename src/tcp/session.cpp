@@ -18,61 +18,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/musen.hpp>
+#include <musen/tcp/session.hpp>
 
-#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
-#include <iostream>
-#include <string>
-
-struct Position
+namespace musen
 {
-  int x;
-  int y;
-  int z;
-};
 
-int main()
+constexpr auto socket_send = send;
+
+Session::Session(std::shared_ptr<BaseSocket> socket)
+: socket(socket)
 {
-  musen::Client client("localhost", 5000);
-
-  if (!client.connect()) {
-    std::cerr << "Failed to connect to server on port " <<
-      client.get_port() << "!" << std::endl;
-
-    return 1;
-  }
-
-  unsigned int seed = time(NULL);
-
-  while (true) {
-    std::cout << "test" << std::endl;
-    auto received_position = client.receive<Position>();
-
-    if (received_position.has_value()) {
-      std::cout << "Received: " <<
-        received_position->x << ", " <<
-        received_position->y << ", " <<
-        received_position->z << std::endl;
-    }
-
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    client.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
-  }
-
-  client.disconnect();
-
-  return 0;
 }
+
+size_t Session::send_raw(const char * data, const size_t & length)
+{
+  if (!is_connected() || length <= 0) {
+    return 0;
+  }
+
+  // Send data
+  int sent = socket_send(socket->get_sockfd(), data, length, 0);
+
+  return std::max(sent, 0);
+}
+
+size_t Session::receive_raw(char * data, const size_t & length)
+{
+  if (!is_connected() || length <= 0) {
+    return 0;
+  }
+
+  // Receive data
+  int received = recv(socket->get_sockfd(), data, length, 0);
+
+  return std::max(received, 0);
+}
+
+std::shared_ptr<BaseSocket> Session::get_socket() const
+{
+  return socket;
+}
+
+bool Session::is_connected() const
+{
+  return socket->is_connected();
+}
+
+}  // namespace musen
