@@ -25,6 +25,14 @@
 #include <memory>
 #include <string>
 
+TEST(SocketTest, Initialize) {
+  musen::BaseSocket a;
+  ASSERT_LT(a.get_sockfd(), 0);
+
+  musen::BaseSocket b(1);
+  ASSERT_EQ(b.get_sockfd(), 1);
+}
+
 TEST(SocketTest, ConnectDisconnect) {
   std::map<std::string, std::shared_ptr<musen::BaseSocket>> sockets = {
     {"UDP socket", std::make_shared<musen::UdpSocket>()},

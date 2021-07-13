@@ -28,6 +28,8 @@ class BaseSocket
 {
 public:
   BaseSocket();
+  explicit BaseSocket(const int & sockfd);
+
   ~BaseSocket();
 
   virtual bool connect();

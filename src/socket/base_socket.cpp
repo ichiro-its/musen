@@ -32,6 +32,11 @@ BaseSocket::BaseSocket()
 {
 }
 
+BaseSocket::BaseSocket(const int & sockfd)
+: sockfd(sockfd)
+{
+}
+
 BaseSocket::~BaseSocket()
 {
   disconnect();
