@@ -28,8 +28,8 @@ namespace musen
 
 class Socket;
 
-std::shared_ptr<Socket> make_tcp_socket();
-std::shared_ptr<Socket> make_udp_socket();
+std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking = true);
+std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking = true);
 
 class Socket
 {
@@ -42,9 +42,7 @@ public:
   void set_status_flags(const int & flags);
   int get_status_flags() const;
 
-  void enable_non_blocking();
-  void disable_non_blocking();
-
+  void set_non_blocking(const bool & enable);
   bool is_non_blocking() const;
 
   const int & get_fd() const;

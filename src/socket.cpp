@@ -30,26 +30,24 @@
 namespace musen
 {
 
-std::shared_ptr<Socket> make_tcp_socket()
+std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking)
 {
-  auto socket = std::make_shared<Socket>(AF_INET, SOCK_STREAM, IPPROTO_IP);
-
-  socket->enable_non_blocking();
+  auto type = SOCK_STREAM | (non_blocking ? SOCK_NONBLOCK : 0);
+  auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
 
   return socket;
 }
 
-std::shared_ptr<Socket> make_udp_socket()
+std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking)
 {
-  auto socket = std::make_shared<Socket>(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+  auto type = SOCK_DGRAM | (non_blocking ? SOCK_NONBLOCK : 0);
+  auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
 
   // Enable broadcast
   int opt = 1;
   setsockopt(
     socket->get_fd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
     sizeof(opt));
-
-  socket->enable_non_blocking();
 
   return socket;
 }
@@ -99,14 +97,10 @@ int Socket::get_status_flags() const
   return flags;
 }
 
-void Socket::enable_non_blocking()
+void Socket::set_non_blocking(const bool & enable)
 {
-  set_status_flags(get_status_flags() | O_NONBLOCK);
-}
-
-void Socket::disable_non_blocking()
-{
-  set_status_flags(get_status_flags() & ~O_NONBLOCK);
+  auto flags = get_status_flags();
+  set_status_flags(enable ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK));
 }
 
 bool Socket::is_non_blocking() const

@@ -54,12 +54,12 @@ TEST_F(SocketManipulationTest, CatchInvalidSetStatusFlags) {
 }
 
 TEST_F(SocketManipulationTest, EnableDisableNonBlocking) {
-  socket->disable_non_blocking();
+  socket->set_non_blocking(false);
   ASSERT_FALSE(socket->is_non_blocking());
 
-  socket->enable_non_blocking();
+  socket->set_non_blocking(true);
   ASSERT_TRUE(socket->is_non_blocking());
 
-  socket->disable_non_blocking();
+  socket->set_non_blocking(false);
   ASSERT_FALSE(socket->is_non_blocking());
 }
