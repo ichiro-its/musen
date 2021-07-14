@@ -45,14 +45,14 @@ public:
   void set_status_flags(const int & flags);
   int get_status_flags() const;
 
+  void set_status_flag(const int & key, const bool & enable);
+  bool get_status_flag(const int & key) const;
+
   template<typename T>
   void set_option(const int & key, const T & value);
 
   template<typename T>
   T get_option(const int & key) const;
-
-  void set_non_blocking(const bool & enable);
-  bool is_non_blocking() const;
 
   const int & get_fd() const;
 

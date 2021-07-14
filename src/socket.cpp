@@ -41,6 +41,7 @@ std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking)
   auto type = SOCK_DGRAM | (non_blocking ? SOCK_NONBLOCK : 0);
   auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
 
+  // Enable broadcast
   socket->set_option(SO_BROADCAST, 1);
 
   return socket;
@@ -84,15 +85,15 @@ int Socket::get_status_flags() const
   return flags;
 }
 
-void Socket::set_non_blocking(const bool & enable)
+void Socket::set_status_flag(const int & key, const bool & enable)
 {
   auto flags = get_status_flags();
-  set_status_flags(enable ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK));
+  set_status_flags(enable ? (flags | key) : (flags & ~key));
 }
 
-bool Socket::is_non_blocking() const
+bool Socket::get_status_flag(const int & key) const
 {
-  return get_status_flags() & O_NONBLOCK;
+  return get_status_flags() & key;
 }
 
 const int & Socket::get_fd() const

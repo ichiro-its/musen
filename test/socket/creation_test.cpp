@@ -18,25 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <fcntl.h>
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
 TEST(SocketCreationTest, MakeTcp) {
   auto socket = musen::make_tcp_socket();
-  ASSERT_TRUE(socket->is_non_blocking());
+  ASSERT_TRUE(socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, MakeUdp) {
   auto socket = musen::make_udp_socket();
-  ASSERT_TRUE(socket->is_non_blocking());
+  ASSERT_TRUE(socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, MakeSocketBlocking) {
   auto tcp_socket = musen::make_tcp_socket(false);
   auto udp_socket = musen::make_udp_socket(false);
 
-  ASSERT_FALSE(tcp_socket->is_non_blocking());
-  ASSERT_FALSE(udp_socket->is_non_blocking());
+  ASSERT_FALSE(tcp_socket->get_status_flag(O_NONBLOCK));
+  ASSERT_FALSE(udp_socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, CustomFdFromOthers) {

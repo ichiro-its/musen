@@ -53,6 +53,14 @@ TEST_F(SocketManipulationTest, CatchInvalidSetStatusFlags) {
   }
 }
 
+TEST_F(SocketManipulationTest, EnableDisableFlag) {
+  socket->set_status_flag(O_NONBLOCK, false);
+  ASSERT_FALSE(socket->get_status_flag(O_NONBLOCK));
+
+  socket->set_status_flag(O_NONBLOCK, true);
+  ASSERT_TRUE(socket->get_status_flag(O_NONBLOCK));
+}
+
 TEST_F(SocketManipulationTest, SetGetOption) {
   socket->set_option(SO_KEEPALIVE, 1);
   ASSERT_EQ(socket->get_option<bool>(SO_KEEPALIVE), 1);
@@ -77,15 +85,4 @@ TEST_F(SocketManipulationTest, CatchInvalidGetOptionKey) {
   } catch (const std::system_error & err) {
     EXPECT_EQ(err.code().value(), ENOPROTOOPT) << "Error must be caused by invalid option key";
   }
-}
-
-TEST_F(SocketManipulationTest, EnableDisableNonBlocking) {
-  socket->set_non_blocking(false);
-  ASSERT_FALSE(socket->is_non_blocking());
-
-  socket->set_non_blocking(true);
-  ASSERT_TRUE(socket->is_non_blocking());
-
-  socket->set_non_blocking(false);
-  ASSERT_FALSE(socket->is_non_blocking());
 }
