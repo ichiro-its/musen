@@ -27,14 +27,6 @@
 #include <memory>
 #include <system_error>
 
-namespace sys
-{
-
-constexpr auto make_socket = socket;
-constexpr auto get_socket_option = getsockopt;
-
-}
-
 namespace musen
 {
 
@@ -43,8 +35,7 @@ std::shared_ptr<Socket> make_tcp_socket()
   auto socket = std::make_shared<Socket>(AF_INET, SOCK_STREAM, IPPROTO_IP);
 
   // Enable non-blocking
-  int flags = fcntl(socket->get_fd(), F_GETFL, 0);
-  fcntl(socket->get_fd(), F_SETFL, flags | O_NONBLOCK);
+  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
 
   return socket;
 }
@@ -60,8 +51,7 @@ std::shared_ptr<Socket> make_udp_socket()
     sizeof(opt));
 
   // Enable non-blocking
-  int flags = fcntl(socket->get_fd(), F_GETFL, 0);
-  fcntl(socket->get_fd(), F_SETFL, flags | O_NONBLOCK);
+  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
 
   return socket;
 }
@@ -72,7 +62,7 @@ Socket::Socket(const int & fd)
   int error;
   socklen_t error_len = sizeof(error);
 
-  if (sys::get_socket_option(fd, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1) {
+  if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
 
@@ -83,7 +73,7 @@ Socket::Socket(const int & fd)
 
 Socket::Socket(const int & domain, const int & type, const int & protocol)
 {
-  fd = sys::make_socket(domain, type, protocol);
+  fd = socket(domain, type, protocol);
   if (fd == -1) {
     throw std::system_error(errno, std::generic_category());
   }
@@ -92,6 +82,23 @@ Socket::Socket(const int & domain, const int & type, const int & protocol)
 Socket::~Socket()
 {
   close(fd);
+}
+
+void Socket::set_status_flags(const int & flags)
+{
+  if (fcntl(fd, F_SETFL, flags) == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+}
+
+int Socket::get_status_flags() const
+{
+  auto flags = fcntl(fd, F_GETFL, 0);
+  if (flags == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return flags;
 }
 
 const int & Socket::get_fd() const

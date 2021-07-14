@@ -21,26 +21,22 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
-#include <map>
-#include <memory>
-#include <string>
-
-TEST(SocketTest, MakeTcp) {
+TEST(SocketCreationTest, MakeTcp) {
   auto socket = musen::make_tcp_socket();
 }
 
-TEST(SocketTest, MakeUdp) {
+TEST(SocketCreationTest, MakeUdp) {
   auto socket = musen::make_udp_socket();
 }
 
-TEST(SocketTest, CustomFdFromOthers) {
+TEST(SocketCreationTest, CustomFdFromOthers) {
   auto a = musen::make_tcp_socket();
   auto b = musen::Socket(a->get_fd());
 
   EXPECT_EQ(a->get_fd(), b.get_fd());
 }
 
-TEST(SocketTest, CatchInvalidCustomFd) {
+TEST(SocketCreationTest, CatchInvalidCustomFd) {
   try {
     musen::Socket socket(-1);
     FAIL() << "Expected a system error";
@@ -49,7 +45,7 @@ TEST(SocketTest, CatchInvalidCustomFd) {
   }
 }
 
-TEST(SocketTest, CatchObsoleteCustomFdFromOthers) {
+TEST(SocketCreationTest, CatchObsoleteCustomFdFromOthers) {
   try {
     int fd;
     {
@@ -61,19 +57,19 @@ TEST(SocketTest, CatchObsoleteCustomFdFromOthers) {
 
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused of invalid file descriptor";
+    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused by invalid file descriptor";
   }
 }
 
-TEST(SocketTest, CustomType) {
+TEST(SocketCreationTest, CustomType) {
   musen::Socket socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
 }
 
-TEST(SocketTest, CatchInvalidCustomType) {
+TEST(SocketCreationTest, CatchInvalidCustomType) {
   try {
     musen::Socket socket(255, 255, 255);
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    EXPECT_EQ(err.code().value(), EINVAL) << "Error must be cause of invalid type";
+    EXPECT_EQ(err.code().value(), EINVAL) << "Error must be caused by invalid type";
   }
 }

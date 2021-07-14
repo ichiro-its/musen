@@ -18,36 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SOCKET_HPP_
-#define MUSEN__SOCKET_HPP_
+#include <fcntl.h>
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
 #include <memory>
 
-namespace musen
+class SocketManipulationTest : public ::testing::Test
 {
+protected:
+  void SetUp() override
+  {
+    socket = musen::make_tcp_socket();
+  }
 
-class Socket;
-
-std::shared_ptr<Socket> make_tcp_socket();
-std::shared_ptr<Socket> make_udp_socket();
-
-class Socket
-{
-public:
-  explicit Socket(const int & fd);
-  Socket(const int & domain, const int & type, const int & protocol);
-
-  ~Socket();
-
-  void set_status_flags(const int & flags);
-  int get_status_flags() const;
-
-  const int & get_fd() const;
-
-private:
-  int fd;
+  std::shared_ptr<musen::Socket> socket;
 };
 
-}  // namespace musen
+TEST_F(SocketManipulationTest, GetStatusFlags) {
+  auto flags = socket->get_status_flags();
+  ASSERT_NE(flags, -1) << "Invalid status flags";
+}
 
-#endif  // MUSEN__SOCKET_HPP_
+TEST_F(SocketManipulationTest, SetStatusFlags) {
+  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
+}
+
+TEST_F(SocketManipulationTest, CatchInvalidSetStatusFlags) {
+  try {
+    socket->set_status_flags(-1);
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    EXPECT_EQ(err.code().value(), EINVAL) << "Error must be caused by invalid flags";
+  }
+}
