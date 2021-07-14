@@ -43,10 +43,7 @@ bool Listener::connect()
   }
 
   // Enable reuse port
-  int opt = 1;
-  setsockopt(
-    socket->get_fd(), SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
+  socket->set_option(SO_REUSEPORT, true);
 
   // Configure the recipent address
   struct sockaddr_in sa;

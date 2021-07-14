@@ -21,7 +21,10 @@
 #ifndef MUSEN__SOCKET_HPP_
 #define MUSEN__SOCKET_HPP_
 
+#include <sys/socket.h>
+
 #include <memory>
+#include <system_error>
 
 namespace musen
 {
@@ -42,6 +45,12 @@ public:
   void set_status_flags(const int & flags);
   int get_status_flags() const;
 
+  template<typename T>
+  void set_option(const int & key, const T & value);
+
+  template<typename T>
+  T get_option(const int & key) const;
+
   void set_non_blocking(const bool & enable);
   bool is_non_blocking() const;
 
@@ -50,6 +59,26 @@ public:
 private:
   int fd;
 };
+
+template<typename T>
+void Socket::set_option(const int & key, const T & value)
+{
+  if (setsockopt(fd, SOL_SOCKET, key, &value, sizeof(value)) == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+}
+
+template<typename T>
+T Socket::get_option(const int & key) const
+{
+  T value;
+  socklen_t value_len = sizeof(value);
+  if (getsockopt(fd, SOL_SOCKET, key, &value, &value_len) == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return value;
+}
 
 }  // namespace musen
 

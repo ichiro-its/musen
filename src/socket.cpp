@@ -21,11 +21,9 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <musen/socket.hpp>
-#include <sys/socket.h>
 #include <unistd.h>
 
 #include <memory>
-#include <system_error>
 
 namespace musen
 {
@@ -43,11 +41,7 @@ std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking)
   auto type = SOCK_DGRAM | (non_blocking ? SOCK_NONBLOCK : 0);
   auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
 
-  // Enable broadcast
-  int opt = 1;
-  setsockopt(
-    socket->get_fd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
+  socket->set_option(SO_BROADCAST, 1);
 
   return socket;
 }
@@ -55,14 +49,7 @@ std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking)
 Socket::Socket(const int & fd)
 : fd(fd)
 {
-  int error;
-  socklen_t error_len = sizeof(error);
-
-  if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1) {
-    throw std::system_error(errno, std::generic_category());
-  }
-
-  if (error != 0) {
+  if (get_option<int>(SO_ERROR) != 0) {
     throw std::system_error(errno, std::generic_category());
   }
 }
