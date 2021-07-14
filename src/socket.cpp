@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <musen/socket.hpp>
 #include <unistd.h>
@@ -27,6 +26,8 @@
 
 namespace musen
 {
+
+constexpr auto socket_bind = bind;
 
 std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking)
 {
@@ -66,6 +67,13 @@ Socket::Socket(const int & domain, const int & type, const int & protocol)
 Socket::~Socket()
 {
   close(fd);
+}
+
+void Socket::bind(const struct sockaddr_in & sa)
+{
+  if (socket_bind(fd, (struct sockaddr *)&sa, sizeof(sa)) == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
 }
 
 void Socket::set_status_flags(const int & flags)

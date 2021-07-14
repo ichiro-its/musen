@@ -52,7 +52,7 @@ TEST(SocketCreationTest, CatchInvalidCustomFd) {
     musen::Socket socket(-1);
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused of invalid file descriptor";
+    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused by invalid file descriptor";
   }
 }
 

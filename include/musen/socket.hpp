@@ -21,6 +21,7 @@
 #ifndef MUSEN__SOCKET_HPP_
 #define MUSEN__SOCKET_HPP_
 
+#include <arpa/inet.h>
 #include <sys/socket.h>
 
 #include <memory>
@@ -41,6 +42,8 @@ public:
   Socket(const int & domain, const int & type, const int & protocol);
 
   ~Socket();
+
+  void bind(const struct sockaddr_in & sa);
 
   void set_status_flags(const int & flags);
   int get_status_flags() const;

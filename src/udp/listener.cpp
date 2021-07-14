@@ -56,9 +56,7 @@ bool Listener::connect()
   }
 
   // Bind the socket with the recipent address
-  if (bind(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
+  socket->bind(sa);
 
   connected = true;
 

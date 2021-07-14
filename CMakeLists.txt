@@ -69,6 +69,7 @@ if(BUILD_TESTING)
     "test/send_and_receive/struct_test.cpp"
     # "test/broadcast_and_listen_test.cpp"
     # "test/server_and_client_test.cpp"
+    "test/socket/connection_test.cpp"
     "test/socket/creation_test.cpp"
     "test/socket/manipulation_test.cpp")
 

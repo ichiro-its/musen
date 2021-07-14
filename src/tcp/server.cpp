@@ -50,9 +50,7 @@ bool Server::connect()
   auto sa = obtain_client_sa();
 
   // Bind the socket to the server address
-  if (bind(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
+  socket->bind(sa);
 
   // Listen to incoming connection
   if (listen(socket->get_fd(), 3) < 0) {
