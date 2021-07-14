@@ -25,40 +25,55 @@
 #include <memory>
 #include <string>
 
-TEST(SocketTest, Initialize) {
-  musen::BaseSocket a;
-  ASSERT_LT(a.get_sockfd(), 0);
-
-  musen::BaseSocket b(1);
-  ASSERT_EQ(b.get_sockfd(), 1);
+TEST(SocketTest, MakeTcp) {
+  auto socket = musen::make_tcp_socket();
 }
 
-TEST(SocketTest, ConnectDisconnect) {
-  std::map<std::string, std::shared_ptr<musen::BaseSocket>> sockets = {
-    {"UDP socket", std::make_shared<musen::UdpSocket>()},
-    {"TCP socket", std::make_shared<musen::TcpSocket>()}
-  };
+TEST(SocketTest, MakeUdp) {
+  auto socket = musen::make_udp_socket();
+}
 
-  for (auto & socket_pair : sockets) {
-    auto name = socket_pair.first;
-    auto socket = socket_pair.second;
+TEST(SocketTest, CustomFdFromOthers) {
+  auto a = musen::make_tcp_socket();
+  auto b = musen::Socket(a->get_fd());
 
-    ASSERT_FALSE(socket->is_connected()) << "The " << name << " must be disconnected";
+  EXPECT_EQ(a->get_fd(), b.get_fd());
+}
 
-    // Trying to connect the socket
-    ASSERT_TRUE(socket->connect()) << "Unable to connect the " << name;
-    ASSERT_TRUE(socket->is_connected()) << "The " << name << " must be connected";
+TEST(SocketTest, CatchInvalidCustomFd) {
+  try {
+    musen::Socket socket(-1);
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused of invalid file descriptor";
+  }
+}
 
-    // Must be failed because the socket is already connected
-    ASSERT_FALSE(socket->connect()) << "Must be unable to connect the " << name;
-    ASSERT_TRUE(socket->is_connected()) << "The " << name << " must be connected";
+TEST(SocketTest, CatchObsoleteCustomFdFromOthers) {
+  try {
+    int fd;
+    {
+      auto a = musen::make_tcp_socket();
+      fd = a->get_fd();
+    }
 
-    // Trying to disconnect the socket
-    ASSERT_TRUE(socket->disconnect()) << "Unable to disconnect the " << name;
-    ASSERT_FALSE(socket->is_connected()) << "The " << name << " must be disconnected";
+    musen::Socket b(fd);
 
-    // Must be failed because the socket is already disconnected
-    ASSERT_FALSE(socket->disconnect()) << "Must be unable to connect the " << name;
-    ASSERT_FALSE(socket->is_connected()) << "The " << name << " must be disconnected";
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    EXPECT_EQ(err.code().value(), EBADF) << "Error must be caused of invalid file descriptor";
+  }
+}
+
+TEST(SocketTest, CustomType) {
+  musen::Socket socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+}
+
+TEST(SocketTest, CatchInvalidCustomType) {
+  try {
+    musen::Socket socket(255, 255, 255);
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    EXPECT_EQ(err.code().value(), EINVAL) << "Error must be cause of invalid type";
   }
 }

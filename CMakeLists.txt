@@ -19,16 +19,14 @@ find_package(ament_cmake REQUIRED)
 install(DIRECTORY "include" DESTINATION ".")
 
 add_library(${PROJECT_NAME} SHARED
-  "src/socket/base_socket.cpp"
-  "src/socket/tcp_socket.cpp"
-  "src/socket/udp_socket.cpp"
   "src/tcp/client.cpp"
   "src/tcp/server.cpp"
   "src/tcp/session.cpp"
   "src/udp/broadcaster.cpp"
   "src/udp/listener.cpp"
   "src/receiver.cpp"
-  "src/sender.cpp")
+  "src/sender.cpp"
+  "src/socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -69,8 +67,8 @@ if(BUILD_TESTING)
     "test/send_and_receive/string_test.cpp"
     "test/send_and_receive/strings_test.cpp"
     "test/send_and_receive/struct_test.cpp"
-    "test/broadcast_and_listen_test.cpp"
-    "test/server_and_client_test.cpp"
+    # "test/broadcast_and_listen_test.cpp"
+    # "test/server_and_client_test.cpp"
     "test/socket_test.cpp")
 
   target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")

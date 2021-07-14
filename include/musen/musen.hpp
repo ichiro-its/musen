@@ -21,10 +21,6 @@
 #ifndef MUSEN__MUSEN_HPP_
 #define MUSEN__MUSEN_HPP_
 
-#include "./socket/base_socket.hpp"
-#include "./socket/tcp_socket.hpp"
-#include "./socket/udp_socket.hpp"
-
 #include "./tcp/client.hpp"
 #include "./tcp/server.hpp"
 
@@ -33,5 +29,6 @@
 
 #include "./sender.hpp"
 #include "./receiver.hpp"
+#include "./socket.hpp"
 
 #endif  // MUSEN__MUSEN_HPP_

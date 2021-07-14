@@ -72,7 +72,6 @@ protected:
     for (size_t i = 0; i < clients.size(); ++i) {
       ASSERT_TRUE(clients[i]->connect()) << "Unable to connect client " << i;
     }
-
   }
 
   void TearDown() override

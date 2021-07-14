@@ -24,9 +24,9 @@
 #include <memory>
 #include <string>
 
-#include "../socket/tcp_socket.hpp"
 #include "../receiver.hpp"
 #include "../sender.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -36,7 +36,7 @@ class Client : public Sender, public Receiver
 public:
   explicit Client(
     const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+    std::shared_ptr<Socket> socket = make_tcp_socket());
 
   bool connect();
   bool disconnect();
@@ -44,7 +44,7 @@ public:
   size_t send_raw(const char * data, const size_t & length) override;
   size_t receive_raw(char * data, const size_t & length) override;
 
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+  std::shared_ptr<Socket> get_socket() const;
 
   bool is_connected() const;
 
@@ -52,7 +52,9 @@ public:
   const int & get_port() const;
 
 protected:
-  std::shared_ptr<TcpSocket> tcp_socket;
+  std::shared_ptr<Socket> socket;
+
+  bool connected;
 
   std::string host;
   int port;

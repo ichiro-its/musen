@@ -25,9 +25,9 @@
 
 #include <memory>
 
-#include "../socket/base_socket.hpp"
 #include "../sender.hpp"
 #include "../receiver.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -35,19 +35,21 @@ namespace musen
 class Session : public Sender, public Receiver
 {
 public:
-  explicit Session(std::shared_ptr<BaseSocket> socket);
+  explicit Session(std::shared_ptr<Socket> socket);
 
   size_t send_raw(const char * data, const size_t & length) override;
   size_t receive_raw(char * data, const size_t & length) override;
 
-  std::shared_ptr<BaseSocket> get_socket() const;
+  std::shared_ptr<Socket> get_socket() const;
 
   bool is_connected() const;
 
 protected:
-  std::shared_ptr<BaseSocket> socket;
+  std::shared_ptr<Socket> socket;
+
+  bool connected;
 };
 
-}
+}  // namespace musen
 
 #endif  // MUSEN__TCP__SESSION_HPP_

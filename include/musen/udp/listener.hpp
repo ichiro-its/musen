@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include "../socket/udp_socket.hpp"
 #include "../receiver.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -33,21 +33,23 @@ class Listener : public Receiver
 {
 public:
   explicit Listener(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
 
   bool connect();
   bool disconnect();
 
   size_t receive_raw(char * data, const size_t & length) override;
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+  std::shared_ptr<Socket> get_socket() const;
 
   bool is_connected() const;
 
   const int & get_port() const;
 
 protected:
-  std::shared_ptr<UdpSocket> udp_socket;
+  std::shared_ptr<Socket> socket;
+
+  bool connected;
 
   int port;
 };

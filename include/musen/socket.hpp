@@ -18,28 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/socket/tcp_socket.hpp>
+#ifndef MUSEN__SOCKET_HPP_
+#define MUSEN__SOCKET_HPP_
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
+#include <memory>
 
 namespace musen
 {
 
-bool TcpSocket::connect()
+class Socket;
+
+std::shared_ptr<Socket> make_tcp_socket();
+std::shared_ptr<Socket> make_udp_socket();
+
+class Socket
 {
-  if (is_connected()) {
-    return false;
-  }
+public:
+  explicit Socket(const int & fd);
+  Socket(const int & domain, const int & type, const int & protocol);
 
-  // Create a new socket
-  sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-  if (get_sockfd() < 0) {
-    return false;
-  }
+  ~Socket();
 
-  return true;
-}
+  const int & get_fd() const;
+
+private:
+  int fd;
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__SOCKET_HPP_

@@ -33,15 +33,16 @@ namespace musen
 
 constexpr auto socket_accept = accept;
 
-Server::Server(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
-: tcp_socket(tcp_socket),
+Server::Server(const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
+  connected(false),
   port(port)
 {
 }
 
 bool Server::connect()
 {
-  if (!tcp_socket->connect()) {
+  if (is_connected()) {
     return false;
   }
 
@@ -49,21 +50,30 @@ bool Server::connect()
   auto sa = obtain_client_sa();
 
   // Bind the socket to the server address
-  if (bind(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (bind(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
 
   // Listen to incoming connection
-  if (listen(tcp_socket->get_sockfd(), 3) < 0) {
+  if (listen(socket->get_fd(), 3) < 0) {
     return false;
   }
+
+  connected = true;
 
   return true;
 }
 
 bool Server::disconnect()
 {
-  return tcp_socket->disconnect();
+  if (!is_connected()) {
+    return false;
+  }
+
+  socket = nullptr;
+  connected = false;
+
+  return true;
 }
 
 std::shared_ptr<Session> Server::accept()
@@ -78,25 +88,25 @@ std::shared_ptr<Session> Server::accept()
 
   // Accept incoming connection
   auto sockfd = socket_accept(
-    tcp_socket->get_sockfd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(&sa_size));
+    socket->get_fd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(&sa_size));
 
   if (sockfd < 0) {
     return nullptr;
   }
 
-  auto socket = std::make_shared<BaseSocket>(sockfd);
+  auto socket = std::make_shared<Socket>(sockfd);
 
   return std::make_shared<Session>(socket);
 }
 
-std::shared_ptr<TcpSocket> Server::get_tcp_socket() const
+std::shared_ptr<Socket> Server::get_socket() const
 {
-  return tcp_socket;
+  return socket;
 }
 
 bool Server::is_connected() const
 {
-  return tcp_socket->is_connected();
+  return connected;
 }
 
 const int & Server::get_port() const

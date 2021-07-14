@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -35,8 +36,9 @@ constexpr auto connect_socket = connect;
 constexpr auto socket_send = send;
 
 Client::Client(
-  const std::string & host, const int & port, std::shared_ptr<TcpSocket> tcp_socket)
-: tcp_socket(tcp_socket),
+  const std::string & host, const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
+  connected(false),
   host(host),
   port(port)
 {
@@ -44,7 +46,7 @@ Client::Client(
 
 bool Client::connect()
 {
-  if (!tcp_socket->connect()) {
+  if (is_connected()) {
     return false;
   }
 
@@ -60,16 +62,28 @@ bool Client::connect()
   }
 
   // Connect to the server address
-  if (connect_socket(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (connect_socket(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+    char buffer[256];
+    char * err = strerror_r(errno, buffer, 256);
+    std::cout << err << std::endl;
     return false;
   }
+
+  connected = true;
 
   return true;
 }
 
 bool Client::disconnect()
 {
-  return tcp_socket->disconnect();
+  if (!is_connected()) {
+    return false;
+  }
+
+  socket = nullptr;
+  connected = false;
+
+  return true;
 }
 
 size_t Client::send_raw(const char * data, const size_t & length)
@@ -79,7 +93,7 @@ size_t Client::send_raw(const char * data, const size_t & length)
   }
 
   // Send data
-  int sent = socket_send(tcp_socket->get_sockfd(), data, length, 0);
+  int sent = socket_send(socket->get_fd(), data, length, 0);
 
   return std::max(sent, 0);
 }
@@ -91,19 +105,19 @@ size_t Client::receive_raw(char * data, const size_t & length)
   }
 
   // Receive data
-  int received = recv(tcp_socket->get_sockfd(), data, length, 0);
+  int received = recv(socket->get_fd(), data, length, 0);
 
   return std::max(received, 0);
 }
 
-std::shared_ptr<TcpSocket> Client::get_tcp_socket() const
+std::shared_ptr<Socket> Client::get_socket() const
 {
-  return tcp_socket;
+  return socket;
 }
 
 bool Client::is_connected() const
 {
-  return tcp_socket->is_connected();
+  return connected;
 }
 
 const std::string & Client::get_host() const

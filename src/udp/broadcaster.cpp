@@ -31,8 +31,9 @@
 namespace musen
 {
 
-Broadcaster::Broadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: udp_socket(udp_socket),
+Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
+  connected(false),
   broadcast(true),
   port(port)
 {
@@ -40,19 +41,28 @@ Broadcaster::Broadcaster(const int & port, std::shared_ptr<UdpSocket> udp_socket
 
 bool Broadcaster::connect()
 {
-  auto result = udp_socket->connect();
-
-  if (result) {
-    // Reobtain recipent socket addresses after connected
-    recipent_sas = obtain_recipent_sas();
+  if (is_connected()) {
+    return false;
   }
 
-  return result;
+  // Reobtain recipent socket addresses after connected
+  recipent_sas = obtain_recipent_sas();
+
+  connected = true;
+
+  return true;
 }
 
 bool Broadcaster::disconnect()
 {
-  return udp_socket->disconnect();
+  if (!is_connected()) {
+    return false;
+  }
+
+  socket = nullptr;
+  connected = false;
+
+  return true;
 }
 
 size_t Broadcaster::send_raw(const char * data, const size_t & length)
@@ -65,7 +75,7 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length)
   int lowest_sent = -1;
   for (const auto & sa : recipent_sas) {
     int sent = sendto(
-      udp_socket->get_sockfd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
+      socket->get_fd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
     // If lowest_sent is not yet set (-1) or sent is less than lowest_sent
     if (lowest_sent < 0 || sent < lowest_sent) {
@@ -93,14 +103,14 @@ void Broadcaster::add_target_host(const std::string & target_host)
   recipent_sas = obtain_recipent_sas();
 }
 
-std::shared_ptr<UdpSocket> Broadcaster::get_udp_socket() const
+std::shared_ptr<Socket> Broadcaster::get_socket() const
 {
-  return udp_socket;
+  return socket;
 }
 
 bool Broadcaster::is_connected() const
 {
-  return udp_socket->is_connected();
+  return connected;
 }
 
 const int & Broadcaster::get_port() const

@@ -27,8 +27,8 @@
 #include <memory>
 #include <string>
 
-#include "../socket/udp_socket.hpp"
 #include "../sender.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -37,7 +37,7 @@ class Broadcaster : public Sender
 {
 public:
   explicit Broadcaster(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
+    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
 
   bool connect();
   bool disconnect();
@@ -47,7 +47,7 @@ public:
   void enable_broadcast(const bool & enable);
   void add_target_host(const std::string & host);
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
+  std::shared_ptr<Socket> get_socket() const;
 
   bool is_connected() const;
 
@@ -58,7 +58,9 @@ protected:
   std::list<struct sockaddr_in> obtain_recipent_sas_from_broadcast_ifas() const;
   std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
 
-  std::shared_ptr<UdpSocket> udp_socket;
+  std::shared_ptr<Socket> socket;
+
+  bool connected;
 
   bool broadcast;
   std::list<std::string> target_hosts;

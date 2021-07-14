@@ -25,9 +25,9 @@
 #include <string>
 
 #include "./session.hpp"
-#include "../socket/tcp_socket.hpp"
 #include "../receiver.hpp"
 #include "../sender.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -36,14 +36,14 @@ class Server : public Sender, public Receiver
 {
 public:
   explicit Server(
-    const int & port, std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
 
   bool connect();
   bool disconnect();
 
   std::shared_ptr<Session> accept();
 
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
+  std::shared_ptr<Socket> get_socket() const;
 
   bool is_connected() const;
 
@@ -52,7 +52,9 @@ public:
 protected:
   struct sockaddr_in obtain_client_sa() const;
 
-  std::shared_ptr<TcpSocket> tcp_socket;
+  std::shared_ptr<Socket> socket;
+
+  bool connected;
 
   int port;
 };

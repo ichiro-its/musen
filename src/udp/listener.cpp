@@ -29,22 +29,23 @@
 namespace musen
 {
 
-Listener::Listener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: udp_socket(udp_socket),
+Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
+  connected(false),
   port(port)
 {
 }
 
 bool Listener::connect()
 {
-  if (!udp_socket->connect()) {
+  if (!is_connected()) {
     return false;
   }
 
   // Enable reuse port
   int opt = 1;
   setsockopt(
-    udp_socket->get_sockfd(), SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<void *>(&opt),
+    socket->get_fd(), SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<void *>(&opt),
     sizeof(opt));
 
   // Configure the recipent address
@@ -58,16 +59,25 @@ bool Listener::connect()
   }
 
   // Bind the socket with the recipent address
-  if (bind(udp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+  if (bind(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
     return false;
   }
+
+  connected = true;
 
   return true;
 }
 
 bool Listener::disconnect()
 {
-  return udp_socket->disconnect();
+  if (!is_connected()) {
+    return false;
+  }
+
+  socket = nullptr;
+  connected = false;
+
+  return true;
 }
 
 size_t Listener::receive_raw(char * data, const size_t & length)
@@ -80,19 +90,19 @@ size_t Listener::receive_raw(char * data, const size_t & length)
   socklen_t sa_len = sizeof(sa);
 
   // Receive data
-  int received = recvfrom(udp_socket->get_sockfd(), data, length, 0, &sa, &sa_len);
+  int received = recvfrom(socket->get_fd(), data, length, 0, &sa, &sa_len);
 
   return std::max(received, 0);
 }
 
-std::shared_ptr<UdpSocket> Listener::get_udp_socket() const
+std::shared_ptr<Socket> Listener::get_socket() const
 {
-  return udp_socket;
+  return socket;
 }
 
 bool Listener::is_connected() const
 {
-  return udp_socket->is_connected();
+  return connected;
 }
 
 const int & Listener::get_port() const

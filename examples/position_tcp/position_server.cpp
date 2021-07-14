@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <list>
+#include <memory>
 #include <string>
 
 struct Position
@@ -48,7 +49,6 @@ int main()
   unsigned int seed = time(NULL);
 
   while (true) {
-    std::cout << "test" << std::endl;
     auto new_session = server.accept();
     if (new_session != nullptr) {
       sessions.push_back(new_session);
