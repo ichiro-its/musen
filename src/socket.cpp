@@ -34,8 +34,7 @@ std::shared_ptr<Socket> make_tcp_socket()
 {
   auto socket = std::make_shared<Socket>(AF_INET, SOCK_STREAM, IPPROTO_IP);
 
-  // Enable non-blocking
-  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
+  socket->enable_non_blocking();
 
   return socket;
 }
@@ -50,8 +49,7 @@ std::shared_ptr<Socket> make_udp_socket()
     socket->get_fd(), SOL_SOCKET, SO_BROADCAST, reinterpret_cast<void *>(&opt),
     sizeof(opt));
 
-  // Enable non-blocking
-  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
+  socket->enable_non_blocking();
 
   return socket;
 }
@@ -99,6 +97,21 @@ int Socket::get_status_flags() const
   }
 
   return flags;
+}
+
+void Socket::enable_non_blocking()
+{
+  set_status_flags(get_status_flags() | O_NONBLOCK);
+}
+
+void Socket::disable_non_blocking()
+{
+  set_status_flags(get_status_flags() & ~O_NONBLOCK);
+}
+
+bool Socket::is_non_blocking() const
+{
+  return get_status_flags() & O_NONBLOCK;
 }
 
 const int & Socket::get_fd() const

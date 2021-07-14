@@ -42,6 +42,11 @@ public:
   void set_status_flags(const int & flags);
   int get_status_flags() const;
 
+  void enable_non_blocking();
+  void disable_non_blocking();
+
+  bool is_non_blocking() const;
+
   const int & get_fd() const;
 
 private:

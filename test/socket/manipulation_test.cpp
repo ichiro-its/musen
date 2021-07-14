@@ -41,7 +41,7 @@ TEST_F(SocketManipulationTest, GetStatusFlags) {
 }
 
 TEST_F(SocketManipulationTest, SetStatusFlags) {
-  socket->set_status_flags(socket->get_status_flags() || O_NONBLOCK);
+  socket->set_status_flags(socket->get_status_flags() | O_NONBLOCK);
 }
 
 TEST_F(SocketManipulationTest, CatchInvalidSetStatusFlags) {
@@ -51,4 +51,15 @@ TEST_F(SocketManipulationTest, CatchInvalidSetStatusFlags) {
   } catch (const std::system_error & err) {
     EXPECT_EQ(err.code().value(), EINVAL) << "Error must be caused by invalid flags";
   }
+}
+
+TEST_F(SocketManipulationTest, EnableDisableNonBlocking) {
+  socket->disable_non_blocking();
+  ASSERT_FALSE(socket->is_non_blocking());
+
+  socket->enable_non_blocking();
+  ASSERT_TRUE(socket->is_non_blocking());
+
+  socket->disable_non_blocking();
+  ASSERT_FALSE(socket->is_non_blocking());
 }
