@@ -34,11 +34,11 @@ struct Position
 
 int main()
 {
-  musen::Client client("127.0.0.1", 5000);
+  musen::Client client(musen::Address("127.0.0.1", 5000));
 
   if (!client.connect()) {
     std::cerr << "Failed to connect to client on port " <<
-      client.get_port() << "!" << std::endl;
+      client.get_server_address().port << "!" << std::endl;
 
     return 1;
   }

@@ -28,6 +28,7 @@ namespace musen
 {
 
 constexpr auto socket_bind = bind;
+constexpr auto socket_connect = connect;
 constexpr auto socket_listen = listen;
 
 std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking)
@@ -74,6 +75,14 @@ void Socket::bind(const Address & address)
 {
   auto sa = address.sockaddr_in();
   if (socket_bind(fd, (struct sockaddr *)&sa, sizeof(sa)) == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+}
+
+void Socket::connect(const Address & address)
+{
+  auto sa = address.sockaddr_in();
+  if (socket_connect(fd, (struct sockaddr *)&sa, sizeof(sa)) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
 }

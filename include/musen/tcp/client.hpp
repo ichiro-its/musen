@@ -24,6 +24,7 @@
 #include <memory>
 #include <string>
 
+#include "../address.hpp"
 #include "../receiver.hpp"
 #include "../sender.hpp"
 #include "../socket.hpp"
@@ -35,8 +36,7 @@ class Client : public Sender, public Receiver
 {
 public:
   explicit Client(
-    const std::string & host, const int & port,
-    std::shared_ptr<Socket> socket = make_tcp_socket());
+    const Address & server_address, std::shared_ptr<Socket> socket = make_tcp_socket());
 
   bool connect();
   bool disconnect();
@@ -48,16 +48,14 @@ public:
 
   bool is_connected() const;
 
-  const std::string & get_host() const;
-  const int & get_port() const;
+  const Address & get_server_address() const;
 
 protected:
   std::shared_ptr<Socket> socket;
 
   bool connected;
 
-  std::string host;
-  int port;
+  Address server_address;
 };
 
 }  // namespace musen

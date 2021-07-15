@@ -39,6 +39,24 @@ TEST(SocketConnectionTest, Bind) {
   }
 }
 
+TEST(SocketConnectionTest, Connect) {
+  auto udp_socket = musen::make_udp_socket(false);
+  auto tcp_socket = musen::make_tcp_socket(false);
+
+  musen::Address address("127.0.0.1", 5000);
+
+  // Connect will work directly on UDP socket
+  udp_socket->connect(address);
+
+  // Connect will failed on TCP socket if a server doesn't exist
+  try {
+    tcp_socket->connect(address);
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    ASSERT_EQ(err.code().value(), ECONNREFUSED) << "Error must be caused by refused connection";
+  }
+}
+
 TEST(SocketConnectionTest, Listen) {
   auto tcp_socket = musen::make_tcp_socket();
   auto udp_socket = musen::make_udp_socket();

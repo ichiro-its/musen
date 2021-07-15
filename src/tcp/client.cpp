@@ -36,11 +36,10 @@ constexpr auto connect_socket = connect;
 constexpr auto socket_send = send;
 
 Client::Client(
-  const std::string & host, const int & port, std::shared_ptr<Socket> socket)
+  const Address & server_address, std::shared_ptr<Socket> socket)
 : socket(socket),
   connected(false),
-  host(host),
-  port(port)
+  server_address(server_address)
 {
 }
 
@@ -50,24 +49,7 @@ bool Client::connect()
     return false;
   }
 
-  // Configure the server address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_port = htons(port);
-
-    inet_aton(host.c_str(), &sa.sin_addr);
-  }
-
-  // Connect to the server address
-  if (connect_socket(socket->get_fd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    char buffer[256];
-    char * err = strerror_r(errno, buffer, 256);
-    std::cout << err << std::endl;
-    return false;
-  }
+  socket->connect(server_address);
 
   connected = true;
 
@@ -117,14 +99,9 @@ bool Client::is_connected() const
   return connected;
 }
 
-const std::string & Client::get_host() const
+const Address & Client::get_server_address() const
 {
-  return host;
-}
-
-const int & Client::get_port() const
-{
-  return port;
+  return server_address;
 }
 
 }  // namespace musen

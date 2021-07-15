@@ -45,6 +45,7 @@ public:
   ~Socket();
 
   void bind(const Address & address);
+  void connect(const Address & address);
   void listen(const int & max_queue = 8);
 
   size_t send_to(const void * data, const size_t & length, const Address & address);
