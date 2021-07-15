@@ -73,6 +73,15 @@ TEST(SocketConnectionTest, Listen) {
   }
 }
 
+TEST(SocketConnectionTest, SendNothing) {
+  auto socket = musen::make_udp_socket();
+  socket->connect(musen::Address("127.0.0.1", 5000));
+
+  auto sent = socket->send(nullptr, 0);
+
+  ASSERT_EQ(sent, 0u);
+}
+
 TEST(SocketConnectionTest, SendToNoOne) {
   auto socket = musen::make_udp_socket();
 

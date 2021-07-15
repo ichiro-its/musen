@@ -20,20 +20,10 @@
 
 #include <musen/tcp/client.hpp>
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-
-#include <algorithm>
-#include <cstring>
-#include <iostream>
 #include <memory>
-#include <string>
 
 namespace musen
 {
-
-constexpr auto connect_socket = connect;
-constexpr auto socket_send = send;
 
 Client::Client(
   const Address & server_address, std::shared_ptr<Socket> socket)
@@ -74,10 +64,7 @@ size_t Client::send_raw(const char * data, const size_t & length)
     return 0;
   }
 
-  // Send data
-  int sent = socket_send(socket->get_fd(), data, length, 0);
-
-  return std::max(sent, 0);
+  return socket->send(data, length);
 }
 
 size_t Client::receive_raw(char * data, const size_t & length)

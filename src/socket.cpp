@@ -30,6 +30,7 @@ namespace musen
 constexpr auto socket_bind = bind;
 constexpr auto socket_connect = connect;
 constexpr auto socket_listen = listen;
+constexpr auto socket_send = send;
 
 std::shared_ptr<Socket> make_tcp_socket()
 {
@@ -93,6 +94,16 @@ void Socket::listen(const int & max_queue)
   if (socket_listen(fd, max_queue) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
+}
+
+size_t Socket::send(const void * data, const size_t & length)
+{
+  auto retval = socket_send(fd, data, length, 0);
+  if (retval == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return retval;
 }
 
 size_t Socket::send_to(const void * data, const size_t & length, const Address & address)

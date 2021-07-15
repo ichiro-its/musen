@@ -18,17 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <arpa/inet.h>
 #include <musen/tcp/session.hpp>
-#include <sys/socket.h>
 
-#include <algorithm>
 #include <memory>
 
 namespace musen
 {
-
-constexpr auto socket_send = send;
 
 Session::Session(std::shared_ptr<Socket> socket)
 : socket(socket),
@@ -42,10 +37,7 @@ size_t Session::send_raw(const char * data, const size_t & length)
     return 0;
   }
 
-  // Send data
-  int sent = socket_send(socket->get_fd(), data, length, 0);
-
-  return std::max(sent, 0);
+  return socket->send(data, length);
 }
 
 size_t Session::receive_raw(char * data, const size_t & length)

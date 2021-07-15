@@ -51,6 +51,7 @@ public:
   void connect(const Address & address);
   void listen(const int & max_queue = 8);
 
+  size_t send(const void * data, const size_t & length);
   size_t send_to(const void * data, const size_t & length, const Address & address);
 
   size_t receive(void * data, const size_t & length);
