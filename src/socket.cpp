@@ -27,6 +27,7 @@
 namespace musen
 {
 
+constexpr auto socket_accept = accept;
 constexpr auto socket_bind = bind;
 constexpr auto socket_connect = connect;
 constexpr auto socket_listen = listen;
@@ -94,6 +95,19 @@ void Socket::listen(const int & max_queue)
   if (socket_listen(fd, max_queue) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
+}
+
+std::shared_ptr<Socket> Socket::accept()
+{
+  struct sockaddr sa;
+  socklen_t len = sizeof(sa);
+
+  auto retval = socket_accept(fd, &sa, &len);
+  if (retval == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return std::make_shared<Socket>(retval);
 }
 
 size_t Socket::send(const void * data, const size_t & length)

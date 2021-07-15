@@ -32,7 +32,7 @@ Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
   // Enable reuse port
   socket->set_option(SO_REUSEPORT, 1);
 
-  // Bind the socket with the recipent address
+  // Bind the socket with the listen address
   socket->bind(make_any_address(port));
 }
 

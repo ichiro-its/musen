@@ -20,18 +20,10 @@
 
 #include <musen/tcp/server.hpp>
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-
-#include <algorithm>
-#include <cstring>
 #include <memory>
-#include <string>
 
 namespace musen
 {
-
-constexpr auto socket_accept = accept;
 
 Server::Server(const int & port, std::shared_ptr<Socket> socket)
 : socket(socket),
@@ -46,11 +38,8 @@ bool Server::connect()
     return false;
   }
 
-  // Obtain the server address
-  Address address(obtain_client_sa());
-
-  // Bind the socket to the server address
-  socket->bind(address);
+  // Bind the socket with the serve address
+  socket->bind(make_any_address(port));
 
   // Listen to incoming connection
   socket->listen();
@@ -78,19 +67,8 @@ std::shared_ptr<Session> Server::accept()
     return nullptr;
   }
 
-  // Obtain the server address
-  auto sa = obtain_client_sa();
-  auto sa_size = sizeof(sa);
-
   // Accept incoming connection
-  auto sockfd = socket_accept(
-    socket->get_fd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(&sa_size));
-
-  if (sockfd < 0) {
-    return nullptr;
-  }
-
-  auto socket = std::make_shared<Socket>(sockfd);
+  auto session_socket = socket->accept();
 
   return std::make_shared<Session>(socket);
 }
@@ -108,19 +86,6 @@ bool Server::is_connected() const
 const int & Server::get_port() const
 {
   return port;
-}
-
-struct sockaddr_in Server::obtain_client_sa() const
-{
-  struct sockaddr_in sa;
-
-  memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-  sa.sin_family = AF_INET;
-  sa.sin_addr.s_addr = htonl(INADDR_ANY);
-  sa.sin_port = htons(port);
-
-  return sa;
 }
 
 }  // namespace musen

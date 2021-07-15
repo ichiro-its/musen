@@ -50,8 +50,6 @@ public:
   const int & get_port() const;
 
 protected:
-  struct sockaddr_in obtain_client_sa() const;
-
   std::shared_ptr<Socket> socket;
 
   bool connected;

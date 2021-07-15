@@ -37,7 +37,7 @@ protected:
 
 TEST_F(SocketManipulationTest, GetStatusFlags) {
   auto flags = socket->get_status_flags();
-  ASSERT_NE(flags, -1) << "Invalid status flags";
+  EXPECT_NE(flags, -1) << "Invalid status flags";
 }
 
 TEST_F(SocketManipulationTest, SetStatusFlags) {

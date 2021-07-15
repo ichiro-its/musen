@@ -24,20 +24,20 @@
 
 TEST(SocketCreationTest, MakeTcp) {
   auto socket = musen::make_tcp_socket();
-  ASSERT_TRUE(socket->get_status_flag(O_NONBLOCK));
+  EXPECT_TRUE(socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, MakeUdp) {
   auto socket = musen::make_udp_socket();
-  ASSERT_TRUE(socket->get_status_flag(O_NONBLOCK));
+  EXPECT_TRUE(socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, MakeSocketBlocking) {
   auto tcp_socket = musen::make_blocking_tcp_socket();
   auto udp_socket = musen::make_blocking_udp_socket();
 
-  ASSERT_FALSE(tcp_socket->get_status_flag(O_NONBLOCK));
-  ASSERT_FALSE(udp_socket->get_status_flag(O_NONBLOCK));
+  EXPECT_FALSE(tcp_socket->get_status_flag(O_NONBLOCK));
+  EXPECT_FALSE(udp_socket->get_status_flag(O_NONBLOCK));
 }
 
 TEST(SocketCreationTest, CustomFdFromOthers) {

@@ -35,7 +35,7 @@ TEST(SocketConnectionTest, Bind) {
     b->bind(address);
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    ASSERT_EQ(err.code().value(), EADDRINUSE) << "Error must be caused by address already in use";
+    EXPECT_EQ(err.code().value(), EADDRINUSE) << "Error must be caused by address already in use";
   }
 }
 
@@ -53,7 +53,7 @@ TEST(SocketConnectionTest, Connect) {
     tcp_socket->connect(address);
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    ASSERT_EQ(err.code().value(), ECONNREFUSED) << "Error must be caused by refused connection";
+    EXPECT_EQ(err.code().value(), ECONNREFUSED) << "Error must be caused by refused connection";
   }
 }
 
@@ -69,7 +69,22 @@ TEST(SocketConnectionTest, Listen) {
     udp_socket->listen();
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
-    ASSERT_EQ(err.code().value(), EOPNOTSUPP) << "Error must be caused by not supported operation";
+    EXPECT_EQ(err.code().value(), EOPNOTSUPP) << "Error must be caused by not supported operation";
+  }
+}
+
+TEST(SocketConnectionTest, AcceptNothing) {
+  auto socket = musen::make_tcp_socket();
+
+  // Listen is required before accepting a connection
+  socket->listen();
+
+  // Accept nothing will results in error
+  try {
+    socket->accept();
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    EXPECT_EQ(err.code().value(), EAGAIN) << "Error must be caused by unavailable resource";
   }
 }
 
@@ -79,7 +94,7 @@ TEST(SocketConnectionTest, SendNothing) {
 
   auto sent = socket->send(nullptr, 0);
 
-  ASSERT_EQ(sent, 0u);
+  EXPECT_EQ(sent, 0u);
 }
 
 TEST(SocketConnectionTest, SendToNoOne) {
@@ -88,7 +103,7 @@ TEST(SocketConnectionTest, SendToNoOne) {
   char data[4] = {'a', 'b', 'c', 'd'};
   auto sent = socket->send_to(data, sizeof(data), musen::Address("1.2.3.4", 5000));
 
-  ASSERT_EQ(sent, sizeof(data));
+  EXPECT_EQ(sent, sizeof(data));
 }
 
 TEST(SocketConnectionTest, ReceiveNothing) {
@@ -97,5 +112,5 @@ TEST(SocketConnectionTest, ReceiveNothing) {
   char data[32];
   auto received = socket->receive(data, sizeof(data));
 
-  ASSERT_EQ(received, 0u);
+  EXPECT_EQ(received, 0u);
 }
