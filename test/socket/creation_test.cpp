@@ -33,8 +33,8 @@ TEST(SocketCreationTest, MakeUdp) {
 }
 
 TEST(SocketCreationTest, MakeSocketBlocking) {
-  auto tcp_socket = musen::make_tcp_socket(false);
-  auto udp_socket = musen::make_udp_socket(false);
+  auto tcp_socket = musen::make_blocking_tcp_socket();
+  auto udp_socket = musen::make_blocking_udp_socket();
 
   ASSERT_FALSE(tcp_socket->get_status_flag(O_NONBLOCK));
   ASSERT_FALSE(udp_socket->get_status_flag(O_NONBLOCK));

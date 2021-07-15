@@ -93,7 +93,7 @@ protected:
   std::shared_ptr<std::thread> server_thread;
 };
 
-TEST_F(ServerAndClientTest, SingleClient) {
+TEST_F(ServerAndClientTest, MultipleClient) {
   std::string send_message = "Hello World!";
   auto active_clients = clients;
 

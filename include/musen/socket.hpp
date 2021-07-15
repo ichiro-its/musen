@@ -33,8 +33,11 @@ namespace musen
 
 class Socket;
 
-std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking = true);
-std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking = true);
+std::shared_ptr<Socket> make_tcp_socket();
+std::shared_ptr<Socket> make_udp_socket();
+
+std::shared_ptr<Socket> make_blocking_tcp_socket();
+std::shared_ptr<Socket> make_blocking_udp_socket();
 
 class Socket
 {

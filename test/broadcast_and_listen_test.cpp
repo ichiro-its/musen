@@ -53,7 +53,7 @@ protected:
   std::vector<std::shared_ptr<musen::Listener>> listeners;
 };
 
-TEST_F(BroadcastAndListenTest, SingleListener) {
+TEST_F(BroadcastAndListenTest, MultipleListener) {
   std::string broadcast_message = "Hello World!";
   auto active_listeners = listeners;
 

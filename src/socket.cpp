@@ -31,23 +31,24 @@ constexpr auto socket_bind = bind;
 constexpr auto socket_connect = connect;
 constexpr auto socket_listen = listen;
 
-std::shared_ptr<Socket> make_tcp_socket(const bool & non_blocking)
+std::shared_ptr<Socket> make_tcp_socket()
 {
-  auto type = SOCK_STREAM | (non_blocking ? SOCK_NONBLOCK : 0);
-  auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
-
-  return socket;
+  return std::make_shared<Socket>(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_IP);
 }
 
-std::shared_ptr<Socket> make_udp_socket(const bool & non_blocking)
+std::shared_ptr<Socket> make_udp_socket()
 {
-  auto type = SOCK_DGRAM | (non_blocking ? SOCK_NONBLOCK : 0);
-  auto socket = std::make_shared<Socket>(AF_INET, type, IPPROTO_IP);
+  return std::make_shared<Socket>(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, IPPROTO_IP);
+}
 
-  // Enable broadcast
-  socket->set_option(SO_BROADCAST, 1);
+std::shared_ptr<Socket> make_blocking_tcp_socket()
+{
+  return std::make_shared<Socket>(AF_INET, SOCK_STREAM, IPPROTO_IP);
+}
 
-  return socket;
+std::shared_ptr<Socket> make_blocking_udp_socket()
+{
+  return std::make_shared<Socket>(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 }
 
 Socket::Socket(const int & fd)

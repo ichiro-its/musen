@@ -69,10 +69,10 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length)
 
 void Broadcaster::enable_broadcast(const bool & enable)
 {
-  broadcast = enable;
+  socket->set_option<int>(SO_BROADCAST, enable);
 
   broadcast_addresses.clear();
-  if (broadcast) {
+  if (socket->get_option<bool>(SO_BROADCAST)) {
     for (const auto & ip : obtain_broadcast_ips()) {
       broadcast_addresses.push_back(Address(ip, port));
     }

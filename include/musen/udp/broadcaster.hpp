@@ -51,7 +51,6 @@ protected:
   std::shared_ptr<Socket> socket;
   int port;
 
-  bool broadcast;
   std::list<Address> broadcast_addresses;
 };
 

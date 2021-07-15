@@ -40,8 +40,8 @@ TEST(SocketConnectionTest, Bind) {
 }
 
 TEST(SocketConnectionTest, Connect) {
-  auto udp_socket = musen::make_udp_socket(false);
-  auto tcp_socket = musen::make_tcp_socket(false);
+  auto udp_socket = musen::make_blocking_udp_socket();
+  auto tcp_socket = musen::make_blocking_tcp_socket();
 
   musen::Address address("127.0.0.1", 5000);
 
