@@ -21,12 +21,11 @@
 #ifndef MUSEN__UDP__BROADCASTER_HPP_
 #define MUSEN__UDP__BROADCASTER_HPP_
 
-#include <arpa/inet.h>
-
 #include <list>
 #include <memory>
 #include <string>
 
+#include "../address.hpp"
 #include "../sender.hpp"
 #include "../socket.hpp"
 
@@ -42,23 +41,18 @@ public:
   size_t send_raw(const char * data, const size_t & length) override;
 
   void enable_broadcast(const bool & enable);
-  void add_target_host(const std::string & host);
 
   std::shared_ptr<Socket> get_socket() const;
   const int & get_port() const;
 
-protected:
-  std::list<struct sockaddr_in> obtain_recipent_sas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_broadcast_ifas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
+  std::list<std::string> target_ips;
 
+protected:
   std::shared_ptr<Socket> socket;
   int port;
 
   bool broadcast;
-  std::list<std::string> target_hosts;
-
-  std::list<struct sockaddr_in> recipent_sas;
+  std::list<Address> broadcast_addresses;
 };
 
 }  // namespace musen

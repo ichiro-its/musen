@@ -20,8 +20,6 @@
 
 #include <musen/udp/broadcaster.hpp>
 
-#include <ifaddrs.h>
-
 #include <algorithm>
 #include <cstring>
 #include <list>
@@ -33,10 +31,9 @@ namespace musen
 
 Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket)
 : socket(socket),
-  port(port),
-  broadcast(true)
+  port(port)
 {
-  recipent_sas = obtain_recipent_sas();
+  enable_broadcast(true);
 }
 
 Broadcaster::~Broadcaster()
@@ -50,9 +47,16 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length)
     return 0;
   }
 
+  // Obtain all addresses
+  auto addresses = broadcast_addresses;
+  for (const auto & ip : target_ips) {
+    addresses.push_back(Address(ip, port));
+  }
+
   // Sent to each recipent socket addresses
   int lowest_sent = -1;
-  for (const auto & sa : recipent_sas) {
+  for (const auto & address : addresses) {
+    auto sa = address.sockaddr_in();
     int sent = sendto(
       socket->get_fd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
 
@@ -70,16 +74,12 @@ void Broadcaster::enable_broadcast(const bool & enable)
 {
   broadcast = enable;
 
-  // Reobtain recipent socket addresses after broadcast changed
-  recipent_sas = obtain_recipent_sas();
-}
-
-void Broadcaster::add_target_host(const std::string & target_host)
-{
-  target_hosts.push_back(target_host);
-
-  // Reobtain recipent socket addresses after target host changed
-  recipent_sas = obtain_recipent_sas();
+  broadcast_addresses.clear();
+  if (broadcast) {
+    for (const auto & ip : obtain_broadcast_ips()) {
+      broadcast_addresses.push_back(Address(ip, port));
+    }
+  }
 }
 
 std::shared_ptr<Socket> Broadcaster::get_socket() const
@@ -90,81 +90,6 @@ std::shared_ptr<Socket> Broadcaster::get_socket() const
 const int & Broadcaster::get_port() const
 {
   return port;
-}
-
-std::list<struct sockaddr_in> Broadcaster::obtain_recipent_sas() const
-{
-  std::list<struct sockaddr_in> sas;
-
-  sas.splice(sas.end(), obtain_recipent_sas_from_broadcast_ifas());
-  sas.splice(sas.end(), obtain_recipent_sas_from_target_hosts());
-
-  return sas;
-}
-
-std::list<struct sockaddr_in> Broadcaster::obtain_recipent_sas_from_broadcast_ifas() const
-{
-  std::list<struct sockaddr_in> sas;
-
-  if (!broadcast) {
-    return sas;
-  }
-
-  // Obtain all interfaces
-  struct ifaddrs * ifas;
-  if (getifaddrs(&ifas) != 0) {
-    return sas;
-  }
-
-  // Repeat for all available interfaces
-  for (auto ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
-    // Skip if null or if the address family is different
-    if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
-      continue;
-    }
-
-    // Get the broadcast address
-    const auto & broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
-
-    // Configure the recipent socket address
-    struct sockaddr_in sa;
-    {
-      memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-      sa.sin_family = AF_INET;
-      sa.sin_addr = broadaddr->sin_addr;
-      sa.sin_port = htons(port);
-    }
-
-    sas.push_back(sa);
-  }
-
-  freeifaddrs(ifas);
-
-  return sas;
-}
-
-std::list<struct sockaddr_in> Broadcaster::obtain_recipent_sas_from_target_hosts() const
-{
-  std::list<struct sockaddr_in> sas;
-
-  // Append recipent socket addresses with target hosts
-  for (const auto & target_host : target_hosts) {
-    // Configure the recipent socket address
-    struct sockaddr_in sa;
-    {
-      memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-      sa.sin_family = AF_INET;
-      sa.sin_port = htons(port);
-
-      inet_aton(target_host.c_str(), &sa.sin_addr);
-    }
-
-    sas.push_back(sa);
-  }
-
-  return sas;
 }
 
 }  // namespace musen

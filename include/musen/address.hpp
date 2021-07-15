@@ -23,6 +23,7 @@
 
 #include <arpa/inet.h>
 
+#include <list>
 #include <string>
 
 namespace musen
@@ -31,6 +32,8 @@ namespace musen
 struct Address;
 
 Address make_any_address(const int & port);
+
+std::list<std::string> obtain_broadcast_ips();
 
 struct Address
 {

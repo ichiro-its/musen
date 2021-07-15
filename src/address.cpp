@@ -18,10 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <ifaddrs.h>
 #include <musen/address.hpp>
 
 #include <cstring>
+#include <list>
 #include <string>
+#include <system_error>
 
 namespace musen
 {
@@ -29,6 +32,34 @@ namespace musen
 Address make_any_address(const int & port)
 {
   return Address("0.0.0.0", port);
+}
+
+std::list<std::string> obtain_broadcast_ips()
+{
+  std::list<std::string> ips;
+
+  // Obtain all interfaces
+  struct ifaddrs * ifas;
+  if (getifaddrs(&ifas) != 0) {
+    freeifaddrs(ifas);
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  // Repeat for all available interfaces
+  for (auto ifa = ifas; ifa != nullptr; ifa = ifa->ifa_next) {
+    // Skip if is null or if the address family is different
+    if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET) {
+      continue;
+    }
+
+    // Get and push the broadcast address
+    const auto & broadaddr = (struct sockaddr_in *)ifa->ifa_broadaddr;
+    ips.push_back(inet_ntoa(broadaddr->sin_addr));
+  }
+
+  freeifaddrs(ifas);
+
+  return ips;
 }
 
 Address::Address(const std::string & ip, const int & port)

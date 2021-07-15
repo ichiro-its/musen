@@ -20,10 +20,6 @@
 
 #include <musen/udp/listener.hpp>
 
-#include <arpa/inet.h>
-
-#include <algorithm>
-#include <cstring>
 #include <memory>
 
 namespace musen
@@ -35,16 +31,6 @@ Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
 {
   // Enable reuse port
   socket->set_option(SO_REUSEPORT, 1);
-
-  // Configure the recipent address
-  // struct sockaddr_in sa;
-  // {
-  //   memset(&sa, 0, sizeof(sa));
-
-  //   sa.sin_family = AF_INET;
-  //   sa.sin_addr.s_addr = htonl(INADDR_ANY);
-  //   sa.sin_port = htons(port);
-  // }
 
   // Bind the socket with the recipent address
   socket->bind(make_any_address(port));
