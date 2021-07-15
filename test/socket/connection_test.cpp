@@ -39,6 +39,22 @@ TEST(SocketConnectionTest, Bind) {
   }
 }
 
+TEST(SocketConnectionTest, Listen) {
+  auto tcp_socket = musen::make_tcp_socket();
+  auto udp_socket = musen::make_udp_socket();
+
+  // Listen will work on TCP socket
+  tcp_socket->listen();
+
+  // Listen is not supported on UDP socket
+  try {
+    udp_socket->listen();
+    FAIL() << "Expected a system error";
+  } catch (const std::system_error & err) {
+    ASSERT_EQ(err.code().value(), EOPNOTSUPP) << "Error must be caused by not supported operation";
+  }
+}
+
 TEST(SocketConnectionTest, SendToNoOne) {
   auto socket = musen::make_udp_socket();
 

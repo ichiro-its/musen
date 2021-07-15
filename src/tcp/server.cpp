@@ -53,9 +53,7 @@ bool Server::connect()
   socket->bind(address);
 
   // Listen to incoming connection
-  if (listen(socket->get_fd(), 3) < 0) {
-    return false;
-  }
+  socket->listen();
 
   connected = true;
 
