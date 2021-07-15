@@ -69,8 +69,9 @@ Socket::~Socket()
   close(fd);
 }
 
-void Socket::bind(const struct sockaddr_in & sa)
+void Socket::bind(const Address & address)
 {
+  auto sa = address.sockaddr_in();
   if (socket_bind(fd, (struct sockaddr *)&sa, sizeof(sa)) == -1) {
     throw std::system_error(errno, std::generic_category());
   }

@@ -34,12 +34,14 @@ TEST(SocketConnectionTest, Bind) {
   auto a = musen::make_udp_socket();
   auto b = musen::make_udp_socket();
 
+  auto address = musen::Address("127.0.0.1", 5000);
+
   // First bind must be success
-  a->bind(sa);
+  a->bind(address);
 
   // Second bind must be failed because of address already in use
   try {
-    b->bind(sa);
+    b->bind(address);
     FAIL() << "Expected a system error";
   } catch (const std::system_error & err) {
     ASSERT_EQ(err.code().value(), EADDRINUSE) << "Error must be caused by address already in use";

@@ -47,10 +47,10 @@ bool Server::connect()
   }
 
   // Obtain the server address
-  auto sa = obtain_client_sa();
+  Address address(obtain_client_sa());
 
   // Bind the socket to the server address
-  socket->bind(sa);
+  socket->bind(address);
 
   // Listen to incoming connection
   if (listen(socket->get_fd(), 3) < 0) {

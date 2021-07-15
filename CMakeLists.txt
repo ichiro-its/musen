@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME} SHARED
   "src/tcp/session.cpp"
   "src/udp/broadcaster.cpp"
   "src/udp/listener.cpp"
+  "src/address.cpp"
   "src/receiver.cpp"
   "src/sender.cpp"
   "src/socket.cpp")
@@ -71,6 +72,7 @@ if(BUILD_TESTING)
     "test/socket/connection_test.cpp"
     "test/socket/creation_test.cpp"
     "test/socket/manipulation_test.cpp"
+    "test/address_test.cpp"
     "test/broadcast_and_listen_test.cpp")
 
   target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")

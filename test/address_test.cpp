@@ -18,66 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/udp/listener.hpp>
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
-#include <arpa/inet.h>
-
-#include <algorithm>
-#include <cstring>
-#include <memory>
-
-namespace musen
-{
-
-Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
-: socket(socket),
-  port(port)
-{
-  // Enable reuse port
-  socket->set_option(SO_REUSEPORT, 1);
-
-  // Configure the recipent address
-  // struct sockaddr_in sa;
-  // {
-  //   memset(&sa, 0, sizeof(sa));
-
-  //   sa.sin_family = AF_INET;
-  //   sa.sin_addr.s_addr = htonl(INADDR_ANY);
-  //   sa.sin_port = htons(port);
-  // }
-
-  // Bind the socket with the recipent address
-  socket->bind(make_any_address(port));
+TEST(AddressTest, EmptyInitialization) {
+  musen::Address address;
 }
 
-Listener::~Listener()
-{
-  socket = nullptr;
+TEST(AddressTest, MakeAnyAddress) {
+  auto address = musen::make_any_address(0);
+
+  auto sa = address.sockaddr_in();
+  EXPECT_EQ(sa.sin_addr.s_addr, htonl(INADDR_ANY)) << "Expected an INADDR_ANY value";
 }
 
-size_t Listener::receive_raw(char * data, const size_t & length)
-{
-  if (length <= 0) {
-    return 0;
-  }
+TEST(AddressTest, Conversion) {
+  auto a = musen::Address("127.0.0.1", 5000);
+  auto b = musen::Address(a.sockaddr_in());
 
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
-
-  // Receive data
-  int received = recvfrom(socket->get_fd(), data, length, 0, &sa, &sa_len);
-
-  return std::max(received, 0);
+  EXPECT_EQ(a.ip, b.ip) << "Expected an equal IP";
+  EXPECT_EQ(a.port, b.port) << "Expected an equal port";
 }
-
-std::shared_ptr<Socket> Listener::get_socket() const
-{
-  return socket;
-}
-
-const int & Listener::get_port() const
-{
-  return port;
-}
-
-}  // namespace musen

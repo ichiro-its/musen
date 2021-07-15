@@ -21,11 +21,12 @@
 #ifndef MUSEN__SOCKET_HPP_
 #define MUSEN__SOCKET_HPP_
 
-#include <arpa/inet.h>
 #include <sys/socket.h>
 
 #include <memory>
 #include <system_error>
+
+#include "./address.hpp"
 
 namespace musen
 {
@@ -43,7 +44,7 @@ public:
 
   ~Socket();
 
-  void bind(const struct sockaddr_in & sa);
+  void bind(const Address & address);
 
   void set_status_flags(const int & flags);
   int get_status_flags() const;

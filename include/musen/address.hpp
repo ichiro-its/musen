@@ -18,66 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/udp/listener.hpp>
+#ifndef MUSEN__ADDRESS_HPP_
+#define MUSEN__ADDRESS_HPP_
 
 #include <arpa/inet.h>
 
-#include <algorithm>
-#include <cstring>
-#include <memory>
+#include <string>
 
 namespace musen
 {
 
-Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
-: socket(socket),
-  port(port)
+struct Address;
+
+Address make_any_address(const int & port);
+
+struct Address
 {
-  // Enable reuse port
-  socket->set_option(SO_REUSEPORT, 1);
+  Address(const std::string & ip, const int & port);
+  explicit Address(const sockaddr_in & sa);
+  Address();
 
-  // Configure the recipent address
-  // struct sockaddr_in sa;
-  // {
-  //   memset(&sa, 0, sizeof(sa));
+  struct sockaddr_in sockaddr_in() const;
 
-  //   sa.sin_family = AF_INET;
-  //   sa.sin_addr.s_addr = htonl(INADDR_ANY);
-  //   sa.sin_port = htons(port);
-  // }
-
-  // Bind the socket with the recipent address
-  socket->bind(make_any_address(port));
-}
-
-Listener::~Listener()
-{
-  socket = nullptr;
-}
-
-size_t Listener::receive_raw(char * data, const size_t & length)
-{
-  if (length <= 0) {
-    return 0;
-  }
-
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
-
-  // Receive data
-  int received = recvfrom(socket->get_fd(), data, length, 0, &sa, &sa_len);
-
-  return std::max(received, 0);
-}
-
-std::shared_ptr<Socket> Listener::get_socket() const
-{
-  return socket;
-}
-
-const int & Listener::get_port() const
-{
-  return port;
-}
+  std::string ip;
+  int port;
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__ADDRESS_HPP_

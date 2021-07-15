@@ -27,6 +27,7 @@
 #include "./udp/broadcaster.hpp"
 #include "./udp/listener.hpp"
 
+#include "./address.hpp"
 #include "./sender.hpp"
 #include "./receiver.hpp"
 #include "./socket.hpp"
