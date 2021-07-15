@@ -39,6 +39,15 @@ TEST(SocketConnectionTest, Bind) {
   }
 }
 
+TEST(SocketConnectionTest, SendToNoOne) {
+  auto socket = musen::make_udp_socket();
+
+  char data[4] = {'a', 'b', 'c', 'd'};
+  auto sent = socket->send_to(data, sizeof(data), musen::Address("1.2.3.4", 5000));
+
+  ASSERT_EQ(sent, sizeof(data));
+}
+
 TEST(SocketConnectionTest, ReceiveNothing) {
   auto socket = musen::make_udp_socket();
 

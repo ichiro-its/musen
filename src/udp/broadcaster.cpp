@@ -20,10 +20,10 @@
 
 #include <musen/udp/broadcaster.hpp>
 
-#include <algorithm>
-#include <cstring>
+#include <limits>
 #include <list>
 #include <memory>
+#include <optional>  // NOLINT
 #include <string>
 
 namespace musen
@@ -54,20 +54,17 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length)
   }
 
   // Sent to each recipent socket addresses
-  int lowest_sent = -1;
+  std::optional<size_t> lowest_sent;
   for (const auto & address : addresses) {
-    auto sa = address.sockaddr_in();
-    int sent = sendto(
-      socket->get_fd(), data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
+    auto sent = socket->send_to(data, length, address);
 
-    // If lowest_sent is not yet set (-1) or sent is less than lowest_sent
-    if (lowest_sent < 0 || sent < lowest_sent) {
+    if (sent < lowest_sent.value_or(std::numeric_limits<size_t>::max())) {
       lowest_sent = sent;
     }
   }
 
   // Return the lowest sent size from all addresses
-  return std::max(lowest_sent, 0);
+  return lowest_sent.value_or(0);
 }
 
 void Broadcaster::enable_broadcast(const bool & enable)

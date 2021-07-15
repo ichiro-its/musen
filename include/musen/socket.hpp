@@ -46,6 +46,8 @@ public:
 
   void bind(const Address & address);
 
+  size_t send_to(const void * data, const size_t & length, const Address & address);
+
   size_t receive(void * data, const size_t & length);
 
   void set_status_flags(const int & flags);

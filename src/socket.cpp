@@ -77,6 +77,17 @@ void Socket::bind(const Address & address)
   }
 }
 
+size_t Socket::send_to(const void * data, const size_t & length, const Address & address)
+{
+  auto sa = address.sockaddr_in();
+  auto retval = sendto(fd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
+  if (retval == -1) {
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return retval;
+}
+
 size_t Socket::receive(void * data, const size_t & length)
 {
   auto retval = recv(fd, data, length, 0);
