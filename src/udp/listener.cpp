@@ -31,24 +31,15 @@ namespace musen
 
 Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
 : socket(socket),
-  connected(false),
   port(port)
 {
-}
-
-bool Listener::connect()
-{
-  if (!is_connected()) {
-    return false;
-  }
-
   // Enable reuse port
-  socket->set_option(SO_REUSEPORT, true);
+  socket->set_option(SO_REUSEPORT, 1);
 
   // Configure the recipent address
   struct sockaddr_in sa;
   {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
 
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -57,27 +48,16 @@ bool Listener::connect()
 
   // Bind the socket with the recipent address
   socket->bind(sa);
-
-  connected = true;
-
-  return true;
 }
 
-bool Listener::disconnect()
+Listener::~Listener()
 {
-  if (!is_connected()) {
-    return false;
-  }
-
   socket = nullptr;
-  connected = false;
-
-  return true;
 }
 
 size_t Listener::receive_raw(char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
+  if (length <= 0) {
     return 0;
   }
 
@@ -93,11 +73,6 @@ size_t Listener::receive_raw(char * data, const size_t & length)
 std::shared_ptr<Socket> Listener::get_socket() const
 {
   return socket;
-}
-
-bool Listener::is_connected() const
-{
-  return connected;
 }
 
 const int & Listener::get_port() const

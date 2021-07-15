@@ -20,11 +20,11 @@
 
 #include <musen/musen.hpp>
 
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <ctime>
+#include <cstdlib>
 #include <iostream>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 struct Position
 {
@@ -35,35 +35,33 @@ struct Position
 
 int main()
 {
-  musen::Broadcaster broadcaster(5000);
+  int port = 5000;
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.get_port() << "!" << std::endl;
+  try {
+    musen::Broadcaster broadcaster(port);
 
-    return 1;
+    while (true) {
+      Position position;
+
+      position.x = std::rand() % 100;
+      position.y = std::rand() % 100;
+      position.z = std::rand() % 100;
+
+      broadcaster.send(position);
+
+      std::cout << "Sent: " <<
+        position.x << ", " <<
+        position.y << ", " <<
+        position.z << std::endl;
+
+      std::this_thread::sleep_for(1s);
+    }
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect broadcaster on port " << port << "! " <<
+      err.what() << std::endl;
+
+    return err.code().value();
   }
-
-  unsigned int seed = time(NULL);
-
-  while (true) {
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    broadcaster.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
-  }
-
-  broadcaster.disconnect();
 
   return 0;
 }

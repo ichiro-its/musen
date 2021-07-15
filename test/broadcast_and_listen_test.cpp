@@ -24,32 +24,28 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 class BroadcastAndListenTest : public ::testing::Test
 {
 protected:
   void SetUp() override
   {
-    broadcaster = std::make_shared<musen::Broadcaster>(5000);
-    listeners = {
-      std::make_shared<musen::Listener>(5000),
-      std::make_shared<musen::Listener>(5000),
-      std::make_shared<musen::Listener>(5000)
-    };
-
-    // Trying to connect both broadcaster and listeners
-    ASSERT_TRUE(broadcaster->connect()) << "Unable to connect the broadcaster";
-    for (size_t i = 0; i < listeners.size(); ++i) {
-      ASSERT_TRUE(listeners[i]->connect()) << "Unable to connect listener " << i;
+    try {
+      broadcaster = std::make_shared<musen::Broadcaster>(5000);
+    } catch (const std::system_error & err) {
+      FAIL() << "Unable to connect the broadcaster! " << err.what();
     }
-  }
 
-  void TearDown() override
-  {
-    // Trying to disconnect both broadcaster and listeners
-    ASSERT_TRUE(broadcaster->disconnect()) << "Unable to disconnect the broadcaster";
-    for (size_t i = 0; i < listeners.size(); ++i) {
-      ASSERT_TRUE(listeners[i]->disconnect()) << "Unable to disconnect listener " << i;
+    for (size_t i = 0; i < 3; ++i) {
+      try {
+        auto new_listener = std::make_shared<musen::Listener>(5000);
+        listeners.push_back(new_listener);
+      } catch (const std::system_error & err) {
+        FAIL() << "Unable to connect listener " << i << "! " << err.what();
+      }
     }
   }
 
@@ -68,7 +64,7 @@ TEST_F(BroadcastAndListenTest, SingleListener) {
     broadcaster->send_string(broadcast_message);
 
     // Wait 10ms so listeners could receive the messages
-    usleep(10 * 1000);
+    std::this_thread::sleep_for(10ms);
 
     for (size_t i = 0; i < active_listeners.size(); ++i) {
       auto listen_message = active_listeners[i]->receive_string(32);

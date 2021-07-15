@@ -20,34 +20,35 @@
 
 #include <musen/musen.hpp>
 
-#include <unistd.h>
-
 #include <iostream>
 #include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 int main()
 {
-  musen::Broadcaster broadcaster(5000);
+  int port = 5000;
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.get_port() << "!" << std::endl;
+  try {
+    musen::Broadcaster broadcaster(port);
 
-    return 1;
+    int counter = 0;
+    while (true) {
+      std::string message = "Hello world! " + std::to_string(counter++);
+
+      broadcaster.send_string(message);
+
+      std::cout << "Sent: " << message << std::endl;
+
+      std::this_thread::sleep_for(1s);
+    }
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect broadcaster on port " << port << "! " <<
+      err.what() << std::endl;
+
+    return err.code().value();
   }
-
-  int counter = 0;
-  while (true) {
-    std::string message = "Hello world! " + std::to_string(counter++);
-
-    broadcaster.send_string(message);
-
-    std::cout << "Sent: " << message << std::endl;
-
-    sleep(1);
-  }
-
-  broadcaster.disconnect();
 
   return 0;
 }

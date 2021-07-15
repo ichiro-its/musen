@@ -33,41 +33,20 @@ namespace musen
 
 Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket)
 : socket(socket),
-  connected(false),
-  broadcast(true),
-  port(port)
+  port(port),
+  broadcast(true)
 {
-}
-
-bool Broadcaster::connect()
-{
-  if (is_connected()) {
-    return false;
-  }
-
-  // Reobtain recipent socket addresses after connected
   recipent_sas = obtain_recipent_sas();
-
-  connected = true;
-
-  return true;
 }
 
-bool Broadcaster::disconnect()
+Broadcaster::~Broadcaster()
 {
-  if (!is_connected()) {
-    return false;
-  }
-
   socket = nullptr;
-  connected = false;
-
-  return true;
 }
 
 size_t Broadcaster::send_raw(const char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
+  if (length <= 0) {
     return 0;
   }
 
@@ -106,11 +85,6 @@ void Broadcaster::add_target_host(const std::string & target_host)
 std::shared_ptr<Socket> Broadcaster::get_socket() const
 {
   return socket;
-}
-
-bool Broadcaster::is_connected() const
-{
-  return connected;
 }
 
 const int & Broadcaster::get_port() const

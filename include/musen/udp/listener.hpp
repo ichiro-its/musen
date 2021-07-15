@@ -32,25 +32,16 @@ namespace musen
 class Listener : public Receiver
 {
 public:
-  explicit Listener(
-    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
-
-  bool connect();
-  bool disconnect();
+  explicit Listener(const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
+  ~Listener();
 
   size_t receive_raw(char * data, const size_t & length) override;
 
   std::shared_ptr<Socket> get_socket() const;
-
-  bool is_connected() const;
-
   const int & get_port() const;
 
 protected:
   std::shared_ptr<Socket> socket;
-
-  bool connected;
-
   int port;
 };
 

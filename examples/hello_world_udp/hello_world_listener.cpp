@@ -20,33 +20,32 @@
 
 #include <musen/musen.hpp>
 
-#include <unistd.h>
-
 #include <iostream>
 #include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 int main()
 {
-  musen::Listener listener(5000);
+  int port = 5000;
 
-  if (!listener.connect()) {
-    std::cerr << "Failed to connect listener on port " <<
-      listener.get_port() << "!" << std::endl;
+  try {
+    musen::Listener listener(port);
 
-    return 1;
-  }
+    while (true) {
+      auto message = listener.receive_string(64);
 
-  while (true) {
-    auto message = listener.receive_string(64);
+      if (message.size() > 0) {
+        std::cout << "Received: " << message << std::endl;
+      }
 
-    if (message.size() > 0) {
-      std::cout << "Received: " << message << std::endl;
+      std::this_thread::sleep_for(100ms);
     }
-
-    usleep(100 * 1000);
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect listener on port " << port << "! " << err.what() << std::endl;
+    return err.code().value();
   }
-
-  listener.disconnect();
 
   return 0;
 }

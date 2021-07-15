@@ -36,11 +36,8 @@ namespace musen
 class Broadcaster : public Sender
 {
 public:
-  explicit Broadcaster(
-    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
-
-  bool connect();
-  bool disconnect();
+  explicit Broadcaster(const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
+  ~Broadcaster();
 
   size_t send_raw(const char * data, const size_t & length) override;
 
@@ -48,9 +45,6 @@ public:
   void add_target_host(const std::string & host);
 
   std::shared_ptr<Socket> get_socket() const;
-
-  bool is_connected() const;
-
   const int & get_port() const;
 
 protected:
@@ -59,13 +53,10 @@ protected:
   std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
 
   std::shared_ptr<Socket> socket;
-
-  bool connected;
+  int port;
 
   bool broadcast;
   std::list<std::string> target_hosts;
-
-  int port;
 
   std::list<struct sockaddr_in> recipent_sas;
 };

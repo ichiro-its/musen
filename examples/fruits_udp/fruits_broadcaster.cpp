@@ -20,49 +20,47 @@
 
 #include <musen/musen.hpp>
 
-#include <unistd.h>
-
-#include <ctime>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 int main()
 {
-  musen::Broadcaster broadcaster(5000);
+  int port = 5000;
 
-  if (!broadcaster.connect()) {
-    std::cerr << "Failed to connect broadcaster on port " <<
-      broadcaster.get_port() << "!" << std::endl;
+  try {
+    musen::Broadcaster broadcaster(port);
 
-    return 1;
-  }
+    std::vector<std::string> fruits = {"apple", "banana", "orange", "pear"};
 
-  std::vector<std::string> fruits = {"apple", "banana", "orange", "pear"};
+    while (true) {
+      std::vector<std::string> message;
 
-  unsigned int seed = time(NULL);
+      size_t length = 3 + (std::rand() % 3);
+      for (size_t i = 0; i < length; ++i) {
+        message.push_back(fruits[std::rand() % fruits.size()]);
+      }
 
-  while (true) {
-    std::vector<std::string> message;
+      broadcaster.send_strings(message, "-");
 
-    size_t length = 3 + (rand_r(&seed) % 3);
+      std::cout << "Sent: ";
+      for (auto & value : message) {
+        std::cout << value << " ";
+      }
+      std::cout << std::endl;
 
-    for (size_t i = 0; i < length; ++i) {
-      message.push_back(fruits[rand_r(&seed) % fruits.size()]);
+      std::this_thread::sleep_for(1s);
     }
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect broadcaster on port " << port << "! " <<
+      err.what() << std::endl;
 
-    broadcaster.send_strings(message, "-");
-
-    std::cout << "Sent: ";
-    for (auto & value : message) {
-      std::cout << value << " ";
-    }
-    std::cout << std::endl;
-
-    sleep(1);
+    return err.code().value();
   }
-
-  broadcaster.disconnect();
 
   return 0;
 }
