@@ -104,10 +104,7 @@ size_t Client::receive_raw(char * data, const size_t & length)
     return 0;
   }
 
-  // Receive data
-  int received = recv(socket->get_fd(), data, length, 0);
-
-  return std::max(received, 0);
+  return socket->receive(data, length);
 }
 
 std::shared_ptr<Socket> Client::get_socket() const

@@ -77,6 +77,20 @@ void Socket::bind(const Address & address)
   }
 }
 
+size_t Socket::receive(void * data, const size_t & length)
+{
+  auto retval = recv(fd, data, length, 0);
+  if (retval == -1) {
+    if (errno == EAGAIN) {
+      return 0;
+    }
+
+    throw std::system_error(errno, std::generic_category());
+  }
+
+  return retval;
+}
+
 void Socket::set_status_flags(const int & flags)
 {
   if (fcntl(fd, F_SETFL, flags) == -1) {

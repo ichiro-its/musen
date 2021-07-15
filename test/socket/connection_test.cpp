@@ -22,15 +22,6 @@
 #include <musen/musen.hpp>
 
 TEST(SocketConnectionTest, Bind) {
-  struct sockaddr_in sa;
-  {
-    memset(&sa, 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(5000);
-  }
-
   auto a = musen::make_udp_socket();
   auto b = musen::make_udp_socket();
 
@@ -46,4 +37,13 @@ TEST(SocketConnectionTest, Bind) {
   } catch (const std::system_error & err) {
     ASSERT_EQ(err.code().value(), EADDRINUSE) << "Error must be caused by address already in use";
   }
+}
+
+TEST(SocketConnectionTest, ReceiveNothing) {
+  auto socket = musen::make_udp_socket();
+
+  char data[32];
+  auto received = socket->receive(data, sizeof(data));
+
+  ASSERT_EQ(received, 0u);
 }

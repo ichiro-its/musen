@@ -61,13 +61,7 @@ size_t Listener::receive_raw(char * data, const size_t & length)
     return 0;
   }
 
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
-
-  // Receive data
-  int received = recvfrom(socket->get_fd(), data, length, 0, &sa, &sa_len);
-
-  return std::max(received, 0);
+  return socket->receive(data, length);
 }
 
 std::shared_ptr<Socket> Listener::get_socket() const
