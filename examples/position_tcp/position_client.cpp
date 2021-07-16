@@ -66,7 +66,7 @@ int main()
       std::this_thread::sleep_for(1s);
     }
   } catch (const std::system_error & err) {
-    std::cerr << "Failed to connect client to server on ip " << server_address.ip <<
+    std::cerr << "Failed to connect the client to the server on ip " << server_address.ip <<
       " and port " << server_address.port << "! " << err.what() << std::endl;
 
     return err.code().value();

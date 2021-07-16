@@ -47,7 +47,7 @@ int main()
       std::this_thread::sleep_for(100ms);
     }
   } catch (const std::system_error & err) {
-    std::cerr << "Failed to connect listener on port " << port << "! " << err.what() << std::endl;
+    std::cerr << "Failed to start the listener on port " << port << "! " << err.what() << std::endl;
     return err.code().value();
   }
 

@@ -21,6 +21,7 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include <vector>
@@ -33,21 +34,27 @@ class BroadcastAndListenTest : public ::testing::Test
 protected:
   void SetUp() override
   {
+    std::srand(std::time(0));
+
+    port = 5000 + std::rand() % 1000;
+
     try {
-      broadcaster = std::make_shared<musen::Broadcaster>(5000);
+      broadcaster = std::make_shared<musen::Broadcaster>(port);
     } catch (const std::system_error & err) {
-      FAIL() << "Unable to connect the broadcaster! " << err.what();
+      FAIL() << "Unable to start the broadcaster on port " << port << "! " << err.what();
     }
 
     for (size_t i = 0; i < 3; ++i) {
       try {
-        auto new_listener = std::make_shared<musen::Listener>(5000);
+        auto new_listener = std::make_shared<musen::Listener>(port);
         listeners.push_back(new_listener);
       } catch (const std::system_error & err) {
-        FAIL() << "Unable to connect listener " << i << "! " << err.what();
+        FAIL() << "Unable to start listener " << i << " on port " << port << "! " << err.what();
       }
     }
   }
+
+  int port;
 
   std::shared_ptr<musen::Broadcaster> broadcaster;
   std::vector<std::shared_ptr<musen::Listener>> listeners;
@@ -58,12 +65,11 @@ TEST_F(BroadcastAndListenTest, MultipleListener) {
   auto active_listeners = listeners;
 
   // Do up to 3 times until all listeners have received the message
-  int iteration = 0;
-  while (iteration++ < 3) {
+  for (int it = 0; it < 3; ++it) {
     // Sending message
     broadcaster->send_string(broadcast_message);
 
-    // Wait 10ms so listeners could receive the messages
+    // Wait a bit so listeners could receive the messages
     std::this_thread::sleep_for(10ms);
 
     for (size_t i = 0; i < active_listeners.size(); ++i) {
