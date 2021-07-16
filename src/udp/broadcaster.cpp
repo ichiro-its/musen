@@ -43,10 +43,6 @@ Broadcaster::~Broadcaster()
 
 size_t Broadcaster::send_raw(const char * data, const size_t & length)
 {
-  if (length <= 0) {
-    return 0;
-  }
-
   // Obtain all addresses
   auto addresses = broadcast_addresses;
   for (const auto & ip : target_ips) {

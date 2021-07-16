@@ -26,37 +26,37 @@ namespace musen
 {
 
 Session::Session(std::shared_ptr<Socket> socket)
-: socket(socket),
-  connected(false)
+: socket(socket)
 {
+}
+
+Session::~Session()
+{
+  socket = nullptr;
 }
 
 size_t Session::send_raw(const char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
-
   return socket->send(data, length);
 }
 
 size_t Session::receive_raw(char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
+  try {
+    return socket->receive(data, length);
+  } catch (const std::system_error & err) {
+    switch (err.code().value()) {
+      case ENOTCONN:
+        return 0;
+    }
 
-  return socket->receive(data, length);
+    throw err;
+  }
 }
 
 std::shared_ptr<Socket> Session::get_socket() const
 {
   return socket;
-}
-
-bool Session::is_connected() const
-{
-  return connected;
 }
 
 }  // namespace musen

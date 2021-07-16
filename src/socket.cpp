@@ -112,7 +112,7 @@ std::shared_ptr<Socket> Socket::accept()
 
 size_t Socket::send(const void * data, const size_t & length)
 {
-  auto retval = socket_send(fd, data, length, 0);
+  auto retval = socket_send(fd, data, length, MSG_NOSIGNAL);
   if (retval == -1) {
     throw std::system_error(errno, std::generic_category());
   }
@@ -123,7 +123,7 @@ size_t Socket::send(const void * data, const size_t & length)
 size_t Socket::send_to(const void * data, const size_t & length, const Address & address)
 {
   auto sa = address.sockaddr_in();
-  auto retval = sendto(fd, data, length, 0, (struct sockaddr *)&sa, sizeof(sa));
+  auto retval = sendto(fd, data, length, MSG_NOSIGNAL, (struct sockaddr *)&sa, sizeof(sa));
   if (retval == -1) {
     throw std::system_error(errno, std::generic_category());
   }

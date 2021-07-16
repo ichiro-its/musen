@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <fcntl.h>
 #include <musen/tcp/client.hpp>
 
 #include <memory>
@@ -28,62 +29,40 @@ namespace musen
 Client::Client(
   const Address & server_address, std::shared_ptr<Socket> socket)
 : socket(socket),
-  connected(false),
   server_address(server_address)
 {
-}
-
-bool Client::connect()
-{
-  if (is_connected()) {
-    return false;
+  // Disable non blocking during connect
+  auto was_non_blocking = socket->get_status_flag(O_NONBLOCK);
+  if (was_non_blocking) {
+    socket->set_status_flag(O_NONBLOCK, false);
   }
 
+  // Connect client to the server
   socket->connect(server_address);
 
-  connected = true;
-
-  return true;
+  if (was_non_blocking) {
+    socket->set_status_flag(O_NONBLOCK, true);
+  }
 }
 
-bool Client::disconnect()
+Client::~Client()
 {
-  if (!is_connected()) {
-    return false;
-  }
-
   socket = nullptr;
-  connected = false;
-
-  return true;
 }
 
 size_t Client::send_raw(const char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
-
   return socket->send(data, length);
 }
 
 size_t Client::receive_raw(char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
-
   return socket->receive(data, length);
 }
 
 std::shared_ptr<Socket> Client::get_socket() const
 {
   return socket;
-}
-
-bool Client::is_connected() const
-{
-  return connected;
 }
 
 const Address & Client::get_server_address() const

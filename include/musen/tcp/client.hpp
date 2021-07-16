@@ -22,7 +22,6 @@
 #define MUSEN__TCP__CLIENT_HPP_
 
 #include <memory>
-#include <string>
 
 #include "../address.hpp"
 #include "../receiver.hpp"
@@ -38,23 +37,16 @@ public:
   explicit Client(
     const Address & server_address, std::shared_ptr<Socket> socket = make_tcp_socket());
 
-  bool connect();
-  bool disconnect();
+  ~Client();
 
   size_t send_raw(const char * data, const size_t & length) override;
   size_t receive_raw(char * data, const size_t & length) override;
 
   std::shared_ptr<Socket> get_socket() const;
-
-  bool is_connected() const;
-
   const Address & get_server_address() const;
 
 protected:
   std::shared_ptr<Socket> socket;
-
-  bool connected;
-
   Address server_address;
 };
 

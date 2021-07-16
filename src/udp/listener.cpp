@@ -43,10 +43,6 @@ Listener::~Listener()
 
 size_t Listener::receive_raw(char * data, const size_t & length)
 {
-  if (length <= 0) {
-    return 0;
-  }
-
   return socket->receive(data, length);
 }
 

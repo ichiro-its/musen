@@ -21,8 +21,6 @@
 #ifndef MUSEN__TCP__SESSION_HPP_
 #define MUSEN__TCP__SESSION_HPP_
 
-#include <arpa/inet.h>
-
 #include <memory>
 
 #include "../sender.hpp"
@@ -36,18 +34,15 @@ class Session : public Sender, public Receiver
 {
 public:
   explicit Session(std::shared_ptr<Socket> socket);
+  ~Session();
 
   size_t send_raw(const char * data, const size_t & length) override;
   size_t receive_raw(char * data, const size_t & length) override;
 
   std::shared_ptr<Socket> get_socket() const;
 
-  bool is_connected() const;
-
 protected:
   std::shared_ptr<Socket> socket;
-
-  bool connected;
 };
 
 }  // namespace musen

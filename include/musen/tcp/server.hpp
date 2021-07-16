@@ -25,35 +25,24 @@
 #include <string>
 
 #include "./session.hpp"
-#include "../receiver.hpp"
-#include "../sender.hpp"
 #include "../socket.hpp"
 
 namespace musen
 {
 
-class Server : public Sender, public Receiver
+class Server
 {
 public:
-  explicit Server(
-    const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
-
-  bool connect();
-  bool disconnect();
+  explicit Server(const int & port, std::shared_ptr<Socket> socket = make_tcp_socket());
+  ~Server();
 
   std::shared_ptr<Session> accept();
 
   std::shared_ptr<Socket> get_socket() const;
-
-  bool is_connected() const;
-
   const int & get_port() const;
 
 protected:
   std::shared_ptr<Socket> socket;
-
-  bool connected;
-
   int port;
 };
 

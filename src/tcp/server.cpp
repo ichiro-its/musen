@@ -27,60 +27,39 @@ namespace musen
 
 Server::Server(const int & port, std::shared_ptr<Socket> socket)
 : socket(socket),
-  connected(false),
   port(port)
 {
-}
-
-bool Server::connect()
-{
-  if (is_connected()) {
-    return false;
-  }
-
   // Bind the socket with the serve address
   socket->bind(make_any_address(port));
 
-  // Listen to incoming connection
+  // Listen to incoming connections
   socket->listen();
-
-  connected = true;
-
-  return true;
 }
 
-bool Server::disconnect()
+Server::~Server()
 {
-  if (!is_connected()) {
-    return false;
-  }
-
   socket = nullptr;
-  connected = false;
-
-  return true;
 }
 
 std::shared_ptr<Session> Server::accept()
 {
-  if (!is_connected()) {
-    return nullptr;
+  try {
+    // Accept incoming connection
+    auto session_socket = socket->accept();
+
+    return std::make_shared<Session>(session_socket);
+  } catch (const std::system_error & err) {
+    if (err.code().value() == EAGAIN) {
+      return nullptr;
+    }
+
+    throw err;
   }
-
-  // Accept incoming connection
-  auto session_socket = socket->accept();
-
-  return std::make_shared<Session>(socket);
 }
 
 std::shared_ptr<Socket> Server::get_socket() const
 {
   return socket;
-}
-
-bool Server::is_connected() const
-{
-  return connected;
 }
 
 const int & Server::get_port() const

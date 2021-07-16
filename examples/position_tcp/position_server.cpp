@@ -20,12 +20,13 @@
 
 #include <musen/musen.hpp>
 
-#include <unistd.h>
-
+#include <cstdlib>
 #include <iostream>
 #include <list>
 #include <memory>
-#include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 struct Position
 {
@@ -36,52 +37,49 @@ struct Position
 
 int main()
 {
-  musen::Server server(5000);
+  int port = 5000;
 
-  if (!server.connect()) {
-    std::cerr << "Failed to connect to port " <<
-      server.get_port() << "!" << std::endl;
+  try {
+    musen::Server server(5000);
 
-    return 1;
-  }
+    std::list<std::shared_ptr<musen::Session>> sessions;
 
-  std::list<std::shared_ptr<musen::Session>> sessions;
-  unsigned int seed = time(NULL);
-
-  while (true) {
-    auto new_session = server.accept();
-    if (new_session != nullptr) {
-      sessions.push_back(new_session);
-    }
-
-    for (auto session : sessions) {
-      Position position;
-
-      position.x = rand_r(&seed) % 100;
-      position.y = rand_r(&seed) % 100;
-      position.z = rand_r(&seed) % 100;
-
-      server.send(position);
-
-      std::cout << "Sent: " <<
-        position.x << ", " <<
-        position.y << ", " <<
-        position.z << std::endl;
-
-      auto received_position = session->receive<Position>();
-
-      if (received_position.has_value()) {
-        std::cout << "Received: " <<
-          received_position->x << ", " <<
-          received_position->y << ", " <<
-          received_position->z << std::endl;
+    while (true) {
+      auto new_session = server.accept();
+      if (new_session != nullptr) {
+        sessions.push_back(new_session);
       }
+
+      for (auto session : sessions) {
+        Position position;
+
+        position.x = std::rand() % 100;
+        position.y = std::rand() % 100;
+        position.z = std::rand() % 100;
+
+        session->send(position);
+
+        std::cout << "Sent: " <<
+          position.x << ", " <<
+          position.y << ", " <<
+          position.z << std::endl;
+
+        auto received_position = session->receive<Position>();
+
+        if (received_position.has_value()) {
+          std::cout << "Received: " <<
+            received_position->x << ", " <<
+            received_position->y << ", " <<
+            received_position->z << std::endl;
+        }
+      }
+
+      std::this_thread::sleep_for(1s);
     }
-
-    sleep(1);
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect server on port " << port << "! " << err.what() << std::endl;
+    return err.code().value();
   }
-
-  server.disconnect();
 
   return 0;
 }
