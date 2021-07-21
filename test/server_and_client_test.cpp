@@ -21,76 +21,118 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
+#include <cstdlib>
+#include <list>
 #include <memory>
 #include <string>
 #include <thread>
+#include <vector>
+
+using namespace std::chrono_literals;
 
 class ServerAndClientTest : public ::testing::Test
 {
 protected:
   void SetUp() override
   {
-    server = std::make_shared<musen::Server>(5000);
-    client = std::make_shared<musen::Client>("localhost", 5000);
+    std::srand(std::time(0));
 
+    server_address.ip = "127.0.0.1";
+    server_address.port = 5000 + std::rand() % 1000;
+
+    // Process the server on a separate thread
     server_thread = std::make_shared<std::thread>(
       [this]() {
-        // Trying to connect the server
-        ASSERT_TRUE(server->connect()) << "Unable to connect the server";
+        try {
+          server = std::make_shared<musen::Server>(server_address.port);
+        } catch (const std::system_error & err) {
+          FAIL() << "Unable to start the server on port " << server_address.port <<
+          "! " << err.what();
+        }
 
-        // Echo the received message while the server connected
-        while (server->is_connected()) {
-          auto receive_message = server->receive_string(32);
-          if (receive_message.size() > 0) {
-            server->send_string(receive_message);
+        std::weak_ptr<musen::Server> weak_server = server;
+
+        std::list<std::shared_ptr<musen::Session>> sessions;
+
+        // Process each client while the server is alive
+        while (auto server = weak_server.lock()) {
+          // Accept a new client
+          auto new_session = server->accept();
+          if (new_session != nullptr) {
+            sessions.push_back(new_session);
+          }
+
+          // Echo the received message from each client
+          for (auto session : sessions) {
+            auto receive_message = session->receive_string(32);
+            if (receive_message.size() > 0) {
+              session->send_string(receive_message);
+            }
           }
         }
       });
 
-    // Wait 10ms so the client could connect to the server
-    usleep(10 * 1000);
+    // Wait a bit so each client could connect to the server
+    std::this_thread::sleep_for(10ms);
 
-    // Trying to connect the client
-    ASSERT_TRUE(client->connect()) << "Unable to connect the client";
+    for (size_t i = 0; i < 3; ++i) {
+      try {
+        auto new_client = std::make_shared<musen::Client>(server_address);
+        clients.push_back(new_client);
+      } catch (const std::system_error & err) {
+        FAIL() << "Unable to connect client " << i <<
+          " to the server on ip " << server_address.ip <<
+          " and port " << server_address.port << "! " << err.what();
+      }
+
+      // Wait a bit so the next client could connect to the server
+      std::this_thread::sleep_for(10ms);
+    }
   }
 
   void TearDown() override
   {
-    // Trying to disconnect both server and client
-    ASSERT_TRUE(server->disconnect()) << "Unable to disconnect the server";
-    ASSERT_TRUE(client->disconnect()) << "Unable to disconnect the client";
-
-    if (server_thread) {
-      server_thread->join();
-    }
+    server = nullptr;
+    server_thread->join();
   }
 
+  musen::Address server_address;
+
   std::shared_ptr<musen::Server> server;
-  std::shared_ptr<musen::Client> client;
+  std::vector<std::shared_ptr<musen::Client>> clients;
 
   std::shared_ptr<std::thread> server_thread;
 };
 
-TEST_F(ServerAndClientTest, SingleClient) {
-  std::string send_message = "Hello World!";
+TEST_F(ServerAndClientTest, MultipleClient) {
+  auto active_clients = clients;
 
-  // Do up to 3 times until the client has received the message back
-  int iteration = 0;
-  while (iteration++ < 3) {
-    // Sending message
-    client->send_string(send_message);
+  // Do up to 3 times until all clients have received the message back
+  for (int it = 0; it < 3; ++it) {
+    for (size_t i = 0; i < active_clients.size(); ++i) {
+      auto client = active_clients[i];
+      std::string send_message = "Hello World! " + std::to_string(i);
 
-    // Wait 10ms so the server could receive the messages
-    usleep(10 * 1000);
+      // Sending message
+      client->send_string(send_message);
 
-    auto receive_message = client->receive_string(32);
-    if (receive_message.size() > 0) {
-      ASSERT_STREQ(receive_message.c_str(), send_message.c_str()) <<
-        "Unequal received and sent message";
+      // Wait a bit so the client could receive the messages
+      std::this_thread::sleep_for(10ms);
 
+      auto receive_message = client->receive_string(32);
+      if (receive_message.size() > 0) {
+        EXPECT_STREQ(receive_message.c_str(), send_message.c_str()) <<
+          "Unequal received and sent message";
+
+        active_clients.erase(active_clients.begin() + i);
+        --i;
+      }
+    }
+
+    if (active_clients.size() <= 0) {
       return SUCCEED();
     }
   }
 
-  FAIL() << "Client did not receive any data";
+  FAIL() << "Several clients did not receive any data";
 }

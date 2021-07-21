@@ -18,20 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SOCKET__UDP_SOCKET_HPP_
-#define MUSEN__SOCKET__UDP_SOCKET_HPP_
+#include <gtest/gtest.h>
+#include <musen/musen.hpp>
 
-#include "./base_socket.hpp"
+TEST(AddressTest, EmptyInitialization) {
+  musen::Address address;
+}
 
-namespace musen
-{
+TEST(AddressTest, MakeAnyAddress) {
+  auto address = musen::make_any_address(0);
 
-class UdpSocket : public BaseSocket
-{
-public:
-  bool connect() override;
-};
+  auto sa = address.sockaddr_in();
+  EXPECT_EQ(sa.sin_addr.s_addr, htonl(INADDR_ANY)) << "Expected an INADDR_ANY value";
+}
 
-}  // namespace musen
+TEST(AddressTest, Conversion) {
+  auto a = musen::Address("127.0.0.1", 5000);
+  auto b = musen::Address(a.sockaddr_in());
 
-#endif  // MUSEN__SOCKET__UDP_SOCKET_HPP_
+  EXPECT_EQ(a.ip, b.ip) << "Expected an equal IP";
+  EXPECT_EQ(a.port, b.port) << "Expected an equal port";
+}

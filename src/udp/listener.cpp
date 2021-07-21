@@ -20,79 +20,35 @@
 
 #include <musen/udp/listener.hpp>
 
-#include <arpa/inet.h>
-
-#include <algorithm>
-#include <cstring>
 #include <memory>
 
 namespace musen
 {
 
-Listener::Listener(const int & port, std::shared_ptr<UdpSocket> udp_socket)
-: udp_socket(udp_socket),
+Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
   port(port)
 {
-}
-
-bool Listener::connect()
-{
-  if (!udp_socket->connect()) {
-    return false;
-  }
-
   // Enable reuse port
-  int opt = 1;
-  setsockopt(
-    udp_socket->get_sockfd(), SOL_SOCKET, SO_REUSEPORT, reinterpret_cast<void *>(&opt),
-    sizeof(opt));
+  socket->set_option(SO_REUSEPORT, 1);
 
-  // Configure the recipent address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(port);
-  }
-
-  // Bind the socket with the recipent address
-  if (bind(udp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
-
-  return true;
+  // Bind the socket with the listen address
+  socket->bind(make_any_address(port));
 }
 
-bool Listener::disconnect()
+Listener::~Listener()
 {
-  return udp_socket->disconnect();
+  socket = nullptr;
 }
 
 size_t Listener::receive_raw(char * data, const size_t & length)
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
-
-  struct sockaddr sa;
-  socklen_t sa_len = sizeof(sa);
-
-  // Receive data
-  int received = recvfrom(udp_socket->get_sockfd(), data, length, 0, &sa, &sa_len);
-
-  return std::max(received, 0);
+  return socket->receive(data, length);
 }
 
-std::shared_ptr<UdpSocket> Listener::get_udp_socket() const
+std::shared_ptr<Socket> Listener::get_socket() const
 {
-  return udp_socket;
-}
-
-bool Listener::is_connected() const
-{
-  return udp_socket->is_connected();
+  return socket;
 }
 
 const int & Listener::get_port() const

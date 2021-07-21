@@ -22,11 +22,11 @@
 #define MUSEN__TCP__CLIENT_HPP_
 
 #include <memory>
-#include <string>
 
-#include "../socket/tcp_socket.hpp"
+#include "../address.hpp"
 #include "../receiver.hpp"
 #include "../sender.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -35,27 +35,19 @@ class Client : public Sender, public Receiver
 {
 public:
   explicit Client(
-    const std::string & host, const int & port,
-    std::shared_ptr<TcpSocket> tcp_socket = std::make_shared<TcpSocket>());
+    const Address & server_address, std::shared_ptr<Socket> socket = make_tcp_socket());
 
-  bool connect();
-  bool disconnect();
+  ~Client();
 
   size_t send_raw(const char * data, const size_t & length) override;
   size_t receive_raw(char * data, const size_t & length) override;
 
-  std::shared_ptr<TcpSocket> get_tcp_socket() const;
-
-  bool is_connected() const;
-
-  const std::string & get_host() const;
-  const int & get_port() const;
+  std::shared_ptr<Socket> get_socket() const;
+  const Address & get_server_address() const;
 
 protected:
-  std::shared_ptr<TcpSocket> tcp_socket;
-
-  std::string host;
-  int port;
+  std::shared_ptr<Socket> socket;
+  Address server_address;
 };
 
 }  // namespace musen

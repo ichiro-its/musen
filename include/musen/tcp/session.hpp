@@ -18,20 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SOCKET__TCP_SOCKET_HPP_
-#define MUSEN__SOCKET__TCP_SOCKET_HPP_
+#ifndef MUSEN__TCP__SESSION_HPP_
+#define MUSEN__TCP__SESSION_HPP_
 
-#include "./base_socket.hpp"
+#include <memory>
+
+#include "../sender.hpp"
+#include "../receiver.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
 
-class TcpSocket : public BaseSocket
+class Session : public Sender, public Receiver
 {
 public:
-  bool connect() override;
+  explicit Session(std::shared_ptr<Socket> socket);
+  ~Session();
+
+  size_t send_raw(const char * data, const size_t & length) override;
+  size_t receive_raw(char * data, const size_t & length) override;
+
+  std::shared_ptr<Socket> get_socket() const;
+
+protected:
+  std::shared_ptr<Socket> socket;
 };
 
 }  // namespace musen
 
-#endif  // MUSEN__SOCKET__TCP_SOCKET_HPP_
+#endif  // MUSEN__TCP__SESSION_HPP_

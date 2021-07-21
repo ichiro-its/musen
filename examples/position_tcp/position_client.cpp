@@ -20,10 +20,11 @@
 
 #include <musen/musen.hpp>
 
-#include <unistd.h>
-
+#include <cstdlib>
 #include <iostream>
-#include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 struct Position
 {
@@ -34,44 +35,42 @@ struct Position
 
 int main()
 {
-  musen::Client client("localhost", 5000);
+  musen::Address server_address("127.0.0.1", 5000);
 
-  if (!client.connect()) {
-    std::cerr << "Failed to connect to server on port " <<
-      client.get_port() << "!" << std::endl;
+  try {
+    musen::Client client(server_address);
 
-    return 1;
-  }
+    while (true) {
+      auto received_position = client.receive<Position>();
 
-  unsigned int seed = time(NULL);
+      if (received_position.has_value()) {
+        std::cout << "Received: " <<
+          received_position->x << ", " <<
+          received_position->y << ", " <<
+          received_position->z << std::endl;
+      }
 
-  while (true) {
-    auto received_position = client.receive<Position>();
+      Position position;
 
-    if (received_position.has_value()) {
-      std::cout << "Received: " <<
-        received_position->x << ", " <<
-        received_position->y << ", " <<
-        received_position->z << std::endl;
+      position.x = std::rand() % 100;
+      position.y = std::rand() % 100;
+      position.z = std::rand() % 100;
+
+      client.send(position);
+
+      std::cout << "Sent: " <<
+        position.x << ", " <<
+        position.y << ", " <<
+        position.z << std::endl;
+
+      std::this_thread::sleep_for(1s);
     }
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to connect the client to the server on ip " << server_address.ip <<
+      " and port " << server_address.port << "! " << err.what() << std::endl;
 
-    Position position;
-
-    position.x = rand_r(&seed) % 100;
-    position.y = rand_r(&seed) % 100;
-    position.z = rand_r(&seed) % 100;
-
-    client.send(position);
-
-    std::cout << "Sent: " <<
-      position.x << ", " <<
-      position.y << ", " <<
-      position.z << std::endl;
-
-    sleep(1);
+    return err.code().value();
   }
-
-  client.disconnect();
 
   return 0;
 }

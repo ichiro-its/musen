@@ -21,14 +21,13 @@
 #ifndef MUSEN__UDP__BROADCASTER_HPP_
 #define MUSEN__UDP__BROADCASTER_HPP_
 
-#include <arpa/inet.h>
-
 #include <list>
 #include <memory>
 #include <string>
 
-#include "../socket/udp_socket.hpp"
+#include "../address.hpp"
 #include "../sender.hpp"
+#include "../socket.hpp"
 
 namespace musen
 {
@@ -36,36 +35,23 @@ namespace musen
 class Broadcaster : public Sender
 {
 public:
-  explicit Broadcaster(
-    const int & port, std::shared_ptr<UdpSocket> udp_socket = std::make_shared<UdpSocket>());
-
-  bool connect();
-  bool disconnect();
+  explicit Broadcaster(const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
+  ~Broadcaster();
 
   size_t send_raw(const char * data, const size_t & length) override;
 
   void enable_broadcast(const bool & enable);
-  void add_target_host(const std::string & host);
 
-  std::shared_ptr<UdpSocket> get_udp_socket() const;
-
-  bool is_connected() const;
-
+  std::shared_ptr<Socket> get_socket() const;
   const int & get_port() const;
 
+  std::list<std::string> target_ips;
+
 protected:
-  std::list<struct sockaddr_in> obtain_recipent_sas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_broadcast_ifas() const;
-  std::list<struct sockaddr_in> obtain_recipent_sas_from_target_hosts() const;
-
-  std::shared_ptr<UdpSocket> udp_socket;
-
-  bool broadcast;
-  std::list<std::string> target_hosts;
-
+  std::shared_ptr<Socket> socket;
   int port;
 
-  std::list<struct sockaddr_in> recipent_sas;
+  std::list<Address> broadcast_addresses;
 };
 
 }  // namespace musen

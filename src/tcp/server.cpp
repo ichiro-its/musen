@@ -18,112 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <fcntl.h>
 #include <musen/tcp/server.hpp>
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-
-#include <algorithm>
-#include <cstring>
 #include <memory>
-#include <string>
 
 namespace musen
 {
 
-constexpr auto socket_send = send;
-
-Server::Server(const int & port, std::shared_ptr<TcpSocket> tcp_socket)
-: tcp_socket(tcp_socket),
+Server::Server(const int & port, std::shared_ptr<Socket> socket)
+: socket(socket),
   port(port)
 {
+  // Bind the socket with the serve address
+  socket->bind(make_any_address(port));
+
+  // Listen to incoming connections
+  socket->listen();
 }
 
-bool Server::connect()
+Server::~Server()
 {
-  if (!tcp_socket->connect()) {
-    return false;
-  }
-
-  // Configure the server address
-  struct sockaddr_in sa;
-  {
-    memset(reinterpret_cast<void *>(&sa), 0, sizeof(sa));
-
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa.sin_port = htons(port);
-  }
-
-  // Bind the socket to server address
-  if (bind(tcp_socket->get_sockfd(), (struct sockaddr *)&sa, sizeof(sa)) < 0) {
-    return false;
-  }
-
-  // Listen to incoming connection
-  if (listen(tcp_socket->get_sockfd(), 3) < 0) {
-    return false;
-  }
-
-  // Accept incoming connection
-  auto sa_size = sizeof(sa);
-  new_sockfd = accept(
-    tcp_socket->get_sockfd(), (struct sockaddr *)&sa, reinterpret_cast<socklen_t *>(&sa_size));
-
-  if (get_new_sockfd() < 0) {
-    return false;
-  }
-
-  return true;
+  socket = nullptr;
 }
 
-bool Server::disconnect()
+std::shared_ptr<Session> Server::accept()
 {
-  return tcp_socket->disconnect();
-}
+  try {
+    // Accept incoming connection
+    auto session_socket = socket->accept();
 
-size_t Server::send_raw(const char * data, const size_t & length)
-{
-  if (!is_connected() || length <= 0) {
-    return 0;
+    // Set the session socket's non-blocking status according to the server socket's
+    auto was_nonblock = socket->get_status_flag(O_NONBLOCK);
+    session_socket->set_status_flag(O_NONBLOCK, was_nonblock);
+
+    return std::make_shared<Session>(session_socket);
+  } catch (const std::system_error & err) {
+    if (err.code().value() == EAGAIN) {
+      return nullptr;
+    }
+
+    throw err;
   }
-
-  // Send data
-  int sent = socket_send(get_new_sockfd(), data, length, 0);
-
-  return std::max(sent, 0);
 }
 
-size_t Server::receive_raw(char * data, const size_t & length)
+std::shared_ptr<Socket> Server::get_socket() const
 {
-  if (!is_connected() || length <= 0) {
-    return 0;
-  }
-
-  // Receive data
-  int received = recv(get_new_sockfd(), data, length, 0);
-
-  return std::max(received, 0);
-}
-
-std::shared_ptr<TcpSocket> Server::get_tcp_socket() const
-{
-  return tcp_socket;
-}
-
-bool Server::is_connected() const
-{
-  return tcp_socket->is_connected();
+  return socket;
 }
 
 const int & Server::get_port() const
 {
   return port;
-}
-
-const int & Server::get_new_sockfd() const
-{
-  return new_sockfd;
 }
 
 }  // namespace musen

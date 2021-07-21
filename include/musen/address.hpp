@@ -18,51 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/socket/base_socket.hpp>
+#ifndef MUSEN__ADDRESS_HPP_
+#define MUSEN__ADDRESS_HPP_
 
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
+
+#include <list>
+#include <string>
 
 namespace musen
 {
 
-BaseSocket::BaseSocket()
-: sockfd(-1)
+struct Address;
+
+Address make_any_address(const int & port);
+
+std::list<std::string> obtain_broadcast_ips();
+
+struct Address
 {
-}
+  Address(const std::string & ip, const int & port);
+  explicit Address(const sockaddr_in & sa);
+  Address();
 
-BaseSocket::~BaseSocket()
-{
-  disconnect();
-}
+  struct sockaddr_in sockaddr_in() const;
 
-bool BaseSocket::connect()
-{
-  return false;
-}
-
-bool BaseSocket::disconnect()
-{
-  if (!is_connected()) {
-    return false;
-  }
-
-  // Close the socket
-  close(sockfd);
-  sockfd = -1;
-
-  return true;
-}
-
-const int & BaseSocket::get_sockfd() const
-{
-  return sockfd;
-}
-
-bool BaseSocket::is_connected() const
-{
-  return get_sockfd() >= 0;
-}
+  std::string ip;
+  int port;
+};
 
 }  // namespace musen
+
+#endif  // MUSEN__ADDRESS_HPP_

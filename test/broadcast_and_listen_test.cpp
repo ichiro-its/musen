@@ -21,54 +21,56 @@
 #include <gtest/gtest.h>
 #include <musen/musen.hpp>
 
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include <vector>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 class BroadcastAndListenTest : public ::testing::Test
 {
 protected:
   void SetUp() override
   {
-    broadcaster = std::make_shared<musen::Broadcaster>(5000);
-    listeners = {
-      std::make_shared<musen::Listener>(5000),
-      std::make_shared<musen::Listener>(5000),
-      std::make_shared<musen::Listener>(5000)
-    };
+    std::srand(std::time(0));
 
-    // Trying to connect both broadcaster and listener
-    ASSERT_TRUE(broadcaster->connect()) << "Unable to connect the broadcaster";
-    for (size_t i = 0; i < listeners.size(); ++i) {
-      ASSERT_TRUE(listeners[i]->connect()) << "Unable to connect listener " << i;
+    port = 5000 + std::rand() % 1000;
+
+    try {
+      broadcaster = std::make_shared<musen::Broadcaster>(port);
+    } catch (const std::system_error & err) {
+      FAIL() << "Unable to start the broadcaster on port " << port << "! " << err.what();
+    }
+
+    for (size_t i = 0; i < 3; ++i) {
+      try {
+        auto new_listener = std::make_shared<musen::Listener>(port);
+        listeners.push_back(new_listener);
+      } catch (const std::system_error & err) {
+        FAIL() << "Unable to start listener " << i << " on port " << port << "! " << err.what();
+      }
     }
   }
 
-  void TearDown() override
-  {
-    // Trying to disconnect both broadcaster and listener
-    ASSERT_TRUE(broadcaster->disconnect()) << "Unable to disconnect the broadcaster";
-    for (size_t i = 0; i < listeners.size(); ++i) {
-      ASSERT_TRUE(listeners[i]->disconnect()) << "Unable to disconnect listener " << i;
-    }
-  }
+  int port;
 
   std::shared_ptr<musen::Broadcaster> broadcaster;
   std::vector<std::shared_ptr<musen::Listener>> listeners;
 };
 
-TEST_F(BroadcastAndListenTest, SingleListener) {
+TEST_F(BroadcastAndListenTest, MultipleListener) {
   std::string broadcast_message = "Hello World!";
   auto active_listeners = listeners;
 
-  // Do up to 3 times until the listener has received the message
-  int iteration = 0;
-  while (iteration++ < 3) {
+  // Do up to 3 times until all listeners have received the message
+  for (int it = 0; it < 3; ++it) {
     // Sending message
     broadcaster->send_string(broadcast_message);
 
-    // Wait 10ms so the listener could receive the messages
-    usleep(10 * 1000);
+    // Wait a bit so listeners could receive the messages
+    std::this_thread::sleep_for(10ms);
 
     for (size_t i = 0; i < active_listeners.size(); ++i) {
       auto listen_message = active_listeners[i]->receive_string(32);
@@ -86,5 +88,5 @@ TEST_F(BroadcastAndListenTest, SingleListener) {
     }
   }
 
-  FAIL() << "Several listener did not receive any data";
+  FAIL() << "Several listeners did not receive any data";
 }

@@ -20,10 +20,10 @@
 
 #include <musen/musen.hpp>
 
-#include <stdlib.h>
-#include <unistd.h>
-
 #include <iostream>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 struct Position
 {
@@ -34,29 +34,27 @@ struct Position
 
 int main()
 {
-  musen::Listener listener(5000);
+  int port = 5000;
 
-  if (!listener.connect()) {
-    std::cerr << "Failed to connect listener on port " <<
-      listener.get_port() << "!" << std::endl;
+  try {
+    musen::Listener listener(5000);
 
-    return 1;
-  }
+    while (true) {
+      auto position = listener.receive<Position>();
 
-  while (true) {
-    auto position = listener.receive<Position>();
+      if (position.has_value()) {
+        std::cout << "Received: " <<
+          position->x << ", " <<
+          position->y << ", " <<
+          position->z << std::endl;
+      }
 
-    if (position.has_value()) {
-      std::cout << "Received: " <<
-        position->x << ", " <<
-        position->y << ", " <<
-        position->z << std::endl;
+      std::this_thread::sleep_for(100ms);
     }
-
-    usleep(100 * 1000);
+  } catch (const std::system_error & err) {
+    std::cerr << "Failed to start the listener on port " << port << "! " << err.what() << std::endl;
+    return err.code().value();
   }
-
-  listener.disconnect();
 
   return 0;
 }
