@@ -77,66 +77,30 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="server_8hpp_source.html">server.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for musen::Server:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classmusen_1_1Server.png" usemap="#musen::Server_map" alt=""/>
-  <map id="musen::Server_map" name="musen::Server_map">
-<area href="classmusen_1_1Sender.html" alt="musen::Sender" shape="rect" coords="0,0,105,24"/>
-<area href="classmusen_1_1Receiver.html" alt="musen::Receiver" shape="rect" coords="115,0,220,24"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abc60975ac54580d8b0f1a621aca5a170"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#abc60975ac54580d8b0f1a621aca5a170">Server</a> (const int &amp;<a class="el" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">port</a>, std::shared_ptr&lt; <a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a> &gt; <a class="el" href="classmusen_1_1Server.html#a547c118293fbb4dcdb021d7358c90c60">tcp_socket</a>=std::make_shared&lt; <a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a> &gt;())</td></tr>
-<tr class="separator:abc60975ac54580d8b0f1a621aca5a170"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8276eee9a15cbd6e14ae5c5e61fe9fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#af8276eee9a15cbd6e14ae5c5e61fe9fc">connect</a> ()</td></tr>
-<tr class="separator:af8276eee9a15cbd6e14ae5c5e61fe9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14bd00b4f16b5b07f2dfbf6d748f383f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a14bd00b4f16b5b07f2dfbf6d748f383f">disconnect</a> ()</td></tr>
-<tr class="separator:a14bd00b4f16b5b07f2dfbf6d748f383f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f0918c4a732f95464b68136aefce2c6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a5f0918c4a732f95464b68136aefce2c6">send_raw</a> (const char *data, const size_t &amp;length) override</td></tr>
-<tr class="separator:a5f0918c4a732f95464b68136aefce2c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a82e562ce65ab4ee1030155ec1dbe76"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a4a82e562ce65ab4ee1030155ec1dbe76">receive_raw</a> (char *data, const size_t &amp;length) override</td></tr>
-<tr class="separator:a4a82e562ce65ab4ee1030155ec1dbe76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aada785150534ebf9084e1125422182ef"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#aada785150534ebf9084e1125422182ef">get_tcp_socket</a> () const</td></tr>
-<tr class="separator:aada785150534ebf9084e1125422182ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe831a8ba856a277f1f0721dbb66e904"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#afe831a8ba856a277f1f0721dbb66e904">is_connected</a> () const</td></tr>
-<tr class="separator:afe831a8ba856a277f1f0721dbb66e904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2b8129ffdac8f269e88f4042547b104"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#ac2b8129ffdac8f269e88f4042547b104">Server</a> (const int &amp;<a class="el" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">port</a>, std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt; <a class="el" href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">socket</a>=<a class="el" href="namespacemusen.html#a294684f89cedb171f62478303d67f3b5">make_tcp_socket</a>())</td></tr>
+<tr class="separator:ac2b8129ffdac8f269e88f4042547b104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0963689f2bf84ee05ca77ece67c3da7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#aa0963689f2bf84ee05ca77ece67c3da7">~Server</a> ()</td></tr>
+<tr class="separator:aa0963689f2bf84ee05ca77ece67c3da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafb3cbdf5130dda685020f8e3dfef037"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Session.html">Session</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#aafb3cbdf5130dda685020f8e3dfef037">accept</a> ()</td></tr>
+<tr class="separator:aafb3cbdf5130dda685020f8e3dfef037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ba716fefb493b4937ca5fd82129a31"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a72ba716fefb493b4937ca5fd82129a31">get_socket</a> () const</td></tr>
+<tr class="separator:a72ba716fefb493b4937ca5fd82129a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab749a5779c48bfe5ce0017a24f6c5577"><td class="memItemLeft" align="right" valign="top">const int &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#ab749a5779c48bfe5ce0017a24f6c5577">get_port</a> () const</td></tr>
 <tr class="separator:ab749a5779c48bfe5ce0017a24f6c5577"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f1a456fe377bd8f60ff230a8c95da34"><td class="memItemLeft" align="right" valign="top">const int &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a6f1a456fe377bd8f60ff230a8c95da34">get_new_sockfd</a> () const</td></tr>
-<tr class="separator:a6f1a456fe377bd8f60ff230a8c95da34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classmusen_1_1Sender"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmusen_1_1Sender')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmusen_1_1Sender.html">musen::Sender</a></td></tr>
-<tr class="memitem:ae7d478644c74c77ff78a15163172edeb inherit pub_methods_classmusen_1_1Sender"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Sender.html#ae7d478644c74c77ff78a15163172edeb">send_string</a> (const std::string &amp;data)</td></tr>
-<tr class="separator:ae7d478644c74c77ff78a15163172edeb inherit pub_methods_classmusen_1_1Sender"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab594fac944301b5d627530d9634aa1f9 inherit pub_methods_classmusen_1_1Sender"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Sender.html#ab594fac944301b5d627530d9634aa1f9">send_strings</a> (const std::vector&lt; std::string &gt; &amp;data, const std::string &amp;delimiter=&quot;,&quot;)</td></tr>
-<tr class="separator:ab594fac944301b5d627530d9634aa1f9 inherit pub_methods_classmusen_1_1Sender"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24feaa19e67de407d0e63810a23234e2 inherit pub_methods_classmusen_1_1Sender"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a24feaa19e67de407d0e63810a23234e2 inherit pub_methods_classmusen_1_1Sender"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmusen_1_1Sender.html#a24feaa19e67de407d0e63810a23234e2">send</a> (const T &amp;data)</td></tr>
-<tr class="separator:a24feaa19e67de407d0e63810a23234e2 inherit pub_methods_classmusen_1_1Sender"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classmusen_1_1Receiver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmusen_1_1Receiver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmusen_1_1Receiver.html">musen::Receiver</a></td></tr>
-<tr class="memitem:a12a370f3778e35143f23868dd9570455 inherit pub_methods_classmusen_1_1Receiver"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a12a370f3778e35143f23868dd9570455">receive_string</a> (const size_t &amp;length)</td></tr>
-<tr class="separator:a12a370f3778e35143f23868dd9570455 inherit pub_methods_classmusen_1_1Receiver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17ec374ad8c25c4fb9acb670653672ef inherit pub_methods_classmusen_1_1Receiver"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a17ec374ad8c25c4fb9acb670653672ef">receive_strings</a> (const size_t &amp;length, const std::string &amp;delimiter=&quot;,&quot;)</td></tr>
-<tr class="separator:a17ec374ad8c25c4fb9acb670653672ef inherit pub_methods_classmusen_1_1Receiver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1 inherit pub_methods_classmusen_1_1Receiver"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a46a7ad6abe46a61513423f2baf6b44f1 inherit pub_methods_classmusen_1_1Receiver"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmusen_1_1Receiver.html#a46a7ad6abe46a61513423f2baf6b44f1">receive</a> ()</td></tr>
-<tr class="separator:a46a7ad6abe46a61513423f2baf6b44f1 inherit pub_methods_classmusen_1_1Receiver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a547c118293fbb4dcdb021d7358c90c60"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a547c118293fbb4dcdb021d7358c90c60">tcp_socket</a></td></tr>
-<tr class="separator:a547c118293fbb4dcdb021d7358c90c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3682e72a4a182383f90e12cdedac3b3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">socket</a></td></tr>
+<tr class="separator:ac3682e72a4a182383f90e12cdedac3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a562c3c31f7c77d6007ac5f54a10eedaa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">port</a></td></tr>
 <tr class="separator:a562c3c31f7c77d6007ac5f54a10eedaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a765d9a9e88fdbd884d1b06768840938d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Server.html#a765d9a9e88fdbd884d1b06768840938d">new_sockfd</a></td></tr>
-<tr class="separator:a765d9a9e88fdbd884d1b06768840938d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abc60975ac54580d8b0f1a621aca5a170"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc60975ac54580d8b0f1a621aca5a170">&#9670;&nbsp;</a></span>Server()</h2>
+<a id="ac2b8129ffdac8f269e88f4042547b104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2b8129ffdac8f269e88f4042547b104">&#9670;&nbsp;</a></span>Server()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -153,8 +117,8 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a> &gt;&#160;</td>
-          <td class="paramname"><em>tcp_socket</em> = <code>std::make_shared&lt;&#160;<a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a>&#160;&gt;()</code>&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td>
+          <td class="paramname"><em>socket</em> = <code><a class="el" href="namespacemusen.html#a294684f89cedb171f62478303d67f3b5">make_tcp_socket</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -171,15 +135,32 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa0963689f2bf84ee05ca77ece67c3da7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0963689f2bf84ee05ca77ece67c3da7">&#9670;&nbsp;</a></span>~Server()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">musen::Server::~Server </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af8276eee9a15cbd6e14ae5c5e61fe9fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8276eee9a15cbd6e14ae5c5e61fe9fc">&#9670;&nbsp;</a></span>connect()</h2>
+<a id="aafb3cbdf5130dda685020f8e3dfef037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb3cbdf5130dda685020f8e3dfef037">&#9670;&nbsp;</a></span>accept()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool musen::Server::connect </td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1Session.html">Session</a>&gt; musen::Server::accept </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -189,124 +170,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a14bd00b4f16b5b07f2dfbf6d748f383f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14bd00b4f16b5b07f2dfbf6d748f383f">&#9670;&nbsp;</a></span>disconnect()</h2>
+<a id="a72ba716fefb493b4937ca5fd82129a31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ba716fefb493b4937ca5fd82129a31">&#9670;&nbsp;</a></span>get_socket()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool musen::Server::disconnect </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5f0918c4a732f95464b68136aefce2c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f0918c4a732f95464b68136aefce2c6">&#9670;&nbsp;</a></span>send_raw()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t musen::Server::send_raw </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const size_t &amp;&#160;</td>
-          <td class="paramname"><em>length</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="classmusen_1_1Sender.html#ae04f547873eb624b24ee22c1e0534ee4">musen::Sender</a>.</p>
-
-</div>
-</div>
-<a id="a4a82e562ce65ab4ee1030155ec1dbe76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a82e562ce65ab4ee1030155ec1dbe76">&#9670;&nbsp;</a></span>receive_raw()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t musen::Server::receive_raw </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const size_t &amp;&#160;</td>
-          <td class="paramname"><em>length</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="classmusen_1_1Receiver.html#aab5d5f4496cdde9717ba079b0513b580">musen::Receiver</a>.</p>
-
-</div>
-</div>
-<a id="aada785150534ebf9084e1125422182ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aada785150534ebf9084e1125422182ef">&#9670;&nbsp;</a></span>get_tcp_socket()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a>&gt; musen::Server::get_tcp_socket </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afe831a8ba856a277f1f0721dbb66e904"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe831a8ba856a277f1f0721dbb66e904">&#9670;&nbsp;</a></span>is_connected()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool musen::Server::is_connected </td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1Socket.html">Socket</a>&gt; musen::Server::get_socket </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -333,26 +204,9 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6f1a456fe377bd8f60ff230a8c95da34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f1a456fe377bd8f60ff230a8c95da34">&#9670;&nbsp;</a></span>get_new_sockfd()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int&amp; musen::Server::get_new_sockfd </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a547c118293fbb4dcdb021d7358c90c60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a547c118293fbb4dcdb021d7358c90c60">&#9670;&nbsp;</a></span>tcp_socket</h2>
+<a id="ac3682e72a4a182383f90e12cdedac3b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3682e72a4a182383f90e12cdedac3b3">&#9670;&nbsp;</a></span>socket</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -361,7 +215,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1TcpSocket.html">TcpSocket</a>&gt; musen::Server::tcp_socket</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1Socket.html">Socket</a>&gt; musen::Server::socket</td>
         </tr>
       </table>
   </td>
@@ -384,28 +238,6 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">int musen::Server::port</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a765d9a9e88fdbd884d1b06768840938d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a765d9a9e88fdbd884d1b06768840938d">&#9670;&nbsp;</a></span>new_sockfd</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int musen::Server::new_sockfd</td>
         </tr>
       </table>
   </td>

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['obtain_5frecipent_5fsas_90',['obtain_recipent_sas',['../classmusen_1_1Broadcaster.html#a098daa52b5745aac11136ef5b27a6f7c',1,'musen::Broadcaster']]],
-  ['obtain_5frecipent_5fsas_5ffrom_5fbroadcast_5fifas_91',['obtain_recipent_sas_from_broadcast_ifas',['../classmusen_1_1Broadcaster.html#a0f359ddfca667858acd633e76f59e1f2',1,'musen::Broadcaster']]],
-  ['obtain_5frecipent_5fsas_5ffrom_5ftarget_5fhosts_92',['obtain_recipent_sas_from_target_hosts',['../classmusen_1_1Broadcaster.html#ad8639a84e8ae4e75334adeefb05b6a16',1,'musen::Broadcaster']]]
+  ['receive_108',['receive',['../classmusen_1_1Receiver.html#a46a7ad6abe46a61513423f2baf6b44f1',1,'musen::Receiver::receive()'],['../classmusen_1_1Socket.html#a4ba14e95c000afaa2ad42cfd34bc6a1f',1,'musen::Socket::receive()']]],
+  ['receive_5fraw_109',['receive_raw',['../classmusen_1_1Receiver.html#aab5d5f4496cdde9717ba079b0513b580',1,'musen::Receiver::receive_raw()'],['../classmusen_1_1Client.html#a90bd2169cf2c66b6b9807f3ca914dfb5',1,'musen::Client::receive_raw()'],['../classmusen_1_1Session.html#a02b14f6724723dd314fed6e5d3d63395',1,'musen::Session::receive_raw()'],['../classmusen_1_1Listener.html#ac18d68fcb2c5226feb28a038fec74123',1,'musen::Listener::receive_raw()']]],
+  ['receive_5fstring_110',['receive_string',['../classmusen_1_1Receiver.html#a12a370f3778e35143f23868dd9570455',1,'musen::Receiver']]],
+  ['receive_5fstrings_111',['receive_strings',['../classmusen_1_1Receiver.html#a17ec374ad8c25c4fb9acb670653672ef',1,'musen::Receiver']]]
 ];

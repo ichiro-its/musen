@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Musen: include/musen/tcp/server.hpp Source File</title>
+<title>Musen: include/musen/tcp/session.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,10 +68,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">server.hpp</div>  </div>
+<div class="title">session.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="server_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright (c) 2021 ICHIRO ITS</span></div>
+<a href="session_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright (c) 2021 ICHIRO ITS</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// Permission is hereby granted, free of charge, to any person obtaining a copy</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">// of this software and associated documentation files (the &quot;Software&quot;), to deal</span></div>
@@ -91,48 +91,46 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// THE SOFTWARE.</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef MUSEN__TCP__SERVER_HPP_</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define MUSEN__TCP__SERVER_HPP_</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef MUSEN__TCP__SESSION_HPP_</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define MUSEN__TCP__SESSION_HPP_</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="session_8hpp.html">./session.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;../sender.hpp&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;../receiver.hpp&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;../socket.hpp&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacemusen.html">musen</a></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmusen_1_1Server.html">Server</a></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmusen_1_1Session.html">Session</a> : <span class="keyword">public</span> <a class="code" href="classmusen_1_1Sender.html">Sender</a>, <span class="keyword">public</span> <a class="code" href="classmusen_1_1Receiver.html">Receiver</a></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#ac2b8129ffdac8f269e88f4042547b104">   36</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classmusen_1_1Server.html#ac2b8129ffdac8f269e88f4042547b104">Server</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp; <a class="code" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">port</a>, std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">socket</a> = <a class="code" href="namespacemusen.html#a294684f89cedb171f62478303d67f3b5">make_tcp_socket</a>());</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#aa0963689f2bf84ee05ca77ece67c3da7">   37</a></span>&#160;  <a class="code" href="classmusen_1_1Server.html#aa0963689f2bf84ee05ca77ece67c3da7">~Server</a>();</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#aee13a058c690b71015d754a0d7759f32">   36</a></span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classmusen_1_1Session.html#aee13a058c690b71015d754a0d7759f32">Session</a>(std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f">socket</a>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#a2c1e41b6c93bff26db809fdc6f8d430b">   37</a></span>&#160;  <a class="code" href="classmusen_1_1Session.html#a2c1e41b6c93bff26db809fdc6f8d430b">~Session</a>();</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#aafb3cbdf5130dda685020f8e3dfef037">   39</a></span>&#160;  std::shared_ptr&lt;Session&gt; <a class="code" href="classmusen_1_1Server.html#aafb3cbdf5130dda685020f8e3dfef037">accept</a>();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#a72ba716fefb493b4937ca5fd82129a31">   41</a></span>&#160;  std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Server.html#a72ba716fefb493b4937ca5fd82129a31">get_socket</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#ab749a5779c48bfe5ce0017a24f6c5577">   42</a></span>&#160;  <span class="keyword">const</span> <span class="keywordtype">int</span> &amp; <a class="code" href="classmusen_1_1Server.html#ab749a5779c48bfe5ce0017a24f6c5577">get_port</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#ac5f92b8a2d63885ead4945fe714b9881">   39</a></span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classmusen_1_1Session.html#ac5f92b8a2d63885ead4945fe714b9881">send_raw</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * data, <span class="keyword">const</span> <span class="keywordtype">size_t</span> &amp; length) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#a02b14f6724723dd314fed6e5d3d63395">   40</a></span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classmusen_1_1Session.html#a02b14f6724723dd314fed6e5d3d63395">receive_raw</a>(<span class="keywordtype">char</span> * data, <span class="keyword">const</span> <span class="keywordtype">size_t</span> &amp; length) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#ac8eb303cc90d6dcbba14f16519939f57">   42</a></span>&#160;  std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Session.html#ac8eb303cc90d6dcbba14f16519939f57">get_socket</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">   45</a></span>&#160;  std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">socket</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">   46</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">port</a>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}  <span class="comment">// namespace musen</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// MUSEN__TCP__SERVER_HPP_</span></div>
-<div class="ttc" id="aclassmusen_1_1Server_html"><div class="ttname"><a href="classmusen_1_1Server.html">musen::Server</a></div><div class="ttdef"><b>Definition:</b> server.hpp:34</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_a562c3c31f7c77d6007ac5f54a10eedaa"><div class="ttname"><a href="classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa">musen::Server::port</a></div><div class="ttdeci">int port</div><div class="ttdef"><b>Definition:</b> server.hpp:46</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_a72ba716fefb493b4937ca5fd82129a31"><div class="ttname"><a href="classmusen_1_1Server.html#a72ba716fefb493b4937ca5fd82129a31">musen::Server::get_socket</a></div><div class="ttdeci">std::shared_ptr&lt; Socket &gt; get_socket() const</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_aa0963689f2bf84ee05ca77ece67c3da7"><div class="ttname"><a href="classmusen_1_1Server.html#aa0963689f2bf84ee05ca77ece67c3da7">musen::Server::~Server</a></div><div class="ttdeci">~Server()</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_aafb3cbdf5130dda685020f8e3dfef037"><div class="ttname"><a href="classmusen_1_1Server.html#aafb3cbdf5130dda685020f8e3dfef037">musen::Server::accept</a></div><div class="ttdeci">std::shared_ptr&lt; Session &gt; accept()</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_ab749a5779c48bfe5ce0017a24f6c5577"><div class="ttname"><a href="classmusen_1_1Server.html#ab749a5779c48bfe5ce0017a24f6c5577">musen::Server::get_port</a></div><div class="ttdeci">const int &amp; get_port() const</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_ac2b8129ffdac8f269e88f4042547b104"><div class="ttname"><a href="classmusen_1_1Server.html#ac2b8129ffdac8f269e88f4042547b104">musen::Server::Server</a></div><div class="ttdeci">Server(const int &amp;port, std::shared_ptr&lt; Socket &gt; socket=make_tcp_socket())</div></div>
-<div class="ttc" id="aclassmusen_1_1Server_html_ac3682e72a4a182383f90e12cdedac3b3"><div class="ttname"><a href="classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3">musen::Server::socket</a></div><div class="ttdeci">std::shared_ptr&lt; Socket &gt; socket</div><div class="ttdef"><b>Definition:</b> server.hpp:45</div></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f">   45</a></span>&#160;  std::shared_ptr&lt;Socket&gt; <a class="code" href="classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f">socket</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}  <span class="comment">// namespace musen</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// MUSEN__TCP__SESSION_HPP_</span></div>
+<div class="ttc" id="aclassmusen_1_1Receiver_html"><div class="ttname"><a href="classmusen_1_1Receiver.html">musen::Receiver</a></div><div class="ttdef"><b>Definition:</b> receiver.hpp:33</div></div>
+<div class="ttc" id="aclassmusen_1_1Sender_html"><div class="ttname"><a href="classmusen_1_1Sender.html">musen::Sender</a></div><div class="ttdef"><b>Definition:</b> sender.hpp:31</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html"><div class="ttname"><a href="classmusen_1_1Session.html">musen::Session</a></div><div class="ttdef"><b>Definition:</b> session.hpp:34</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_a02b14f6724723dd314fed6e5d3d63395"><div class="ttname"><a href="classmusen_1_1Session.html#a02b14f6724723dd314fed6e5d3d63395">musen::Session::receive_raw</a></div><div class="ttdeci">size_t receive_raw(char *data, const size_t &amp;length) override</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_a2c1e41b6c93bff26db809fdc6f8d430b"><div class="ttname"><a href="classmusen_1_1Session.html#a2c1e41b6c93bff26db809fdc6f8d430b">musen::Session::~Session</a></div><div class="ttdeci">~Session()</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_ac5f92b8a2d63885ead4945fe714b9881"><div class="ttname"><a href="classmusen_1_1Session.html#ac5f92b8a2d63885ead4945fe714b9881">musen::Session::send_raw</a></div><div class="ttdeci">size_t send_raw(const char *data, const size_t &amp;length) override</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_ac8eb303cc90d6dcbba14f16519939f57"><div class="ttname"><a href="classmusen_1_1Session.html#ac8eb303cc90d6dcbba14f16519939f57">musen::Session::get_socket</a></div><div class="ttdeci">std::shared_ptr&lt; Socket &gt; get_socket() const</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_acc91f882c48ed4e548deae971d997b9f"><div class="ttname"><a href="classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f">musen::Session::socket</a></div><div class="ttdeci">std::shared_ptr&lt; Socket &gt; socket</div><div class="ttdef"><b>Definition:</b> session.hpp:45</div></div>
+<div class="ttc" id="aclassmusen_1_1Session_html_aee13a058c690b71015d754a0d7759f32"><div class="ttname"><a href="classmusen_1_1Session.html#aee13a058c690b71015d754a0d7759f32">musen::Session::Session</a></div><div class="ttdeci">Session(std::shared_ptr&lt; Socket &gt; socket)</div></div>
 <div class="ttc" id="anamespacemusen_html"><div class="ttname"><a href="namespacemusen.html">musen</a></div><div class="ttdef"><b>Definition:</b> address.hpp:30</div></div>
-<div class="ttc" id="anamespacemusen_html_a294684f89cedb171f62478303d67f3b5"><div class="ttname"><a href="namespacemusen.html#a294684f89cedb171f62478303d67f3b5">musen::make_tcp_socket</a></div><div class="ttdeci">std::shared_ptr&lt; Socket &gt; make_tcp_socket()</div></div>
-<div class="ttc" id="asession_8hpp_html"><div class="ttname"><a href="session_8hpp.html">session.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

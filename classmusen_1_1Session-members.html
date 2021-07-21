@@ -63,31 +63,29 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespacemusen.html">musen</a></li><li class="navelem"><a class="el" href="classmusen_1_1Client.html">Client</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacemusen.html">musen</a></li><li class="navelem"><a class="el" href="classmusen_1_1Session.html">Session</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">musen::Client Member List</div>  </div>
+<div class="title">musen::Session Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="classmusen_1_1Client.html">musen::Client</a>, including all inherited members.</p>
+<p>This is the complete list of members for <a class="el" href="classmusen_1_1Session.html">musen::Session</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Client.html#a3c22df4ba97d1dec017cfc08799175da">Client</a>(const Address &amp;server_address, std::shared_ptr&lt; Socket &gt; socket=make_tcp_socket())</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classmusen_1_1Client.html#a404fa262a95301d3748972a4d8726a47">get_server_address</a>() const</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Client.html#a37380548f9e110e60ac6a27ae949ace9">get_socket</a>() const</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Session.html#ac8eb303cc90d6dcbba14f16519939f57">get_socket</a>() const</td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classmusen_1_1Receiver.html#a46a7ad6abe46a61513423f2baf6b44f1">receive</a>()</td><td class="entry"><a class="el" href="classmusen_1_1Receiver.html">musen::Receiver</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Client.html#a90bd2169cf2c66b6b9807f3ca914dfb5">receive_raw</a>(char *data, const size_t &amp;length) override</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Session.html#a02b14f6724723dd314fed6e5d3d63395">receive_raw</a>(char *data, const size_t &amp;length) override</td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classmusen_1_1Receiver.html#a12a370f3778e35143f23868dd9570455">receive_string</a>(const size_t &amp;length)</td><td class="entry"><a class="el" href="classmusen_1_1Receiver.html">musen::Receiver</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Receiver.html#a17ec374ad8c25c4fb9acb670653672ef">receive_strings</a>(const size_t &amp;length, const std::string &amp;delimiter=&quot;,&quot;)</td><td class="entry"><a class="el" href="classmusen_1_1Receiver.html">musen::Receiver</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classmusen_1_1Sender.html#a24feaa19e67de407d0e63810a23234e2">send</a>(const T &amp;data)</td><td class="entry"><a class="el" href="classmusen_1_1Sender.html">musen::Sender</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Client.html#ad52ca943945b0a8a084589f3420b446a">send_raw</a>(const char *data, const size_t &amp;length) override</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Session.html#ac5f92b8a2d63885ead4945fe714b9881">send_raw</a>(const char *data, const size_t &amp;length) override</td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classmusen_1_1Sender.html#ae7d478644c74c77ff78a15163172edeb">send_string</a>(const std::string &amp;data)</td><td class="entry"><a class="el" href="classmusen_1_1Sender.html">musen::Sender</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Sender.html#ab594fac944301b5d627530d9634aa1f9">send_strings</a>(const std::vector&lt; std::string &gt; &amp;data, const std::string &amp;delimiter=&quot;,&quot;)</td><td class="entry"><a class="el" href="classmusen_1_1Sender.html">musen::Sender</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classmusen_1_1Client.html#afae55a36bc37458aca4f49b7b92d3af0">server_address</a></td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Client.html#a6b2e96d2c860546c0f4224bd3aa7a5c3">socket</a></td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classmusen_1_1Client.html#a01a1f0e799f68f1593229175d7442327">~Client</a>()</td><td class="entry"><a class="el" href="classmusen_1_1Client.html">musen::Client</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classmusen_1_1Session.html#aee13a058c690b71015d754a0d7759f32">Session</a>(std::shared_ptr&lt; Socket &gt; socket)</td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f">socket</a></td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classmusen_1_1Session.html#a2c1e41b6c93bff26db809fdc6f8d430b">~Session</a>()</td><td class="entry"><a class="el" href="classmusen_1_1Session.html">musen::Session</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

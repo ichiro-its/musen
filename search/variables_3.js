@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['port_106',['port',['../classmusen_1_1Client.html#ac4d4f7aa2c0328766310f77d8137c1d8',1,'musen::Client::port()'],['../classmusen_1_1Server.html#a562c3c31f7c77d6007ac5f54a10eedaa',1,'musen::Server::port()'],['../classmusen_1_1Broadcaster.html#a37de20f921df9e92185d730dc7e8a2ea',1,'musen::Broadcaster::port()'],['../classmusen_1_1Listener.html#aff929504d5a01dc8e60418d5edf3b8ae',1,'musen::Listener::port()']]]
+  ['server_5faddress_133',['server_address',['../classmusen_1_1Client.html#afae55a36bc37458aca4f49b7b92d3af0',1,'musen::Client']]],
+  ['socket_134',['socket',['../classmusen_1_1Client.html#a6b2e96d2c860546c0f4224bd3aa7a5c3',1,'musen::Client::socket()'],['../classmusen_1_1Server.html#ac3682e72a4a182383f90e12cdedac3b3',1,'musen::Server::socket()'],['../classmusen_1_1Session.html#acc91f882c48ed4e548deae971d997b9f',1,'musen::Session::socket()'],['../classmusen_1_1Broadcaster.html#afd683e02ce6e05a2773af890252a9d0d',1,'musen::Broadcaster::socket()'],['../classmusen_1_1Listener.html#a42e5e49d83fa87ae12dfcc28975e90e5',1,'musen::Listener::socket()']]]
 ];

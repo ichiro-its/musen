@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['basesocket_76',['BaseSocket',['../classmusen_1_1BaseSocket.html#a5f327bd880fe64f993ffaa76276fc86b',1,'musen::BaseSocket']]],
-  ['broadcaster_77',['Broadcaster',['../classmusen_1_1Broadcaster.html#a924b65bbe9971689d8c7f930e394ac88',1,'musen::Broadcaster']]]
+  ['bind_88',['bind',['../classmusen_1_1Socket.html#ad86a2ec9570e60d770e07ce3e8fb26a6',1,'musen::Socket']]],
+  ['broadcaster_89',['Broadcaster',['../classmusen_1_1Broadcaster.html#a87a6826ca6d994085916a1e5ebb12ae2',1,'musen::Broadcaster']]]
 ];

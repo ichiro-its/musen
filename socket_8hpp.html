@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Musen: include/musen/socket/udp_socket.hpp File Reference</title>
+<title>Musen: include/musen/socket.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,30 +63,45 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_015a68ce2cdb5fb7a016dcf80444af9a.html">musen</a></li><li class="navelem"><a class="el" href="dir_10bdb6790b507bc06daa256cdc91feef.html">socket</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_015a68ce2cdb5fb7a016dcf80444af9a.html">musen</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">udp_socket.hpp File Reference</div>  </div>
+<div class="title">socket.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="base__socket_8hpp_source.html">./base_socket.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;sys/socket.h&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;system_error&gt;</code><br />
+<code>#include &quot;<a class="el" href="address_8hpp_source.html">./address.hpp</a>&quot;</code><br />
 </div>
-<p><a href="udp__socket_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="socket_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1UdpSocket.html">musen::UdpSocket</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Socket.html">musen::Socket</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacemusen"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemusen.html">musen</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a294684f89cedb171f62478303d67f3b5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Socket &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemusen.html#a294684f89cedb171f62478303d67f3b5">musen::make_tcp_socket</a> ()</td></tr>
+<tr class="separator:a294684f89cedb171f62478303d67f3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a592ebeb55f7f05908179111beb7110e3"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Socket &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemusen.html#a592ebeb55f7f05908179111beb7110e3">musen::make_udp_socket</a> ()</td></tr>
+<tr class="separator:a592ebeb55f7f05908179111beb7110e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac70dda6887400f1a78aba8771777dfc1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Socket &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemusen.html#ac70dda6887400f1a78aba8771777dfc1">musen::make_blocking_tcp_socket</a> ()</td></tr>
+<tr class="separator:ac70dda6887400f1a78aba8771777dfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a412b522c7618731afac80dc8974c966a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; Socket &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacemusen.html#a412b522c7618731afac80dc8974c966a">musen::make_blocking_udp_socket</a> ()</td></tr>
+<tr class="separator:a412b522c7618731afac80dc8974c966a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

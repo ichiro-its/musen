@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['host_104',['host',['../classmusen_1_1Client.html#a8cffdf1a7403f7951746a708d4ce7050',1,'musen::Client']]]
+  ['ip_131',['ip',['../structmusen_1_1Address.html#ad7a40bc24d8e549e7744e7ffffceb7f9',1,'musen::Address']]]
 ];

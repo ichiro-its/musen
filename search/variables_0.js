@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['broadcast_103',['broadcast',['../classmusen_1_1Broadcaster.html#a2bbb0420de420a32d4a65ac39b0b2128',1,'musen::Broadcaster']]]
+  ['broadcast_5faddresses_130',['broadcast_addresses',['../classmusen_1_1Broadcaster.html#a7b588e17d99650424ef83785fcd6f398',1,'musen::Broadcaster']]]
 ];

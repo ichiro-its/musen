@@ -89,18 +89,14 @@ Inheritance diagram for musen::Listener:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5e4ab53eaab995f9a63e2003f5cc7e90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a5e4ab53eaab995f9a63e2003f5cc7e90">Listener</a> (const int &amp;<a class="el" href="classmusen_1_1Listener.html#aff929504d5a01dc8e60418d5edf3b8ae">port</a>, std::shared_ptr&lt; <a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a> &gt; <a class="el" href="classmusen_1_1Listener.html#a34ea61ef718310afc8be2526119f8229">udp_socket</a>=std::make_shared&lt; <a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a> &gt;())</td></tr>
-<tr class="separator:a5e4ab53eaab995f9a63e2003f5cc7e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80cbc792de04010c9baeec84c968ad03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a80cbc792de04010c9baeec84c968ad03">connect</a> ()</td></tr>
-<tr class="separator:a80cbc792de04010c9baeec84c968ad03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2607044d43c71274a633adb89bbedcc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#ab2607044d43c71274a633adb89bbedcc">disconnect</a> ()</td></tr>
-<tr class="separator:ab2607044d43c71274a633adb89bbedcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d1fa36b7ec36376d2f7f07a6040c3ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a7d1fa36b7ec36376d2f7f07a6040c3ea">Listener</a> (const int &amp;<a class="el" href="classmusen_1_1Listener.html#aff929504d5a01dc8e60418d5edf3b8ae">port</a>, std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt; <a class="el" href="classmusen_1_1Listener.html#a42e5e49d83fa87ae12dfcc28975e90e5">socket</a>=<a class="el" href="namespacemusen.html#a592ebeb55f7f05908179111beb7110e3">make_udp_socket</a>())</td></tr>
+<tr class="separator:a7d1fa36b7ec36376d2f7f07a6040c3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8c5b09a17c4c0a1c50df28f55513e8e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#ad8c5b09a17c4c0a1c50df28f55513e8e">~Listener</a> ()</td></tr>
+<tr class="separator:ad8c5b09a17c4c0a1c50df28f55513e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac18d68fcb2c5226feb28a038fec74123"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#ac18d68fcb2c5226feb28a038fec74123">receive_raw</a> (char *data, const size_t &amp;length) override</td></tr>
 <tr class="separator:ac18d68fcb2c5226feb28a038fec74123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8261bfc2db9f5858968a99e51f1dac3f"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a8261bfc2db9f5858968a99e51f1dac3f">get_udp_socket</a> () const</td></tr>
-<tr class="separator:a8261bfc2db9f5858968a99e51f1dac3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb7af013b25e072efcc6965cb16435d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#adb7af013b25e072efcc6965cb16435d3">is_connected</a> () const</td></tr>
-<tr class="separator:adb7af013b25e072efcc6965cb16435d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5bfe4727f90eef9d115728dc4366c0c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#ae5bfe4727f90eef9d115728dc4366c0c">get_socket</a> () const</td></tr>
+<tr class="separator:ae5bfe4727f90eef9d115728dc4366c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7731afc877223f747e30988ea2a8401a"><td class="memItemLeft" align="right" valign="top">const int &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a7731afc877223f747e30988ea2a8401a">get_port</a> () const</td></tr>
 <tr class="separator:a7731afc877223f747e30988ea2a8401a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classmusen_1_1Receiver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classmusen_1_1Receiver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classmusen_1_1Receiver.html">musen::Receiver</a></td></tr>
@@ -114,14 +110,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a34ea61ef718310afc8be2526119f8229"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a34ea61ef718310afc8be2526119f8229">udp_socket</a></td></tr>
-<tr class="separator:a34ea61ef718310afc8be2526119f8229"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42e5e49d83fa87ae12dfcc28975e90e5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#a42e5e49d83fa87ae12dfcc28975e90e5">socket</a></td></tr>
+<tr class="separator:a42e5e49d83fa87ae12dfcc28975e90e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff929504d5a01dc8e60418d5edf3b8ae"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmusen_1_1Listener.html#aff929504d5a01dc8e60418d5edf3b8ae">port</a></td></tr>
 <tr class="separator:aff929504d5a01dc8e60418d5edf3b8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5e4ab53eaab995f9a63e2003f5cc7e90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e4ab53eaab995f9a63e2003f5cc7e90">&#9670;&nbsp;</a></span>Listener()</h2>
+<a id="a7d1fa36b7ec36376d2f7f07a6040c3ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d1fa36b7ec36376d2f7f07a6040c3ea">&#9670;&nbsp;</a></span>Listener()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,8 +134,8 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a> &gt;&#160;</td>
-          <td class="paramname"><em>udp_socket</em> = <code>std::make_shared&lt;&#160;<a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a>&#160;&gt;()</code>&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classmusen_1_1Socket.html">Socket</a> &gt;&#160;</td>
+          <td class="paramname"><em>socket</em> = <code><a class="el" href="namespacemusen.html#a592ebeb55f7f05908179111beb7110e3">make_udp_socket</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -156,41 +152,24 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad8c5b09a17c4c0a1c50df28f55513e8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8c5b09a17c4c0a1c50df28f55513e8e">&#9670;&nbsp;</a></span>~Listener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">musen::Listener::~Listener </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a80cbc792de04010c9baeec84c968ad03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80cbc792de04010c9baeec84c968ad03">&#9670;&nbsp;</a></span>connect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool musen::Listener::connect </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab2607044d43c71274a633adb89bbedcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2607044d43c71274a633adb89bbedcc">&#9670;&nbsp;</a></span>disconnect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool musen::Listener::disconnect </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ac18d68fcb2c5226feb28a038fec74123"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac18d68fcb2c5226feb28a038fec74123">&#9670;&nbsp;</a></span>receive_raw()</h2>
 
@@ -229,31 +208,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8261bfc2db9f5858968a99e51f1dac3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8261bfc2db9f5858968a99e51f1dac3f">&#9670;&nbsp;</a></span>get_udp_socket()</h2>
+<a id="ae5bfe4727f90eef9d115728dc4366c0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5bfe4727f90eef9d115728dc4366c0c">&#9670;&nbsp;</a></span>get_socket()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a>&gt; musen::Listener::get_udp_socket </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adb7af013b25e072efcc6965cb16435d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb7af013b25e072efcc6965cb16435d3">&#9670;&nbsp;</a></span>is_connected()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool musen::Listener::is_connected </td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1Socket.html">Socket</a>&gt; musen::Listener::get_socket </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -281,8 +243,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a34ea61ef718310afc8be2526119f8229"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34ea61ef718310afc8be2526119f8229">&#9670;&nbsp;</a></span>udp_socket</h2>
+<a id="a42e5e49d83fa87ae12dfcc28975e90e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42e5e49d83fa87ae12dfcc28975e90e5">&#9670;&nbsp;</a></span>socket</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,7 +253,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1UdpSocket.html">UdpSocket</a>&gt; musen::Listener::udp_socket</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classmusen_1_1Socket.html">Socket</a>&gt; musen::Listener::socket</td>
         </tr>
       </table>
   </td>
