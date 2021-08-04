@@ -66,6 +66,10 @@ if(BUILD_TESTING)
     COMMAND cppcheck "examples" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
+  add_test(NAME ${PROJECT_NAME}_cpplint_test
+    COMMAND cpplint --root=include --recursive "examples" "include" "src" "test"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
   # find_package(ament_cmake_gtest REQUIRED)
   # find_package(ament_lint_auto REQUIRED)
 
