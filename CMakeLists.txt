@@ -14,7 +14,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 endif()
 
-find_package(ament_cmake REQUIRED)
+# find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY "include" DESTINATION ".")
 
@@ -30,8 +30,8 @@ add_library(${PROJECT_NAME} SHARED
   "src/socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 
 install(TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
@@ -60,28 +60,34 @@ foreach(EXECUTABLE ${EXECUTABLES})
 endforeach()
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_gtest REQUIRED)
-  find_package(ament_lint_auto REQUIRED)
+  enable_testing()
 
-  ament_add_gtest(${PROJECT_NAME}_tests
-    "test/send_and_receive/raw_test.cpp"
-    "test/send_and_receive/string_test.cpp"
-    "test/send_and_receive/strings_test.cpp"
-    "test/send_and_receive/struct_test.cpp"
-    "test/socket/connection_test.cpp"
-    "test/socket/creation_test.cpp"
-    "test/socket/manipulation_test.cpp"
-    "test/address_test.cpp"
-    "test/broadcast_and_listen_test.cpp"
-    "test/server_and_client_test.cpp")
+  add_test(NAME ${PROJECT_NAME}_cppcheck_test
+    COMMAND cppcheck "examples" "src" "test"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
+  # find_package(ament_cmake_gtest REQUIRED)
+  # find_package(ament_lint_auto REQUIRED)
 
-  target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+  # ament_add_gtest(${PROJECT_NAME}_tests
+  #   "test/send_and_receive/raw_test.cpp"
+  #   "test/send_and_receive/string_test.cpp"
+  #   "test/send_and_receive/strings_test.cpp"
+  #   "test/send_and_receive/struct_test.cpp"
+  #   "test/socket/connection_test.cpp"
+  #   "test/socket/creation_test.cpp"
+  #   "test/socket/manipulation_test.cpp"
+  #   "test/address_test.cpp"
+  #   "test/broadcast_and_listen_test.cpp"
+  #   "test/server_and_client_test.cpp")
 
-  ament_lint_auto_find_test_dependencies()
+  # target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
+
+  # target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+
+  # ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories("include")
-ament_export_libraries(${PROJECT_NAME})
-ament_package()
+# ament_export_include_directories("include")
+# ament_export_libraries(${PROJECT_NAME})
+# ament_package()
