@@ -14,5 +14,23 @@ jobs:
         with:
           path: musen
 
-      - name: Build and test workspace
-        uses: ichiro-its/ros2-build-and-test-action@main
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck python3-pip
+          sudo pip install cpplint
+
+      - name: Create a build directory
+        run: mkdir build
+
+      - name: Configure CMake
+        working-directory: build
+        run: cmake -DBUILD_TESTING=ON ../musen
+
+      - name: Build the project
+        working-directory: build
+        run: make -j8
+
+      - name: Test the project
+        working-directory: build
+        run: ctest --verbose
