@@ -19,17 +19,15 @@
 // THE SOFTWARE.
 
 #include <fcntl.h>
-#include <musen/tcp/server.hpp>
 
 #include <memory>
 
-namespace musen
-{
+#include "musen/tcp/server.hpp"
+
+namespace musen {
 
 Server::Server(const int & port, std::shared_ptr<Socket> socket)
-: socket(socket),
-  port(port)
-{
+: socket(socket), port(port) {
   // Bind the socket with the serve address
   socket->bind(make_any_address(port));
 
@@ -37,13 +35,11 @@ Server::Server(const int & port, std::shared_ptr<Socket> socket)
   socket->listen();
 }
 
-Server::~Server()
-{
+Server::~Server() {
   socket = nullptr;
 }
 
-std::shared_ptr<Session> Server::accept()
-{
+std::shared_ptr<Session> Server::accept() {
   try {
     // Accept incoming connection
     auto session_socket = socket->accept();
@@ -62,13 +58,11 @@ std::shared_ptr<Session> Server::accept()
   }
 }
 
-std::shared_ptr<Socket> Server::get_socket() const
-{
+std::shared_ptr<Socket> Server::get_socket() const {
   return socket;
 }
 
-const int & Server::get_port() const
-{
+const int & Server::get_port() const {
   return port;
 }
 

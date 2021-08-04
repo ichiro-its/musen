@@ -18,9 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
-#include <musen/musen.hpp>
-
 #include <cstdlib>
 #include <list>
 #include <memory>
@@ -28,13 +25,14 @@
 #include <thread>
 #include <vector>
 
-using namespace std::chrono_literals;
+#include "gtest/gtest.h"
+#include "musen/musen.hpp"
 
-class ServerAndClientTest : public ::testing::Test
-{
-protected:
-  void SetUp() override
-  {
+using std::chrono_literals::operator""ms;
+
+class ServerAndClientTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
     std::srand(std::time(0));
 
     server_address.ip = "127.0.0.1";
@@ -90,8 +88,7 @@ protected:
     }
   }
 
-  void TearDown() override
-  {
+  void TearDown() override {
     server = nullptr;
     server_thread->join();
   }

@@ -18,30 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/tcp/session.hpp>
-
 #include <memory>
 
-namespace musen
-{
+#include "musen/tcp/session.hpp"
+
+namespace musen {
 
 Session::Session(std::shared_ptr<Socket> socket)
-: socket(socket)
-{
+: socket(socket) {
 }
 
-Session::~Session()
-{
+Session::~Session() {
   socket = nullptr;
 }
 
-size_t Session::send_raw(const char * data, const size_t & length)
-{
+size_t Session::send_raw(const char * data, const size_t & length) {
   return socket->send(data, length);
 }
 
-size_t Session::receive_raw(char * data, const size_t & length)
-{
+size_t Session::receive_raw(char * data, const size_t & length) {
   try {
     return socket->receive(data, length);
   } catch (const std::system_error & err) {
@@ -54,8 +49,7 @@ size_t Session::receive_raw(char * data, const size_t & length)
   }
 }
 
-std::shared_ptr<Socket> Session::get_socket() const
-{
+std::shared_ptr<Socket> Session::get_socket() const {
   return socket;
 }
 

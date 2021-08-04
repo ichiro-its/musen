@@ -18,27 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/sender.hpp>
-
 #include <string>
 #include <vector>
 
-namespace musen
-{
+#include "musen/sender.hpp"
 
-size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/)
-{
+namespace musen {
+
+size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/) {
   return 0;
 }
 
-size_t Sender::send_string(const std::string & data)
-{
+size_t Sender::send_string(const std::string & data) {
   return send_raw(data.c_str(), data.size());
 }
 
 size_t Sender::send_strings(
-  const std::vector<std::string> & data, const std::string & delimiter)
-{
+  const std::vector<std::string> & data, const std::string & delimiter) {
   // Merge data using the delimiter
   std::string merged_data = "";
   for (size_t i = 0; i < data.size(); ++i) {

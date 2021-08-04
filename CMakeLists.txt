@@ -67,7 +67,7 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_test(NAME ${PROJECT_NAME}_cpplint_test
-    COMMAND cpplint --root=include --recursive "examples" "include" "src" "test"
+    COMMAND cpplint --linelength=120 --filter=-build/c++11 --recursive "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   # find_package(ament_cmake_gtest REQUIRED)

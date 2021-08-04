@@ -18,18 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/musen.hpp>
-
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <thread>
 
-using namespace std::chrono_literals;
+#include "musen/musen.hpp"
 
-int main()
-{
+using std::chrono_literals::operator""s;
+
+int main() {
   int port = 5000;
 
   try {

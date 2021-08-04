@@ -19,18 +19,16 @@
 // THE SOFTWARE.
 
 #include <fcntl.h>
-#include <musen/tcp/client.hpp>
 
 #include <memory>
 
-namespace musen
-{
+#include "musen/tcp/client.hpp"
+
+namespace musen {
 
 Client::Client(
   const Address & server_address, std::shared_ptr<Socket> socket)
-: socket(socket),
-  server_address(server_address)
-{
+: socket(socket), server_address(server_address) {
   // Disable non blocking during connect
   auto was_non_blocking = socket->get_status_flag(O_NONBLOCK);
   if (was_non_blocking) {
@@ -45,28 +43,23 @@ Client::Client(
   }
 }
 
-Client::~Client()
-{
+Client::~Client() {
   socket = nullptr;
 }
 
-size_t Client::send_raw(const char * data, const size_t & length)
-{
+size_t Client::send_raw(const char * data, const size_t & length) {
   return socket->send(data, length);
 }
 
-size_t Client::receive_raw(char * data, const size_t & length)
-{
+size_t Client::receive_raw(char * data, const size_t & length) {
   return socket->receive(data, length);
 }
 
-std::shared_ptr<Socket> Client::get_socket() const
-{
+std::shared_ptr<Socket> Client::get_socket() const {
   return socket;
 }
 
-const Address & Client::get_server_address() const
-{
+const Address & Client::get_server_address() const {
   return server_address;
 }
 

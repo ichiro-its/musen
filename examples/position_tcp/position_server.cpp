@@ -18,25 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/musen.hpp>
-
 #include <cstdlib>
 #include <iostream>
 #include <list>
 #include <memory>
 #include <thread>
 
-using namespace std::chrono_literals;
+#include "musen/musen.hpp"
 
-struct Position
-{
+using std::chrono_literals::operator""s;
+
+struct Position {
   int x;
   int y;
   int z;
 };
 
-int main()
-{
+int main() {
   int port = 5000;
 
   try {

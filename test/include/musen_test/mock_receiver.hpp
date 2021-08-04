@@ -18,31 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN_TEST__MOCK_RECEIVER_HPP_
-#define MUSEN_TEST__MOCK_RECEIVER_HPP_
-
-#include <musen/musen.hpp>
+#pragma once
 
 #include <algorithm>
 #include <memory>
 #include <queue>
 #include <vector>
 
-namespace musen_test
-{
+#include "musen/musen.hpp"
+
+namespace musen_test {
 
 using Buffers = std::queue<std::vector<char>>;
 
-class MockReceiver : public musen::Receiver
-{
-public:
+class MockReceiver : public musen::Receiver {
+ public:
   explicit MockReceiver(std::shared_ptr<Buffers> buffers)
-  : buffers(buffers)
-  {
+  : buffers(buffers) {
   }
 
-  size_t receive_raw(char * data, const size_t & length) override
-  {
+  size_t receive_raw(char * data, const size_t & length) override {
     if (buffers->empty()) {
       return 0;
     }
@@ -59,10 +54,8 @@ public:
     }
   }
 
-private:
+ private:
   std::shared_ptr<Buffers> buffers;
 };
 
 }  // namespace musen_test
-
-#endif  // MUSEN_TEST__MOCK_RECEIVER_HPP_

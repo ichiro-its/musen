@@ -18,18 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SOCKET_HPP_
-#define MUSEN__SOCKET_HPP_
+#pragma once
 
 #include <sys/socket.h>
 
 #include <memory>
 #include <system_error>
 
-#include "./address.hpp"
+#include "musen/address.hpp"
 
-namespace musen
-{
+namespace musen {
 
 class Socket;
 
@@ -39,9 +37,8 @@ std::shared_ptr<Socket> make_udp_socket();
 std::shared_ptr<Socket> make_blocking_tcp_socket();
 std::shared_ptr<Socket> make_blocking_udp_socket();
 
-class Socket
-{
-public:
+class Socket {
+ public:
   explicit Socket(const int & fd);
   Socket(const int & domain, const int & type, const int & protocol);
 
@@ -72,21 +69,19 @@ public:
 
   const int & get_fd() const;
 
-private:
+ private:
   int fd;
 };
 
 template<typename T>
-void Socket::set_option(const int & key, const T & value)
-{
+void Socket::set_option(const int & key, const T & value) {
   if (setsockopt(fd, SOL_SOCKET, key, &value, sizeof(value)) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
 }
 
 template<typename T>
-T Socket::get_option(const int & key) const
-{
+T Socket::get_option(const int & key) const {
   T value;
   socklen_t value_len = sizeof(value);
   if (getsockopt(fd, SOL_SOCKET, key, &value, &value_len) == -1) {
@@ -97,5 +92,3 @@ T Socket::get_option(const int & key) const
 }
 
 }  // namespace musen
-
-#endif  // MUSEN__SOCKET_HPP_

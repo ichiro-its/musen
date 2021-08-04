@@ -19,8 +19,9 @@
 // THE SOFTWARE.
 
 #include <fcntl.h>
-#include <gtest/gtest.h>
-#include <musen/musen.hpp>
+
+#include "gtest/gtest.h"
+#include "musen/musen.hpp"
 
 TEST(SocketCreationTest, MakeTcp) {
   auto socket = musen::make_tcp_socket();

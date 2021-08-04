@@ -18,18 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__SENDER_HPP_
-#define MUSEN__SENDER_HPP_
+#pragma once
 
 #include <string>
 #include <vector>
 
-namespace musen
-{
+namespace musen {
 
-class Sender
-{
-public:
+class Sender {
+ public:
   virtual size_t send_raw(const char * data, const size_t & length);
 
   size_t send_string(const std::string & data);
@@ -40,11 +37,8 @@ public:
 };
 
 template<typename T>
-size_t Sender::send(const T & data)
-{
+size_t Sender::send(const T & data) {
   return send_raw((const char *)&data, sizeof(data));
 }
 
 }  // namespace musen
-
-#endif  // MUSEN__SENDER_HPP_

@@ -18,22 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
-#include <musen/musen.hpp>
-
 #include <cstdlib>
 #include <memory>
 #include <string>
 #include <vector>
 #include <thread>
 
-using namespace std::chrono_literals;
+#include "gtest/gtest.h"
+#include "musen/musen.hpp"
 
-class BroadcastAndListenTest : public ::testing::Test
-{
-protected:
-  void SetUp() override
-  {
+using std::chrono_literals::operator""ms;
+
+class BroadcastAndListenTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
     std::srand(std::time(0));
 
     port = 5000 + std::rand() % 1000;

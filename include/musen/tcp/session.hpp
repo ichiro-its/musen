@@ -18,21 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__TCP__SESSION_HPP_
-#define MUSEN__TCP__SESSION_HPP_
+#pragma once
 
 #include <memory>
 
-#include "../sender.hpp"
-#include "../receiver.hpp"
-#include "../socket.hpp"
+#include "musen/sender.hpp"
+#include "musen/receiver.hpp"
+#include "musen/socket.hpp"
 
-namespace musen
-{
+namespace musen {
 
-class Session : public Sender, public Receiver
-{
-public:
+class Session : public Sender, public Receiver {
+ public:
   explicit Session(std::shared_ptr<Socket> socket);
   ~Session();
 
@@ -41,10 +38,8 @@ public:
 
   std::shared_ptr<Socket> get_socket() const;
 
-protected:
+ protected:
   std::shared_ptr<Socket> socket;
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__TCP__SESSION_HPP_

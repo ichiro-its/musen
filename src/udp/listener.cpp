@@ -18,17 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/udp/listener.hpp>
-
 #include <memory>
 
-namespace musen
-{
+#include "musen/udp/listener.hpp"
+
+namespace musen {
 
 Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
-: socket(socket),
-  port(port)
-{
+: socket(socket), port(port) {
   // Enable reuse port
   socket->set_option(SO_REUSEPORT, 1);
 
@@ -36,23 +33,19 @@ Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
   socket->bind(make_any_address(port));
 }
 
-Listener::~Listener()
-{
+Listener::~Listener() {
   socket = nullptr;
 }
 
-size_t Listener::receive_raw(char * data, const size_t & length)
-{
+size_t Listener::receive_raw(char * data, const size_t & length) {
   return socket->receive(data, length);
 }
 
-std::shared_ptr<Socket> Listener::get_socket() const
-{
+std::shared_ptr<Socket> Listener::get_socket() const {
   return socket;
 }
 
-const int & Listener::get_port() const
-{
+const int & Listener::get_port() const {
   return port;
 }
 

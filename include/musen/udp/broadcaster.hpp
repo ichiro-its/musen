@@ -18,23 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__UDP__BROADCASTER_HPP_
-#define MUSEN__UDP__BROADCASTER_HPP_
+#pragma once
 
 #include <list>
 #include <memory>
 #include <string>
 
-#include "../address.hpp"
-#include "../sender.hpp"
-#include "../socket.hpp"
+#include "musen/address.hpp"
+#include "musen/sender.hpp"
+#include "musen/socket.hpp"
 
-namespace musen
-{
+namespace musen {
 
-class Broadcaster : public Sender
-{
-public:
+class Broadcaster : public Sender {
+ public:
   explicit Broadcaster(const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
   ~Broadcaster();
 
@@ -47,7 +44,7 @@ public:
 
   std::list<std::string> target_ips;
 
-protected:
+ protected:
   std::shared_ptr<Socket> socket;
   int port;
 
@@ -55,5 +52,3 @@ protected:
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__UDP__BROADCASTER_HPP_

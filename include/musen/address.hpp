@@ -18,16 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__ADDRESS_HPP_
-#define MUSEN__ADDRESS_HPP_
+#pragma once
 
 #include <arpa/inet.h>
 
 #include <list>
 #include <string>
 
-namespace musen
-{
+namespace musen {
 
 struct Address;
 
@@ -35,8 +33,7 @@ Address make_any_address(const int & port);
 
 std::list<std::string> obtain_broadcast_ips();
 
-struct Address
-{
+struct Address {
   Address(const std::string & ip, const int & port);
   explicit Address(const sockaddr_in & sa);
   Address();
@@ -48,5 +45,3 @@ struct Address
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__ADDRESS_HPP_

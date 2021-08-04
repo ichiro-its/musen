@@ -19,16 +19,15 @@
 // THE SOFTWARE.
 
 #include <fcntl.h>
-#include <gtest/gtest.h>
-#include <musen/musen.hpp>
 
 #include <memory>
 
-class SocketManipulationTest : public ::testing::Test
-{
-protected:
-  void SetUp() override
-  {
+#include "gtest/gtest.h"
+#include "musen/musen.hpp"
+
+class SocketManipulationTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
     socket = musen::make_tcp_socket();
   }
 

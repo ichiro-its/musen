@@ -18,18 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
-#include <musen_test/mock_receiver.hpp>
-#include <musen_test/mock_sender.hpp>
-
 #include <memory>
 #include <string>
 
-class SendAndReceiveStringTest : public ::testing::Test
-{
-protected:
-  void SetUp() override
-  {
+#include "gtest/gtest.h"
+#include "musen_test/mock_receiver.hpp"
+#include "musen_test/mock_sender.hpp"
+
+class SendAndReceiveStringTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
     auto buffers = std::make_shared<musen_test::Buffers>();
 
     sender = std::make_shared<musen_test::MockSender>(buffers);

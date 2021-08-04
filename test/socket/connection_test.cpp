@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
-#include <musen/musen.hpp>
+#include "gtest/gtest.h"
+#include "musen/musen.hpp"
 
 TEST(SocketConnectionTest, Bind) {
   auto a = musen::make_udp_socket();

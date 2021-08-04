@@ -18,40 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN_TEST__MOCK_SENDER_HPP_
-#define MUSEN_TEST__MOCK_SENDER_HPP_
-
-#include <musen/musen.hpp>
+#pragma once
 
 #include <memory>
 #include <queue>
 #include <vector>
 
-namespace musen_test
-{
+#include "musen/musen.hpp"
+
+namespace musen_test {
 
 using Buffers = std::queue<std::vector<char>>;
 
-class MockSender : public musen::Sender
-{
-public:
+class MockSender : public musen::Sender {
+ public:
   explicit MockSender(std::shared_ptr<Buffers> buffers)
-  : buffers(buffers)
-  {
+  : buffers(buffers) {
   }
 
-  size_t send_raw(const char * data, const size_t & length) override
-  {
+  size_t send_raw(const char * data, const size_t & length) override {
     std::vector buffer(data, data + length);
     buffers->push(buffer);
 
     return buffer.size();
   }
 
-private:
+ private:
   std::shared_ptr<Buffers> buffers;
 };
 
 }  // namespace musen_test
-
-#endif  // MUSEN_TEST__MOCK_SENDER_HPP_

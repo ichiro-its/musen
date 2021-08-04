@@ -18,20 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__RECEIVER_HPP_
-#define MUSEN__RECEIVER_HPP_
+#pragma once
 
 #include <optional>
 #include <string>
 #include <utility>
 #include <vector>
 
-namespace musen
-{
+namespace musen {
 
-class Receiver
-{
-public:
+class Receiver {
+ public:
   virtual size_t receive_raw(char * data, const size_t & length);
 
   std::string receive_string(const size_t & length);
@@ -43,8 +40,7 @@ public:
 };
 
 template<typename T>
-std::optional<T> Receiver::receive()
-{
+std::optional<T> Receiver::receive() {
   T data;
 
   auto received = receive_raw(reinterpret_cast<char *>(&data), sizeof(T));
@@ -57,5 +53,3 @@ std::optional<T> Receiver::receive()
 }
 
 }  // namespace musen
-
-#endif  // MUSEN__RECEIVER_HPP_

@@ -18,21 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <musen/receiver.hpp>
-
 #include <string>
 #include <vector>
 
-namespace musen
-{
+#include "musen/receiver.hpp"
 
-size_t Receiver::receive_raw(char * /*data*/, const size_t & /*length*/)
-{
+namespace musen {
+
+size_t Receiver::receive_raw(char * /*data*/, const size_t & /*length*/) {
   return 0;
 }
 
-std::string Receiver::receive_string(const size_t & length)
-{
+std::string Receiver::receive_string(const size_t & length) {
   std::string data;
   if (length <= 0) {
     return data;
@@ -55,8 +52,7 @@ std::string Receiver::receive_string(const size_t & length)
 }
 
 std::vector<std::string> Receiver::receive_strings(
-  const size_t & length, const std::string & delimiter)
-{
+  const size_t & length, const std::string & delimiter) {
   auto data = receive_string(length);
 
   std::vector<std::string> splitted_data;

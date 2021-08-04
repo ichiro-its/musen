@@ -18,22 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__TCP__CLIENT_HPP_
-#define MUSEN__TCP__CLIENT_HPP_
+#pragma once
 
 #include <memory>
 
-#include "../address.hpp"
-#include "../receiver.hpp"
-#include "../sender.hpp"
-#include "../socket.hpp"
+#include "musen/address.hpp"
+#include "musen/receiver.hpp"
+#include "musen/sender.hpp"
+#include "musen/socket.hpp"
 
-namespace musen
-{
+namespace musen {
 
-class Client : public Sender, public Receiver
-{
-public:
+class Client : public Sender, public Receiver {
+ public:
   explicit Client(
     const Address & server_address, std::shared_ptr<Socket> socket = make_tcp_socket());
 
@@ -45,11 +42,9 @@ public:
   std::shared_ptr<Socket> get_socket() const;
   const Address & get_server_address() const;
 
-protected:
+ protected:
   std::shared_ptr<Socket> socket;
   Address server_address;
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__TCP__CLIENT_HPP_

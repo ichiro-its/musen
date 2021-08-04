@@ -19,23 +19,21 @@
 // THE SOFTWARE.
 
 #include <ifaddrs.h>
-#include <musen/address.hpp>
 
 #include <cstring>
 #include <list>
 #include <string>
 #include <system_error>
 
-namespace musen
-{
+#include "musen/address.hpp"
 
-Address make_any_address(const int & port)
-{
+namespace musen {
+
+Address make_any_address(const int & port) {
   return Address("0.0.0.0", port);
 }
 
-std::list<std::string> obtain_broadcast_ips()
-{
+std::list<std::string> obtain_broadcast_ips() {
   std::list<std::string> ips;
 
   // Obtain all interfaces
@@ -63,23 +61,18 @@ std::list<std::string> obtain_broadcast_ips()
 }
 
 Address::Address(const std::string & ip, const int & port)
-: ip(ip),
-  port(port)
-{
+: ip(ip), port(port) {
 }
 
 Address::Address(const struct sockaddr_in & sa)
-: Address(inet_ntoa(sa.sin_addr), ntohs(sa.sin_port))
-{
+: Address(inet_ntoa(sa.sin_addr), ntohs(sa.sin_port)) {
 }
 
 Address::Address()
-: Address("", 0)
-{
+: Address("", 0) {
 }
 
-struct sockaddr_in Address::sockaddr_in() const
-{
+struct sockaddr_in Address::sockaddr_in() const {
   struct sockaddr_in sa;
   memset(&sa, 0, sizeof(sa));
 

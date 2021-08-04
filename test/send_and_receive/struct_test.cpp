@@ -18,23 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <gtest/gtest.h>
-#include <musen_test/mock_receiver.hpp>
-#include <musen_test/mock_sender.hpp>
-
 #include <memory>
 
-class SendAndReceiveStructTest : public ::testing::Test
-{
-protected:
-  struct Foo
-  {
+#include "gtest/gtest.h"
+#include "musen_test/mock_receiver.hpp"
+#include "musen_test/mock_sender.hpp"
+
+class SendAndReceiveStructTest : public ::testing::Test {
+ protected:
+  struct Foo {
     int a;
     float b;
   };
 
-  void SetUp() override
-  {
+  void SetUp() override {
     auto buffers = std::make_shared<musen_test::Buffers>();
 
     sender = std::make_shared<musen_test::MockSender>(buffers);

@@ -18,21 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__TCP__SERVER_HPP_
-#define MUSEN__TCP__SERVER_HPP_
+#pragma once
 
 #include <memory>
 #include <string>
 
-#include "./session.hpp"
-#include "../socket.hpp"
+#include "musen/tcp/session.hpp"
+#include "musen/socket.hpp"
 
-namespace musen
-{
+namespace musen {
 
-class Server
-{
-public:
+class Server {
+ public:
   explicit Server(const int & port, std::shared_ptr<Socket> socket = make_tcp_socket());
   ~Server();
 
@@ -41,11 +38,9 @@ public:
   std::shared_ptr<Socket> get_socket() const;
   const int & get_port() const;
 
-protected:
+ protected:
   std::shared_ptr<Socket> socket;
   int port;
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__TCP__SERVER_HPP_

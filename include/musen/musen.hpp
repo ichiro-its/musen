@@ -18,18 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#pragma once
 
-#include "./tcp/client.hpp"
-#include "./tcp/server.hpp"
+#include "musen/tcp/client.hpp"
+#include "musen/tcp/server.hpp"
 
-#include "./udp/broadcaster.hpp"
-#include "./udp/listener.hpp"
+#include "musen/udp/broadcaster.hpp"
+#include "musen/udp/listener.hpp"
 
-#include "./address.hpp"
-#include "./sender.hpp"
-#include "./receiver.hpp"
-#include "./socket.hpp"
-
-#endif  // MUSEN__MUSEN_HPP_
+#include "musen/address.hpp"
+#include "musen/sender.hpp"
+#include "musen/receiver.hpp"
+#include "musen/socket.hpp"
