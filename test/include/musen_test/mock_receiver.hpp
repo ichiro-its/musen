@@ -20,7 +20,7 @@ using Buffers = std::queue<std::vector<char>>;
 class MockReceiver : public musen::Receiver {
  public:
   explicit MockReceiver(std::shared_ptr<Buffers> buffers)
-  : buffers(buffers) {
+    : buffers(buffers) {
   }
 
   size_t receive_raw(char * data, const size_t & length) override {

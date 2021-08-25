@@ -11,7 +11,7 @@
 namespace musen {
 
 Session::Session(std::shared_ptr<Socket> socket)
-: socket(socket) {
+  : socket(socket) {
 }
 
 Session::~Session() {

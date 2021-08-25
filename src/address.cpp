@@ -47,15 +47,15 @@ std::list<std::string> obtain_broadcast_ips() {
 }
 
 Address::Address(const std::string & ip, const int & port)
-: ip(ip), port(port) {
+  : ip(ip), port(port) {
 }
 
 Address::Address(const struct sockaddr_in & sa)
-: Address(inet_ntoa(sa.sin_addr), ntohs(sa.sin_port)) {
+  : Address(inet_ntoa(sa.sin_addr), ntohs(sa.sin_port)) {
 }
 
 Address::Address()
-: Address("", 0) {
+  : Address("", 0) {
 }
 
 struct sockaddr_in Address::sockaddr_in() const {
