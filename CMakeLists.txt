@@ -40,6 +40,7 @@ install(TARGETS ${PROJECT_NAME}
 add_subdirectory("examples")
 
 include("cmake/cpack.cmake")
+include("cmake/doc.cmake")
 include("cmake/lint.cmake")
 
 if(BUILD_TESTING)
