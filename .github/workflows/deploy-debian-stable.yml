@@ -23,7 +23,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: build
-        run: cmake ../musen
+        run: cmake -DCMAKE_INSTALL_PREFIX=/usr ../musen
 
       - name: Build stable Debian package
         working-directory: build
