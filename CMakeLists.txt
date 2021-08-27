@@ -4,6 +4,7 @@ project(musen)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 17)
+
 add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 
 install(DIRECTORY "include" DESTINATION ".")
@@ -53,6 +54,7 @@ if(BUILD_TESTING)
   include_directories("test/gtest")
 endif()
 
-# ament_export_include_directories("include")
-# ament_export_libraries(${PROJECT_NAME})
-# ament_package()
+install(EXPORT ${PROJECT_NAME}_export
+  FILE ${PROJECT_NAME}-config.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION "lib/cmake/${PROJECT_NAME}")
