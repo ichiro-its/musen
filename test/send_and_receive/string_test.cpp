@@ -8,8 +8,8 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "musen_test/mock_receiver.hpp"
-#include "musen_test/mock_sender.hpp"
+#include "./mocks/mock_receiver.hpp"
+#include "./mocks/mock_sender.hpp"
 
 class SendAndReceiveStringTest : public ::testing::Test {
  protected:

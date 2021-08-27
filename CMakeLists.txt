@@ -2,19 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(musen)
 
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
-
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
-endif()
-
-# find_package(ament_cmake REQUIRED)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 17)
+add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 
 install(DIRECTORY "include" DESTINATION ".")
 
@@ -66,6 +56,9 @@ add_custom_target(lint
 if(BUILD_TESTING)
   enable_testing()
 
+  find_package(GTest REQUIRED)
+  find_package(Threads REQUIRED)
+
   add_test(NAME ${PROJECT_NAME}_cppcheck_test
     COMMAND cppcheck examples include src test
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -78,26 +71,26 @@ if(BUILD_TESTING)
     COMMAND python test/uncrustify/test.py examples include src test
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  # find_package(ament_cmake_gtest REQUIRED)
-  # find_package(ament_lint_auto REQUIRED)
+  add_executable(${PROJECT_NAME}_tests
+    "test/send_and_receive/mocks/mock_receiver.hpp"
+    "test/send_and_receive/mocks/mock_sender.hpp"
+    "test/send_and_receive/raw_test.cpp"
+    "test/send_and_receive/string_test.cpp"
+    "test/send_and_receive/strings_test.cpp"
+    "test/send_and_receive/struct_test.cpp"
+    "test/socket/connection_test.cpp"
+    "test/socket/creation_test.cpp"
+    "test/socket/manipulation_test.cpp"
+    "test/address_test.cpp"
+    "test/broadcast_and_listen_test.cpp"
+    "test/server_and_client_test.cpp")
 
-  # ament_add_gtest(${PROJECT_NAME}_tests
-  #   "test/send_and_receive/raw_test.cpp"
-  #   "test/send_and_receive/string_test.cpp"
-  #   "test/send_and_receive/strings_test.cpp"
-  #   "test/send_and_receive/struct_test.cpp"
-  #   "test/socket/connection_test.cpp"
-  #   "test/socket/creation_test.cpp"
-  #   "test/socket/manipulation_test.cpp"
-  #   "test/address_test.cpp"
-  #   "test/broadcast_and_listen_test.cpp"
-  #   "test/server_and_client_test.cpp")
+  target_link_libraries(${PROJECT_NAME}_tests
+    ${PROJECT_NAME} gtest gtest_main Threads::Threads)
 
-  # target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
+  include(GoogleTest)
 
-  # target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
-
-  # ament_lint_auto_find_test_dependencies()
+  gtest_discover_tests(${PROJECT_NAME}_tests)
 endif()
 
 # ament_export_include_directories("include")

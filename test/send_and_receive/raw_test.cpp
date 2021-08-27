@@ -7,8 +7,8 @@
 #include <memory>
 
 #include "gtest/gtest.h"
-#include "musen_test/mock_receiver.hpp"
-#include "musen_test/mock_sender.hpp"
+#include "./mocks/mock_receiver.hpp"
+#include "./mocks/mock_sender.hpp"
 
 class SendAndReceiveRawTest : public ::testing::Test {
  protected:
