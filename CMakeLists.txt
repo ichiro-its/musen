@@ -36,7 +36,7 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
 
-include_directories("examples")
+add_subdirectory("examples")
 
 add_custom_target(lint
   COMMAND find "examples" "include" "src" "test" '\(' -name '*.cpp' -o -name '*.hpp' -o -name '*.tpp' '\)' -exec uncrustify -c test/uncrustify/config.cfg --replace --no-backup {} '\;'
@@ -57,7 +57,7 @@ if(BUILD_TESTING)
     COMMAND python test/uncrustify/test.py "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  include_directories("test/gtest")
+  add_subdirectory("test/gtest")
 endif()
 
 install(EXPORT ${PROJECT_NAME}_export
