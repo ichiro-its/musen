@@ -60,22 +60,22 @@ foreach(EXECUTABLE ${EXECUTABLES})
 endforeach()
 
 add_custom_target(lint
-  COMMAND find examples include src test '\(' -name '*.cpp' -o -name '*.hpp' '\)' -exec uncrustify -c uncrustify.cfg --replace --no-backup {} '\;'
+  COMMAND find examples include src test '\(' -name '*.cpp' -o -name '*.hpp' -o -name '*.tpp' '\)' -exec uncrustify -c test/uncrustify/config.cfg --replace --no-backup {} '\;'
   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(BUILD_TESTING)
   enable_testing()
 
   add_test(NAME ${PROJECT_NAME}_cppcheck_test
-    COMMAND cppcheck examples src test
+    COMMAND cppcheck examples include src test
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_test(NAME ${PROJECT_NAME}_cpplint_test
-    COMMAND cpplint --linelength=120 --filter=-build/c++11 --recursive examples include src test
+    COMMAND cpplint --linelength=120 --filter=-build/c++11 --headers=tpp --recursive examples include src test
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_test(NAME ${PROJECT_NAME}_uncrustify_test
-    COMMAND sh -c "find examples include src test '\(' -name '*.cpp' -o -name '*.hpp' '\)' -exec uncrustify -c uncrustify.cfg --check -f {} \\;"
+    COMMAND python test/uncrustify/test.py examples include src test
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   # find_package(ament_cmake_gtest REQUIRED)
