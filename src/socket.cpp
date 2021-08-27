@@ -35,8 +35,9 @@ std::shared_ptr<Socket> make_blocking_udp_socket() {
   return std::make_shared<Socket>(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 }
 
-Socket::Socket(const int & fd)
-  : fd(fd) {
+Socket::Socket(const int & fd) {
+  this->fd = fd;
+
   if (get_option<int>(SO_ERROR) != 0) {
     throw std::system_error(errno, std::generic_category());
   }

@@ -37,8 +37,7 @@ TEST_F(SendAndReceiveStringTest, ReceivePartial) {
   sender->send_string(send_data);
 
   auto receive_data = receiver->receive_string(5);
-  ASSERT_STREQ(receive_data.c_str(), send_data.substr(0, 5).c_str()) <<
-    "Unequal received and sent data";
+  ASSERT_STREQ(receive_data.c_str(), send_data.substr(0, 5).c_str()) << "Unequal received and sent data";
 }
 
 TEST_F(SendAndReceiveStringTest, ReceiveNothing) {

@@ -18,16 +18,9 @@ using Buffers = std::queue<std::vector<char>>;
 
 class MockSender : public musen::Sender {
  public:
-  explicit MockSender(std::shared_ptr<Buffers> buffers)
-    : buffers(buffers) {
-  }
+  explicit MockSender(std::shared_ptr<Buffers> buffers);
 
-  size_t send_raw(const char * data, const size_t & length) override {
-    std::vector buffer(data, data + length);
-    buffers->push(buffer);
-
-    return buffer.size();
-  }
+  size_t send_raw(const char * data, const size_t & length) override;
 
  private:
   std::shared_ptr<Buffers> buffers;

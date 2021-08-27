@@ -8,7 +8,9 @@ find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
 add_executable(${PROJECT_NAME}_tests
+  "src/send_and_receive/mocks/mock_receiver.cpp"
   "src/send_and_receive/mocks/mock_receiver.hpp"
+  "src/send_and_receive/mocks/mock_sender.cpp"
   "src/send_and_receive/mocks/mock_sender.hpp"
   "src/send_and_receive/raw_test.cpp"
   "src/send_and_receive/string_test.cpp"

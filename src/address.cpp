@@ -46,8 +46,9 @@ std::list<std::string> obtain_broadcast_ips() {
   return ips;
 }
 
-Address::Address(const std::string & ip, const int & port)
-  : ip(ip), port(port) {
+Address::Address(const std::string & ip, const int & port) {
+  this->ip = ip;
+  this->port = port;
 }
 
 Address::Address(const struct sockaddr_in & sa)

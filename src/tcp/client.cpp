@@ -12,8 +12,10 @@
 
 namespace musen {
 
-Client::Client(const Address & server_address, std::shared_ptr<Socket> socket)
-  : socket(socket), server_address(server_address) {
+Client::Client(const Address & server_address, std::shared_ptr<Socket> socket) {
+  this->socket = socket;
+  this->server_address = server_address;
+
   // Disable non blocking during connect
   auto was_non_blocking = socket->get_status_flag(O_NONBLOCK);
   if (was_non_blocking) {

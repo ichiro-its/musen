@@ -14,8 +14,10 @@
 
 namespace musen {
 
-Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket)
-  : socket(socket), port(port) {
+Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket) {
+  this->socket = socket;
+  this->port = port;
+
   enable_broadcast(true);
 }
 

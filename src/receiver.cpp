@@ -37,8 +37,7 @@ std::string Receiver::receive_string(const size_t & length) {
   return data;
 }
 
-std::vector<std::string> Receiver::receive_strings(
-  const size_t & length, const std::string & delimiter) {
+std::vector<std::string> Receiver::receive_strings(const size_t & length, const std::string & delimiter) {
   auto data = receive_string(length);
 
   std::vector<std::string> splitted_data;

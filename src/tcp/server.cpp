@@ -12,8 +12,10 @@
 
 namespace musen {
 
-Server::Server(const int & port, std::shared_ptr<Socket> socket)
-  : socket(socket), port(port) {
+Server::Server(const int & port, std::shared_ptr<Socket> socket) {
+  this->socket = socket;
+  this->port = port;
+
   // Bind the socket with the serve address
   socket->bind(make_any_address(port));
 

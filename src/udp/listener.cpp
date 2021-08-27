@@ -10,8 +10,10 @@
 
 namespace musen {
 
-Listener::Listener(const int & port, std::shared_ptr<Socket> socket)
-  : socket(socket), port(port) {
+Listener::Listener(const int & port, std::shared_ptr<Socket> socket) {
+  this->socket = socket;
+  this->port = port;
+
   // Enable reuse port
   socket->set_option(SO_REUSEPORT, 1);
 

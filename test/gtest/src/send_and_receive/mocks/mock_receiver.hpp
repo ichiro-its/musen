@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <algorithm>
 #include <memory>
 #include <queue>
 #include <vector>
@@ -19,26 +18,9 @@ using Buffers = std::queue<std::vector<char>>;
 
 class MockReceiver : public musen::Receiver {
  public:
-  explicit MockReceiver(std::shared_ptr<Buffers> buffers)
-    : buffers(buffers) {
-  }
+  explicit MockReceiver(std::shared_ptr<Buffers> buffers);
 
-  size_t receive_raw(char * data, const size_t & length) override {
-    if (buffers->empty()) {
-      return 0;
-    }
-
-    auto buffer = buffers->front();
-    buffers->pop();
-
-    if (length >= buffer.size()) {
-      std::copy(buffer.begin(), buffer.end(), data);
-      return buffer.size();
-    } else {
-      std::copy_n(buffer.begin(), length, data);
-      return length;
-    }
-  }
+  size_t receive_raw(char * data, const size_t & length) override;
 
  private:
   std::shared_ptr<Buffers> buffers;

@@ -17,8 +17,7 @@ class Receiver {
   virtual size_t receive_raw(char * data, const size_t & length);
 
   std::string receive_string(const size_t & length);
-  std::vector<std::string> receive_strings(
-    const size_t & length, const std::string & delimiter = ",");
+  std::vector<std::string> receive_strings(const size_t & length, const std::string & delimiter = ",");
 
   template<typename T>
   std::optional<T> receive();

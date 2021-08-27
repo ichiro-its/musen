@@ -30,8 +30,7 @@ class ServerAndClientTest : public ::testing::Test {
         try {
           server = std::make_shared<musen::Server>(server_address.port);
         } catch (const std::system_error & err) {
-          FAIL() << "Unable to start the server on port " << server_address.port <<
-          "! " << err.what();
+          FAIL() << "Unable to start the server on port " << server_address.port << "! " << err.what();
         }
 
         std::weak_ptr<musen::Server> weak_server = server;
