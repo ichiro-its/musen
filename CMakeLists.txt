@@ -24,73 +24,33 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "$<INSTALL_INTERFACE:include>")
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT export_${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}_export
   ARCHIVE DESTINATION "lib"
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
 
-set(EXECUTABLES
-  "examples/fruits_udp/fruits_broadcaster.cpp"
-  "examples/fruits_udp/fruits_listener.cpp"
-  "examples/hello_world_udp/hello_world_broadcaster.cpp"
-  "examples/hello_world_udp/hello_world_listener.cpp"
-  "examples/position_tcp/position_client.cpp"
-  "examples/position_tcp/position_server.cpp"
-  "examples/position_udp/position_broadcaster.cpp"
-  "examples/position_udp/position_listener.cpp")
-
-foreach(EXECUTABLE ${EXECUTABLES})
-  get_filename_component(TARGET ${EXECUTABLE} NAME_WE)
-
-  add_executable(${TARGET} ${EXECUTABLE})
-  target_link_libraries(${TARGET} ${PROJECT_NAME})
-
-  install(TARGETS ${TARGET}
-    DESTINATION "lib/${PROJECT_NAME}")
-endforeach()
+include_directories("examples")
 
 add_custom_target(lint
-  COMMAND find examples include src test '\(' -name '*.cpp' -o -name '*.hpp' -o -name '*.tpp' '\)' -exec uncrustify -c test/uncrustify/config.cfg --replace --no-backup {} '\;'
+  COMMAND find "examples" "include" "src" "test" '\(' -name '*.cpp' -o -name '*.hpp' -o -name '*.tpp' '\)' -exec uncrustify -c test/uncrustify/config.cfg --replace --no-backup {} '\;'
   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(BUILD_TESTING)
   enable_testing()
 
-  find_package(GTest REQUIRED)
-  find_package(Threads REQUIRED)
-
   add_test(NAME ${PROJECT_NAME}_cppcheck_test
-    COMMAND cppcheck examples include src test
+    COMMAND cppcheck "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_test(NAME ${PROJECT_NAME}_cpplint_test
-    COMMAND cpplint --linelength=120 --filter=-build/c++11 --headers=tpp --recursive examples include src test
+    COMMAND cpplint --linelength=120 --filter=-build/c++11 --headers=tpp --recursive "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
   add_test(NAME ${PROJECT_NAME}_uncrustify_test
-    COMMAND python test/uncrustify/test.py examples include src test
+    COMMAND python test/uncrustify/test.py "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  add_executable(${PROJECT_NAME}_tests
-    "test/send_and_receive/mocks/mock_receiver.hpp"
-    "test/send_and_receive/mocks/mock_sender.hpp"
-    "test/send_and_receive/raw_test.cpp"
-    "test/send_and_receive/string_test.cpp"
-    "test/send_and_receive/strings_test.cpp"
-    "test/send_and_receive/struct_test.cpp"
-    "test/socket/connection_test.cpp"
-    "test/socket/creation_test.cpp"
-    "test/socket/manipulation_test.cpp"
-    "test/address_test.cpp"
-    "test/broadcast_and_listen_test.cpp"
-    "test/server_and_client_test.cpp")
-
-  target_link_libraries(${PROJECT_NAME}_tests
-    ${PROJECT_NAME} gtest gtest_main Threads::Threads)
-
-  include(GoogleTest)
-
-  gtest_discover_tests(${PROJECT_NAME}_tests)
+  include_directories("test/gtest")
 endif()
 
 # ament_export_include_directories("include")
