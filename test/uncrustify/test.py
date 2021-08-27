@@ -21,7 +21,13 @@ def check_file(file: str):
 
     original = subprocess.run(['cat', file], capture_output=True)
     formatted = subprocess.run(['uncrustify', '-c', config_path, '-f', file], capture_output=True)
-    difflines = list(unified_diff(original.stdout.decode("utf8").splitlines(), formatted.stdout.decode("utf8").splitlines()))
+
+    difflines = list(unified_diff(
+      original.stdout.decode('utf8').splitlines(),
+      formatted.stdout.decode('utf8').splitlines(),
+      fromfile=file,
+      tofile=file + ' (formatted)'))
+
     if difflines:
         fail = True
         for line in difflines:

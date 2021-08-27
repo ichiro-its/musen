@@ -22,9 +22,6 @@ class Sender {
   size_t send(const T & data);
 };
 
-template<typename T>
-size_t Sender::send(const T & data) {
-  return send_raw((const char *)&data, sizeof(data));
-}
+#include "musen/sender.tpp"
 
 }  // namespace musen
