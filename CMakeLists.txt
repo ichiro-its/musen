@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 
-install(DIRECTORY "include" DESTINATION ".")
+install(DIRECTORY "include/musen"
+  DESTINATION "include")
 
 add_library(${PROJECT_NAME} SHARED
   "src/tcp/client.cpp"

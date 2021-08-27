@@ -1,4 +1,4 @@
-set(EXECUTABLES
+set(EXAMPLES
   "fruits_udp/fruits_broadcaster.cpp"
   "fruits_udp/fruits_listener.cpp"
   "hello_world_udp/hello_world_broadcaster.cpp"
@@ -8,12 +8,12 @@ set(EXECUTABLES
   "position_udp/position_broadcaster.cpp"
   "position_udp/position_listener.cpp")
 
-foreach(EXECUTABLE ${EXECUTABLES})
-get_filename_component(TARGET ${EXECUTABLE} NAME_WE)
+foreach(EXAMPLE ${EXAMPLES})
+  get_filename_component(TARGET "${EXAMPLE}" NAME_WE)
 
-add_executable(${TARGET} ${EXECUTABLE})
-target_link_libraries(${TARGET} ${PROJECT_NAME})
+  add_executable(${TARGET} "${EXAMPLE}")
+  target_link_libraries(${TARGET} ${PROJECT_NAME})
 
-install(TARGETS ${TARGET}
-  DESTINATION "lib/${PROJECT_NAME}")
+  install(TARGETS ${TARGET}
+    DESTINATION "bin")
 endforeach()
