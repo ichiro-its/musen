@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <optional>
 #include <utility>
 
 #include "musen/receiver.hpp"

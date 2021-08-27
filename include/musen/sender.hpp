@@ -22,6 +22,6 @@ class Sender {
   size_t send(const T & data);
 };
 
-#include "musen/sender.tpp"
-
 }  // namespace musen
+
+#include "musen/sender.tpp"
