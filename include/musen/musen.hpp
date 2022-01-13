@@ -1,35 +1,18 @@
 // Copyright (c) 2021 ICHIRO ITS
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
 
-#ifndef MUSEN__MUSEN_HPP_
-#define MUSEN__MUSEN_HPP_
+#pragma once
 
-#include "./tcp/client.hpp"
-#include "./tcp/server.hpp"
+#include "musen/tcp/client.hpp"
+#include "musen/tcp/server.hpp"
 
-#include "./udp/broadcaster.hpp"
-#include "./udp/listener.hpp"
+#include "musen/udp/broadcaster.hpp"
+#include "musen/udp/listener.hpp"
 
-#include "./address.hpp"
-#include "./sender.hpp"
-#include "./receiver.hpp"
-#include "./socket.hpp"
-
-#endif  // MUSEN__MUSEN_HPP_
+#include "musen/address.hpp"
+#include "musen/sender.hpp"
+#include "musen/receiver.hpp"
+#include "musen/socket.hpp"

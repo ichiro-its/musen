@@ -1,38 +1,21 @@
 // Copyright (c) 2021 ICHIRO ITS
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
 
-#ifndef MUSEN__TCP__SERVER_HPP_
-#define MUSEN__TCP__SERVER_HPP_
+#pragma once
 
 #include <memory>
 #include <string>
 
-#include "./session.hpp"
-#include "../socket.hpp"
+#include "musen/tcp/session.hpp"
+#include "musen/socket.hpp"
 
-namespace musen
-{
+namespace musen {
 
-class Server
-{
-public:
+class Server {
+ public:
   explicit Server(const int & port, std::shared_ptr<Socket> socket = make_tcp_socket());
   ~Server();
 
@@ -41,11 +24,9 @@ public:
   std::shared_ptr<Socket> get_socket() const;
   const int & get_port() const;
 
-protected:
+ protected:
   std::shared_ptr<Socket> socket;
   int port;
 };
 
 }  // namespace musen
-
-#endif  // MUSEN__TCP__SERVER_HPP_

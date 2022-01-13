@@ -1,3 +1,9 @@
+# Copyright (c) 2021 ICHIRO ITS
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
 name: Deploy Debian Stable
 on:
   workflow_dispatch:
@@ -12,8 +18,16 @@ jobs:
         with:
           path: musen
 
+      - name: Create a build directory
+        run: mkdir build
+
+      - name: Configure CMake
+        working-directory: build
+        run: cmake -DCMAKE_INSTALL_PREFIX=/usr ../musen
+
       - name: Build stable Debian package
-        uses: ichiro-its/ros2-build-debian-action@main
+        working-directory: build
+        run: make -j8 && cpack
 
       - name: Deploy stable Debian package to server
         uses: appleboy/scp-action@master
@@ -22,7 +36,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASS }}
-          source: "package/*.deb"
+          source: "build/*.deb"
           target: "~/temp/stable/musen/"
           rm: true
 
@@ -35,5 +49,5 @@ jobs:
           password: ${{ secrets.SSH_PASS }}
           script: |
             cd ~/repository/debian
-            reprepro includedeb stable ~/temp/stable/musen/package/*.deb
+            reprepro includedeb stable ~/temp/stable/musen/build/*.deb
             rm -rf ~/temp/stable/musen/

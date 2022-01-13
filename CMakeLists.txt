@@ -1,22 +1,20 @@
+# Copyright (c) 2021 ICHIRO ITS
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
 cmake_minimum_required(VERSION 3.5)
 
 project(musen)
 
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 17)
 
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
-endif()
-
-find_package(ament_cmake REQUIRED)
-
-install(DIRECTORY "include" DESTINATION ".")
+install(DIRECTORY "include/musen"
+  DESTINATION "include")
 
 add_library(${PROJECT_NAME} SHARED
   "src/tcp/client.cpp"
@@ -30,58 +28,40 @@ add_library(${PROJECT_NAME} SHARED
   "src/socket.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT export_${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}_export
   ARCHIVE DESTINATION "lib"
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
 
-set(EXECUTABLES
-  "examples/fruits_udp/fruits_broadcaster.cpp"
-  "examples/fruits_udp/fruits_listener.cpp"
-  "examples/hello_world_udp/hello_world_broadcaster.cpp"
-  "examples/hello_world_udp/hello_world_listener.cpp"
-  "examples/position_tcp/position_client.cpp"
-  "examples/position_tcp/position_server.cpp"
-  "examples/position_udp/position_broadcaster.cpp"
-  "examples/position_udp/position_listener.cpp")
+add_subdirectory("examples")
 
-foreach(EXECUTABLE ${EXECUTABLES})
-  get_filename_component(TARGET ${EXECUTABLE} NAME_WE)
-
-  add_executable(${TARGET} ${EXECUTABLE})
-  target_link_libraries(${TARGET} ${PROJECT_NAME})
-
-  install(TARGETS ${TARGET}
-    DESTINATION "lib/${PROJECT_NAME}")
-endforeach()
+include("cmake/cpack.cmake")
+include("cmake/doc.cmake")
+include("cmake/lint.cmake")
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_gtest REQUIRED)
-  find_package(ament_lint_auto REQUIRED)
+  enable_testing()
 
-  ament_add_gtest(${PROJECT_NAME}_tests
-    "test/send_and_receive/raw_test.cpp"
-    "test/send_and_receive/string_test.cpp"
-    "test/send_and_receive/strings_test.cpp"
-    "test/send_and_receive/struct_test.cpp"
-    "test/socket/connection_test.cpp"
-    "test/socket/creation_test.cpp"
-    "test/socket/manipulation_test.cpp"
-    "test/address_test.cpp"
-    "test/broadcast_and_listen_test.cpp"
-    "test/server_and_client_test.cpp")
+  add_test(NAME ${PROJECT_NAME}_cppcheck_test
+    COMMAND cppcheck "examples" "include" "src" "test"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  target_include_directories(${PROJECT_NAME}_tests PUBLIC "test/include")
+  add_test(NAME ${PROJECT_NAME}_cpplint_test
+    COMMAND cpplint --linelength=120 --filter=-build/c++11 --headers=tpp --recursive "examples" "include" "src" "test"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
+  add_test(NAME ${PROJECT_NAME}_uncrustify_test
+    COMMAND python test/uncrustify/test.py "examples" "include" "src" "test"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
-  ament_lint_auto_find_test_dependencies()
+  add_subdirectory("test/gtest")
 endif()
 
-ament_export_include_directories("include")
-ament_export_libraries(${PROJECT_NAME})
-ament_package()
+install(EXPORT ${PROJECT_NAME}_export
+  FILE ${PROJECT_NAME}-config.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION "lib/cmake/${PROJECT_NAME}")

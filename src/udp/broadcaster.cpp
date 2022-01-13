@@ -1,48 +1,31 @@
 // Copyright (c) 2021 ICHIRO ITS
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-#include <musen/udp/broadcaster.hpp>
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
 
 #include <limits>
 #include <list>
 #include <memory>
-#include <optional>  // NOLINT
+#include <optional>
 #include <string>
 
-namespace musen
-{
+#include "musen/udp/broadcaster.hpp"
 
-Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket)
-: socket(socket),
-  port(port)
-{
+namespace musen {
+
+Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket) {
+  this->socket = socket;
+  this->port = port;
+
   enable_broadcast(true);
 }
 
-Broadcaster::~Broadcaster()
-{
+Broadcaster::~Broadcaster() {
   socket = nullptr;
 }
 
-size_t Broadcaster::send_raw(const char * data, const size_t & length)
-{
+size_t Broadcaster::send_raw(const char * data, const size_t & length) {
   // Obtain all addresses
   auto addresses = broadcast_addresses;
   for (const auto & ip : target_ips) {
@@ -63,8 +46,7 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length)
   return lowest_sent.value_or(0);
 }
 
-void Broadcaster::enable_broadcast(const bool & enable)
-{
+void Broadcaster::enable_broadcast(const bool & enable) {
   socket->set_option<int>(SO_BROADCAST, enable);
 
   broadcast_addresses.clear();
@@ -75,13 +57,11 @@ void Broadcaster::enable_broadcast(const bool & enable)
   }
 }
 
-std::shared_ptr<Socket> Broadcaster::get_socket() const
-{
+std::shared_ptr<Socket> Broadcaster::get_socket() const {
   return socket;
 }
 
-const int & Broadcaster::get_port() const
-{
+const int & Broadcaster::get_port() const {
   return port;
 }
 
