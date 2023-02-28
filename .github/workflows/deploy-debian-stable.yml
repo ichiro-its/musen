@@ -11,7 +11,7 @@ on:
     types: [created]
 jobs:
   deploy-debian-stable:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v2.3.4
@@ -48,6 +48,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASS }}
           script: |
-            cd ~/repository/debian
+            cd ${{ secrets.SERVER_REPO_DIR }}/debian
             reprepro includedeb stable ~/temp/stable/musen/build/*.deb
             rm -rf ~/temp/stable/musen/
