@@ -30,8 +30,7 @@ In this library, the UDP socket communication will be handled by Broadcaster and
 
 ### Binary Packages
 
-- See [releases](https://github.com/ichiro-its/musen/releases) for the latest version of this package.
-- Alternatively, this package also available on [ICHIRO ITS Repository](https://repository.ichiro-its.org/) as `libmusen-deb` package.
+See [releases](https://github.com/ichiro-its/musen/releases) for the latest version of this package.
 
 ### Build From Source
 
