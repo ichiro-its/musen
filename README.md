@@ -3,7 +3,6 @@
 [![latest version](https://img.shields.io/github/v/release/ichiro-its/musen)](https://github.com/ichiro-its/musen/releases/)
 [![commits since latest version](https://img.shields.io/github/commits-since/ichiro-its/musen/latest)](https://github.com/ichiro-its/musen/commits/master)
 [![license](https://img.shields.io/github/license/ichiro-its/musen)](./LICENSE)
-[![deploy stable status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Deploy%20Debian%20Stable?label=deploy%20stable)](https://repository.ichiro-its.org/)
 
 [Musen](https://ichiro-its.github.io/musen) (無線, wireless) is a package that provides [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) and [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) socket communication library.
 This library is written in [C++](https://isocpp.org/) and currently only works on [Linux](https://www.linux.org/) based operating system.
