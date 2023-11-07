@@ -3,8 +3,6 @@
 [![latest version](https://img.shields.io/github/v/release/ichiro-its/musen)](https://github.com/ichiro-its/musen/releases/)
 [![commits since latest version](https://img.shields.io/github/commits-since/ichiro-its/musen/latest)](https://github.com/ichiro-its/musen/commits/master)
 [![license](https://img.shields.io/github/license/ichiro-its/musen)](./LICENSE)
-[![deploy stable status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Deploy%20Debian%20Stable?label=deploy%20stable)](https://repository.ichiro-its.org/)
-[![deploy nightly status](https://img.shields.io/github/workflow/status/ichiro-its/musen/Deploy%20Debian%20Nightly?label=deploy%20nightly)](https://repository.ichiro-its.org/)
 
 [Musen](https://ichiro-its.github.io/musen) (無線, wireless) is a package that provides [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) and [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) socket communication library.
 This library is written in [C++](https://isocpp.org/) and currently only works on [Linux](https://www.linux.org/) based operating system.
@@ -32,8 +30,7 @@ In this library, the UDP socket communication will be handled by Broadcaster and
 
 ### Binary Packages
 
-- See [releases](https://github.com/ichiro-its/musen/releases) for the latest version of this package.
-- Alternatively, this package also available on [ICHIRO ITS Repository](https://repository.ichiro-its.org/) as `libmusen-deb` package.
+See [releases](https://github.com/ichiro-its/musen/releases) for the latest version of this package.
 
 ### Build From Source
 
