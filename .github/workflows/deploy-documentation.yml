@@ -50,4 +50,4 @@ jobs:
 
       - name: Deploy Pages
         id: deploy-pages
-        uses: actions/deploy-pages@v4.0.4
+        uses: actions/deploy-pages@v4.0.5
