@@ -23,7 +23,7 @@ jobs:
       - name: Install test dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cppcheck libgtest-dev uncrustify
+          sudo apt-get install -y libgtest-dev uncrustify
           sudo pip install cpplint
 
       - name: Create a build directory

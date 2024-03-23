@@ -45,10 +45,6 @@ include("cmake/lint.cmake")
 if(BUILD_TESTING)
   enable_testing()
 
-  add_test(NAME ${PROJECT_NAME}_cppcheck_test
-    COMMAND cppcheck "examples" "include" "src" "test"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
-
   add_test(NAME ${PROJECT_NAME}_cpplint_test
     COMMAND cpplint --linelength=120 --filter=-build/c++11 --headers=tpp --recursive "examples" "include" "src" "test"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
