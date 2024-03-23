@@ -70,4 +70,6 @@ You can read the full API documentation in the generated `doc` directory (see [t
 
 ## License
 
-This project is maintained by [ICHIRO ITS](https://ichiro-its.org/) and licensed under the [MIT License](https://github.com/ichiro-its/musen/blob/master/LICENSE).
+This project is licensed under the terms of the [MIT License](https://github.com/ichiro-its/musen/blob/master/LICENSE).
+
+Copyright © 2021-2024 [ICHIRO ITS](https://ichiro.its.ac.id/)
