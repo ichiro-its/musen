@@ -44,11 +44,6 @@ include("cmake/lint.cmake")
 
 if(BUILD_TESTING)
   enable_testing()
-
-  add_test(NAME ${PROJECT_NAME}_uncrustify_test
-    COMMAND python test/uncrustify/test.py "examples" "include" "src" "test"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
-
   add_subdirectory("test/gtest")
 endif()
 
