@@ -21,9 +21,6 @@ In this library, the UDP socket communication will be handled by Broadcaster and
 - Documentation requirement (optional):
   - [Doxygen](https://www.doxygen.nl/).
 - Test requirement (optional):
-  - [Cppcheck](http://cppcheck.sourceforge.net/).
-  - [cpplint](https://github.com/cpplint/cpplint).
-  - [Uncrustify](http://uncrustify.sourceforge.net/).
   - [GoogleTest](https://google.github.io/googletest/).
 
 ## Installation
