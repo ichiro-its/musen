@@ -33,8 +33,6 @@ install(TARGETS ${PROJECT_NAME}
 
 add_subdirectory("examples")
 
-include("cmake/doc.cmake")
-
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory("test/gtest")
