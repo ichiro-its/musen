@@ -34,7 +34,6 @@ install(TARGETS ${PROJECT_NAME}
 add_subdirectory("examples")
 
 include("cmake/doc.cmake")
-include("cmake/lint.cmake")
 
 if(BUILD_TESTING)
   enable_testing()
