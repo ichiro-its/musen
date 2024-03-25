@@ -44,10 +44,6 @@ See [releases](https://github.com/ichiro-its/musen/releases) for the latest vers
   ```sh
   $ make doc
   ```
-- (Optional) format source code using the configured CMake.
-  ```sh
-  $ make lint
-  ```
 - (Optional) reconfigure CMake to build a Debian packages.
   ```sh
   $ cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make && cpack
