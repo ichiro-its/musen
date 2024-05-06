@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
         with:
           path: musen
 
