@@ -18,29 +18,19 @@ jobs:
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4.1.7
-        with:
-          path: musen
 
       - name: Install documentation dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y doxygen
 
-      - name: Create a build directory
-        run: mkdir build
-
-      - name: Configure CMake
-        working-directory: build
-        run: cmake ../musen
-
       - name: Build documentation
-        working-directory: build
-        run: make doc
+        run: doxygen
 
       - name: Upload Documentation
         uses: actions/upload-pages-artifact@v3.0.1
         with:
-          path: musen/doc
+          path: doc
 
       - name: Deploy Pages
         id: deploy-pages
