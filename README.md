@@ -40,9 +40,9 @@ See [releases](https://github.com/ichiro-its/musen/releases) for the latest vers
   $ cmake .. && make
   ```
   > Optionally, you could speed up the build process by specifying the parallel job using `-j` option, see [this](https://www.gnu.org/software/make/manual/html_node/Parallel.html).
-- (Optional) generate documentation using the configured CMake.
+- (Optional) generate documentation.
   ```sh
-  $ make doc
+  $ doxygen
   ```
 - (Optional) reconfigure CMake to build a Debian packages.
   ```sh
