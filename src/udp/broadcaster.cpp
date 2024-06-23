@@ -21,6 +21,7 @@ Broadcaster::~Broadcaster() {
 
 size_t Broadcaster::send_raw(const char * data, const size_t & length) {
   // Obtain all addresses
+  this->enable_broadcast(true);
   auto addresses = broadcast_addresses;
   for (const auto & ip : target_ips) {
     addresses.push_back(Address(ip, port));
