@@ -11,24 +11,17 @@ jobs:
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4.1.7
-        with:
-          path: musen
 
       - name: Install test dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtest-dev
 
-      - name: Create a build directory
-        run: mkdir build
-
-      - name: Configure CMake
-        working-directory: build
-        run: cmake -DBUILD_TESTING=ON ../musen
-
-      - name: Build the project
-        working-directory: build
-        run: make -j8
+      - name: Build project
+        uses: threeal/cmake-action@v1.3.0
+        with:
+          options: BUILD_TESTING=ON
+          run-build: true
 
       - name: Test the project
         working-directory: build
