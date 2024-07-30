@@ -23,6 +23,5 @@ jobs:
           options: BUILD_TESTING=ON
           run-build: true
 
-      - name: Test the project
-        working-directory: build
-        run: ctest --verbose
+      - name: Test project
+        uses: threeal/ctest-action@v1.1.0
