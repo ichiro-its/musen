@@ -5,7 +5,7 @@
 
 namespace musen {
 
-size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/) {
+size_t Sender::send_raw(const char * /*data*/, size_t /*length*/) {
   return 0;
 }
 

@@ -14,7 +14,7 @@ class MockSender : public musen::Sender {
  public:
   explicit MockSender(std::shared_ptr<Buffers> buffers);
 
-  size_t send_raw(const char * data, const size_t & length) override;
+  size_t send_raw(const char * data, size_t length) override;
 
  private:
   std::shared_ptr<Buffers> buffers;

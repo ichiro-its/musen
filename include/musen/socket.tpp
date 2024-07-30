@@ -8,14 +8,14 @@
 namespace musen {
 
 template<typename T>
-void Socket::set_option(const int & key, const T & value) {
+void Socket::set_option(int key, const T & value) {
   if (setsockopt(fd, SOL_SOCKET, key, &value, sizeof(value)) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
 }
 
 template<typename T>
-T Socket::get_option(const int & key) const {
+T Socket::get_option(int key) const {
   T value;
   socklen_t value_len = sizeof(value);
 

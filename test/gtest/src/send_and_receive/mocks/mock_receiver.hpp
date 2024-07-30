@@ -14,7 +14,7 @@ class MockReceiver : public musen::Receiver {
  public:
   explicit MockReceiver(std::shared_ptr<Buffers> buffers);
 
-  size_t receive_raw(char * data, const size_t & length) override;
+  size_t receive_raw(char * data, size_t length) override;
 
  private:
   std::shared_ptr<Buffers> buffers;

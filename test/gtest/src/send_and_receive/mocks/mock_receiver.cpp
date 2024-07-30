@@ -8,7 +8,7 @@ MockReceiver::MockReceiver(std::shared_ptr<Buffers> buffers) {
   this->buffers = buffers;
 }
 
-size_t MockReceiver::receive_raw(char * data, const size_t & length) {
+size_t MockReceiver::receive_raw(char * data, size_t length) {
   if (buffers->empty()) {
     return 0;
   }

@@ -16,8 +16,8 @@ class Client : public Sender, public Receiver {
 
   ~Client();
 
-  size_t send_raw(const char * data, const size_t & length) override;
-  size_t receive_raw(char * data, const size_t & length) override;
+  size_t send_raw(const char * data, size_t length) override;
+  size_t receive_raw(char * data, size_t length) override;
 
   std::shared_ptr<Socket> get_socket() const;
   const Address & get_server_address() const;

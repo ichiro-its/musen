@@ -12,15 +12,15 @@ namespace musen {
 
 class Broadcaster : public Sender {
  public:
-  explicit Broadcaster(const int & port, std::shared_ptr<Socket> socket = make_udp_socket());
+  explicit Broadcaster(int port, std::shared_ptr<Socket> socket = make_udp_socket());
   ~Broadcaster();
 
-  size_t send_raw(const char * data, const size_t & length) override;
+  size_t send_raw(const char * data, size_t length) override;
 
-  void enable_broadcast(const bool & enable);
+  void enable_broadcast(bool enable);
 
   std::shared_ptr<Socket> get_socket() const;
-  const int & get_port() const;
+  int get_port() const;
 
   std::list<std::string> target_ips;
 
