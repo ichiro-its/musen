@@ -1,4 +1,8 @@
-find_package(GTest REQUIRED)
+find_package(GTest QUIET)
+if(NOT GTest_FOUND)
+  cpmaddpackage(gh:google/googletest@1.15.0)
+endif()
+
 find_package(Threads REQUIRED)
 
 add_executable(${PROJECT_NAME}_tests

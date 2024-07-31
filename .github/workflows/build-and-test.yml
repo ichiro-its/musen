@@ -12,11 +12,6 @@ jobs:
       - name: Checkout this repository
         uses: actions/checkout@v4.1.7
 
-      - name: Install test dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtest-dev
-
       - name: Build project
         uses: threeal/cmake-action@v1.3.0
         with:
