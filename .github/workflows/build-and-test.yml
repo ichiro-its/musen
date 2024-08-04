@@ -15,7 +15,7 @@ jobs:
       - name: Build project
         uses: threeal/cmake-action@v1.3.0
         with:
-          options: BUILD_TESTING=ON
+          options: MUSEN_BUILD_TESTS=ON MUSEN_BUILD_EXAMPLES=ON
           run-build: true
 
       - name: Test project

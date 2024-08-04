@@ -50,7 +50,7 @@ See [releases](https://github.com/ichiro-its/musen/releases) for the latest vers
   ```
 - (Optional) reconfigure CMake to run the unit tests.
   ```sh
-  $ cmake -DBUILD_TESTING=ON .. && make && ctest --verbose
+  $ cmake -DMUSEN_BUILD_TESTS=ON .. && make && ctest --verbose
   ```
 
 ## Usages

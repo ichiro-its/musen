@@ -14,6 +14,7 @@ foreach(EXAMPLE ${EXAMPLES})
   add_executable(${TARGET} "${EXAMPLE}")
   target_link_libraries(${TARGET} ${PROJECT_NAME})
 
-  install(TARGETS ${TARGET}
-    DESTINATION "bin")
+  if(MUSEN_ENABLE_INSTALL)
+    install(TARGETS ${TARGET} DESTINATION "bin")
+  endif()
 endforeach()
