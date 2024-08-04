@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.21)
 
 project(musen)
 
 option(MUSEN_BUILD_TESTS "Build test targets.")
 option(MUSEN_BUILD_EXAMPLES "Build example targets.")
+option(MUSEN_ENABLE_INSTALL "Enable targets installation." "${PROJECT_IS_TOP_LEVEL}")
 
 function(cpmaddpackage)
   file(
@@ -18,9 +19,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
-
-install(DIRECTORY "include/musen"
-  DESTINATION "include")
 
 add_library(${PROJECT_NAME} SHARED
   "src/tcp/client.cpp"
@@ -37,12 +35,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>")
 
-install(TARGETS ${PROJECT_NAME}
-  EXPORT ${PROJECT_NAME}_export
-  ARCHIVE DESTINATION "lib"
-  LIBRARY DESTINATION "lib"
-  RUNTIME DESTINATION "bin")
-
 if(MUSEN_BUILD_TESTS)
   enable_testing()
   add_subdirectory("test/gtest")
@@ -52,7 +44,18 @@ if(MUSEN_BUILD_EXAMPLES)
   add_subdirectory("examples")
 endif()
 
-install(EXPORT ${PROJECT_NAME}_export
-  FILE ${PROJECT_NAME}-config.cmake
-  NAMESPACE ${PROJECT_NAME}::
-  DESTINATION "lib/cmake/${PROJECT_NAME}")
+if(MUSEN_ENABLE_INSTALL)
+  install(DIRECTORY "include/musen"
+    DESTINATION "include")
+
+  install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}_export
+    ARCHIVE DESTINATION "lib"
+    LIBRARY DESTINATION "lib"
+    RUNTIME DESTINATION "bin")
+
+  install(EXPORT ${PROJECT_NAME}_export
+    FILE ${PROJECT_NAME}-config.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION "lib/cmake/${PROJECT_NAME}")
+endif()
