@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(musen)
 
 option(MUSEN_BUILD_TESTS "Build test targets.")
+option(MUSEN_BUILD_EXAMPLES "Build example targets.")
 
 function(cpmaddpackage)
   file(
@@ -42,11 +43,13 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
 
-add_subdirectory("examples")
-
 if(MUSEN_BUILD_TESTS)
   enable_testing()
   add_subdirectory("test/gtest")
+endif()
+
+if(MUSEN_BUILD_EXAMPLES)
+  add_subdirectory("examples")
 endif()
 
 install(EXPORT ${PROJECT_NAME}_export
