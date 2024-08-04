@@ -28,11 +28,11 @@ Client::~Client() {
   socket = nullptr;
 }
 
-size_t Client::send_raw(const char * data, const size_t & length) {
+size_t Client::send_raw(const char * data, size_t length) {
   return socket->send(data, length);
 }
 
-size_t Client::receive_raw(char * data, const size_t & length) {
+size_t Client::receive_raw(char * data, size_t length) {
   return socket->receive(data, length);
 }
 

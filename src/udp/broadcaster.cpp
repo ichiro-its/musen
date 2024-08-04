@@ -8,7 +8,7 @@
 
 namespace musen {
 
-Broadcaster::Broadcaster(const int & port, std::shared_ptr<Socket> socket) {
+Broadcaster::Broadcaster(int port, std::shared_ptr<Socket> socket) {
   this->socket = socket;
   this->port = port;
 
@@ -19,7 +19,7 @@ Broadcaster::~Broadcaster() {
   socket = nullptr;
 }
 
-size_t Broadcaster::send_raw(const char * data, const size_t & length) {
+size_t Broadcaster::send_raw(const char * data, size_t length) {
   // Obtain all addresses
   this->enable_broadcast(true);
   auto addresses = broadcast_addresses;
@@ -41,7 +41,7 @@ size_t Broadcaster::send_raw(const char * data, const size_t & length) {
   return lowest_sent.value_or(0);
 }
 
-void Broadcaster::enable_broadcast(const bool & enable) {
+void Broadcaster::enable_broadcast(bool enable) {
   socket->set_option<int>(SO_BROADCAST, enable);
 
   broadcast_addresses.clear();
@@ -56,7 +56,7 @@ std::shared_ptr<Socket> Broadcaster::get_socket() const {
   return socket;
 }
 
-const int & Broadcaster::get_port() const {
+int Broadcaster::get_port() const {
   return port;
 }
 

@@ -4,7 +4,7 @@
 
 namespace musen {
 
-Listener::Listener(const int & port, std::shared_ptr<Socket> socket) {
+Listener::Listener(int port, std::shared_ptr<Socket> socket) {
   this->socket = socket;
   this->port = port;
 
@@ -19,7 +19,7 @@ Listener::~Listener() {
   socket = nullptr;
 }
 
-size_t Listener::receive_raw(char * data, const size_t & length) {
+size_t Listener::receive_raw(char * data, size_t length) {
   return socket->receive(data, length);
 }
 
@@ -27,7 +27,7 @@ std::shared_ptr<Socket> Listener::get_socket() const {
   return socket;
 }
 
-const int & Listener::get_port() const {
+int Listener::get_port() const {
   return port;
 }
 

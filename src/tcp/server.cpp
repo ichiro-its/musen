@@ -6,7 +6,7 @@
 
 namespace musen {
 
-Server::Server(const int & port, std::shared_ptr<Socket> socket) {
+Server::Server(int port, std::shared_ptr<Socket> socket) {
   this->socket = socket;
   this->port = port;
 
@@ -44,7 +44,7 @@ std::shared_ptr<Socket> Server::get_socket() const {
   return socket;
 }
 
-const int & Server::get_port() const {
+int Server::get_port() const {
   return port;
 }
 

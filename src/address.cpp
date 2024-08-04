@@ -9,7 +9,7 @@
 
 namespace musen {
 
-Address make_any_address(const int & port) {
+Address make_any_address(int port) {
   return Address("0.0.0.0", port);
 }
 
@@ -40,7 +40,7 @@ std::list<std::string> obtain_broadcast_ips() {
   return ips;
 }
 
-Address::Address(const std::string & ip, const int & port) {
+Address::Address(const std::string & ip, int port) {
   this->ip = ip;
   this->port = port;
 }

@@ -29,7 +29,7 @@ std::shared_ptr<Socket> make_blocking_udp_socket() {
   return std::make_shared<Socket>(AF_INET, SOCK_DGRAM, IPPROTO_IP);
 }
 
-Socket::Socket(const int & fd) {
+Socket::Socket(int fd) {
   this->fd = fd;
 
   if (get_option<int>(SO_ERROR) != 0) {
@@ -37,7 +37,7 @@ Socket::Socket(const int & fd) {
   }
 }
 
-Socket::Socket(const int & domain, const int & type, const int & protocol) {
+Socket::Socket(int domain, int type, int protocol) {
   fd = socket(domain, type, protocol);
   if (fd == -1) {
     throw std::system_error(errno, std::generic_category());
@@ -62,7 +62,7 @@ void Socket::connect(const Address & address) {
   }
 }
 
-void Socket::listen(const int & max_queue) {
+void Socket::listen(int max_queue) {
   if (socket_listen(fd, max_queue) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
@@ -80,7 +80,7 @@ std::shared_ptr<Socket> Socket::accept() {
   return std::make_shared<Socket>(retval);
 }
 
-size_t Socket::send(const void * data, const size_t & length) {
+size_t Socket::send(const void * data, size_t length) {
   auto retval = socket_send(fd, data, length, MSG_NOSIGNAL);
   if (retval == -1) {
     throw std::system_error(errno, std::generic_category());
@@ -89,7 +89,7 @@ size_t Socket::send(const void * data, const size_t & length) {
   return retval;
 }
 
-size_t Socket::send_to(const void * data, const size_t & length, const Address & address) {
+size_t Socket::send_to(const void * data, size_t length, const Address & address) {
   auto sa = address.sockaddr_in();
   auto retval = sendto(fd, data, length, MSG_NOSIGNAL, (struct sockaddr *)&sa, sizeof(sa));
   if (retval == -1) {
@@ -99,7 +99,7 @@ size_t Socket::send_to(const void * data, const size_t & length, const Address &
   return retval;
 }
 
-size_t Socket::receive(void * data, const size_t & length) {
+size_t Socket::receive(void * data, size_t length) {
   auto retval = recv(fd, data, length, 0);
   if (retval == -1) {
     if (errno == EAGAIN) {
@@ -112,7 +112,7 @@ size_t Socket::receive(void * data, const size_t & length) {
   return retval;
 }
 
-void Socket::set_status_flags(const int & flags) {
+void Socket::set_status_flags(int flags) {
   if (fcntl(fd, F_SETFL, flags) == -1) {
     throw std::system_error(errno, std::generic_category());
   }
@@ -127,16 +127,16 @@ int Socket::get_status_flags() const {
   return flags;
 }
 
-void Socket::set_status_flag(const int & key, const bool & enable) {
+void Socket::set_status_flag(int key, bool enable) {
   auto flags = get_status_flags();
   set_status_flags(enable ? (flags | key) : (flags & ~key));
 }
 
-bool Socket::get_status_flag(const int & key) const {
+bool Socket::get_status_flag(int key) const {
   return get_status_flags() & key;
 }
 
-const int & Socket::get_fd() const {
+int Socket::get_fd() const {
   return fd;
 }
 

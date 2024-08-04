@@ -10,13 +10,13 @@ namespace musen {
 
 class Server {
  public:
-  explicit Server(const int & port, std::shared_ptr<Socket> socket = make_tcp_socket());
+  explicit Server(int port, std::shared_ptr<Socket> socket = make_tcp_socket());
   ~Server();
 
   std::shared_ptr<Session> accept();
 
   std::shared_ptr<Socket> get_socket() const;
-  const int & get_port() const;
+  int get_port() const;
 
  protected:
   std::shared_ptr<Socket> socket;
