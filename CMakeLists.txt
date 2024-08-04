@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(musen)
 
+option(MUSEN_BUILD_TESTS "Build test targets.")
+
 function(cpmaddpackage)
   file(
     DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.1/CPM.cmake
@@ -42,7 +44,7 @@ install(TARGETS ${PROJECT_NAME}
 
 add_subdirectory("examples")
 
-if(BUILD_TESTING)
+if(MUSEN_BUILD_TESTS)
   enable_testing()
   add_subdirectory("test/gtest")
 endif()
