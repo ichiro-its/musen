@@ -13,10 +13,11 @@ jobs:
         uses: actions/checkout@v4.2.0
 
       - name: Build project
-        uses: threeal/cmake-action@v1.3.0
+        uses: threeal/cmake-action@v2.0.0
         with:
-          options: MUSEN_BUILD_TESTS=ON MUSEN_BUILD_EXAMPLES=ON
-          run-build: true
+          options: |
+            MUSEN_BUILD_TESTS=ON
+            MUSEN_BUILD_EXAMPLES=ON
 
       - name: Test project
         uses: threeal/ctest-action@v1.1.0
