@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4.2.1
+        uses: actions/checkout@v4.2.2
 
       - name: Install documentation dependencies
         run: |
